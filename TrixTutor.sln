@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObject", "BusinessO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{0DFDE1CE-3B07-4ED8-BF71-D22E71A41C6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrixTutor", "TrixTutor\TrixTutor.csproj", "{CBED1C96-0BF9-4A22-BF51-5D3D98E93B5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrixTutorAPI", "TrixTutorAPI\TrixTutorAPI.csproj", "{DB91D1A6-B842-458E-94AE-5A8E9F87C7CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{0DFDE1CE-3B07-4ED8-BF71-D22E71A41C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DFDE1CE-3B07-4ED8-BF71-D22E71A41C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DFDE1CE-3B07-4ED8-BF71-D22E71A41C6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBED1C96-0BF9-4A22-BF51-5D3D98E93B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBED1C96-0BF9-4A22-BF51-5D3D98E93B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBED1C96-0BF9-4A22-BF51-5D3D98E93B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBED1C96-0BF9-4A22-BF51-5D3D98E93B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB91D1A6-B842-458E-94AE-5A8E9F87C7CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB91D1A6-B842-458E-94AE-5A8E9F87C7CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB91D1A6-B842-458E-94AE-5A8E9F87C7CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB91D1A6-B842-458E-94AE-5A8E9F87C7CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
