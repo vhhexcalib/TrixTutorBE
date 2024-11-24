@@ -1,8 +1,10 @@
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\Service.deps.json
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\Service.dll
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\Service.pdb
+D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\BusinessObject.dll
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\DataAccess.dll
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\Repository.dll
+D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\BusinessObject.pdb
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\Repository.pdb
 D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\DataAccess.pdb
 D:\STUDY\EXE201\TrixTutorBE\Service\obj\Debug\net8.0\Service.csproj.AssemblyReference.cache
@@ -16,5 +18,3 @@ D:\STUDY\EXE201\TrixTutorBE\Service\obj\Debug\net8.0\Service.dll
 D:\STUDY\EXE201\TrixTutorBE\Service\obj\Debug\net8.0\refint\Service.dll
 D:\STUDY\EXE201\TrixTutorBE\Service\obj\Debug\net8.0\Service.pdb
 D:\STUDY\EXE201\TrixTutorBE\Service\obj\Debug\net8.0\ref\Service.dll
-D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\BusinessObject.dll
-D:\STUDY\EXE201\TrixTutorBE\Service\bin\Debug\net8.0\BusinessObject.pdb

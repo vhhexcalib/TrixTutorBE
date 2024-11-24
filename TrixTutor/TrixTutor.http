@@ -1,0 +1,6 @@
+@TrixTutor_HostAddress = http://localhost:5149
+
+GET {{TrixTutor_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
