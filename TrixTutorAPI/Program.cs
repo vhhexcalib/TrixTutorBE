@@ -1,5 +1,8 @@
-var builder = WebApplication.CreateBuilder(args);
+using DataAccess.Context;
 
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("MyDb");
+builder.Services.AddTrixTutorDBContext(connectionString);
 // Add services to the container.
 
 builder.Services.AddControllers();
