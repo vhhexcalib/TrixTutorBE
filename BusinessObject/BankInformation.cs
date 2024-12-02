@@ -13,11 +13,9 @@ namespace BusinessObject
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
         public string BankNumber { get; set; }
-        [Required]
-        [StringLength(100)]
         public string BankName { get; set; }
+
         [ForeignKey("Account")]
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }

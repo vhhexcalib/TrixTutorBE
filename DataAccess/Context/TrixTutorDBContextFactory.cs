@@ -15,7 +15,7 @@ namespace DataAccess.Context
         {
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             var config = new ConfigurationBuilder()
-                .SetBasePath(path + "\\TrixTutor.TrixTutorAPI")
+                .SetBasePath(path + "\\TrixTutorAPI")
                 .AddJsonFile("appsettings.json")
                 .Build();
 

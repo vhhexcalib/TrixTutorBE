@@ -16,5 +16,11 @@ namespace BusinessObject
         public string RoleName { get; set; }
         public int Quantity { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<SystemAccount> SystemAccounts { get; set; }
+        public Role()
+        {
+            Accounts = new HashSet<Account>();
+            SystemAccounts = new HashSet<SystemAccount>();
+        }
     }
 }
