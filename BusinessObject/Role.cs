@@ -13,8 +13,6 @@ namespace BusinessObject
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
-        [StringLength(100)]
         public string RoleName { get; set; }
         public int Quantity { get; set; }
         public virtual ICollection<Account> Accounts { get; set; }
