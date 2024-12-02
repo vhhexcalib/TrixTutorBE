@@ -9,6 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IAccountRepository : IRepository<Account>
     {
-
+        Task<Account> LoginAsync(string email, string password);
     }
 }
