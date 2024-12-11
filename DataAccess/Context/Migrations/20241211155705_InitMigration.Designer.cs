@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20241202165957_InitMigration")]
+    [Migration("20241211155705_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -161,7 +161,7 @@ namespace DataAccess.Context.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("SystemAccounts");
+                    b.ToTable("SystemAccount");
                 });
 
             modelBuilder.Entity("BusinessObject.Account", b =>

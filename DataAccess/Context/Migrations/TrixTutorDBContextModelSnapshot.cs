@@ -158,7 +158,7 @@ namespace DataAccess.Context.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("SystemAccounts");
+                    b.ToTable("SystemAccount");
                 });
 
             modelBuilder.Entity("BusinessObject.Account", b =>

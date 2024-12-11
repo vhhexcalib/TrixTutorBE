@@ -50,7 +50,7 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SystemAccounts",
+                name: "SystemAccount",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -61,9 +61,9 @@ namespace DataAccess.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SystemAccounts", x => x.Id);
+                    table.PrimaryKey("PK_SystemAccount", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SystemAccounts_Roles_RoleId",
+                        name: "FK_SystemAccount_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
@@ -129,8 +129,8 @@ namespace DataAccess.Context.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SystemAccounts_RoleId",
-                table: "SystemAccounts",
+                name: "IX_SystemAccount_RoleId",
+                table: "SystemAccount",
                 column: "RoleId");
         }
 
@@ -144,7 +144,7 @@ namespace DataAccess.Context.Migrations
                 name: "Certificate");
 
             migrationBuilder.DropTable(
-                name: "SystemAccounts");
+                name: "SystemAccount");
 
             migrationBuilder.DropTable(
                 name: "Account");
