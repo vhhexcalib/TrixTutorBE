@@ -20,6 +20,7 @@ namespace BusinessObject
         [ForeignKey("Role")]
         public int RoleId { get; set; } 
         public int Age { get; set; }
+        public bool IsBan { get; set; }
         public bool IsEmailConfirm { get; set; }
         public virtual Role Role { get; set; } 
         public virtual ICollection<Certificate> Certificates { get; set; }

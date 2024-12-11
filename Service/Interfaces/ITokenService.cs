@@ -11,7 +11,6 @@ namespace Service.Interfaces
     public interface ITokenService
     {
         Task<SecurityToken> GenerateTokenAsync(CurrentUserObject currentUserObject);
-        Task<dynamic> RenewTokenAsync(RenewTokenDTO tokenDTO);
         Task<string> GenerateAccessTokenAsync(SecurityToken token);
     }
 }

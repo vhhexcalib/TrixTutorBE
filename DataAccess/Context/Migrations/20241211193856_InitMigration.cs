@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DataAccess.Context.Migrations
 {
     /// <inheritdoc />
@@ -36,6 +38,7 @@ namespace DataAccess.Context.Migrations
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
+                    IsBan = table.Column<bool>(type: "bit", nullable: false),
                     IsEmailConfirm = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -57,6 +60,7 @@ namespace DataAccess.Context.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsBan = table.Column<bool>(type: "bit", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -111,6 +115,26 @@ namespace DataAccess.Context.Migrations
                         principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Quantity", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, 0, "Admin" },
+                    { 2, 0, "Staff" },
+                    { 3, 0, "Student" },
+                    { 4, 0, "Tutor" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SystemAccount",
+                columns: new[] { "Id", "Email", "IsBan", "Password", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "Admin@gmail.com", false, "7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358", 1 },
+                    { 2, "Staff@gmail.com", false, "b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1", 2 }
                 });
 
             migrationBuilder.CreateIndex(

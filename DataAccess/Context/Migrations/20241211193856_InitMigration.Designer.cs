@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20241211155705_InitMigration")]
+    [Migration("20241211193856_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace DataAccess.Context.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailConfirm")
                         .HasColumnType("bit");
@@ -136,6 +139,32 @@ namespace DataAccess.Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Quantity = 0,
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Quantity = 0,
+                            RoleName = "Staff"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Quantity = 0,
+                            RoleName = "Student"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Quantity = 0,
+                            RoleName = "Tutor"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.SystemAccount", b =>
@@ -150,6 +179,9 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -162,6 +194,24 @@ namespace DataAccess.Context.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("SystemAccount");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "Admin@gmail.com",
+                            IsBan = false,
+                            Password = "7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "Staff@gmail.com",
+                            IsBan = false,
+                            Password = "b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1",
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Account", b =>

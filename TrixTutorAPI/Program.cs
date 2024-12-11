@@ -1,19 +1,53 @@
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Service.DTOs.TokenDTO;
+using Service.Mappings;
 using System.Text;
+using TrixTutorAPI.Helper;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddTrixTutorDBContext(connectionString);
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "TrixTutorAPI", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+    option.DocumentFilter<CustomDocumentFilter>();
+    option.SchemaFilter<SimpleEnumSchemaFilter>();
+});
 // Add services to the container.
 //Add cors
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(policy =>
     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-//Add Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
+
+// Add Authentication
+var jwtSettings = builder.Configuration.GetSection("JwtConfig");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
-//Jwt
+// JWT 
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
 var secretKey = builder.Configuration["AppSettings:SecretKey"];
 var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
@@ -22,12 +56,12 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(options =>
 {
-    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        //tu cap Token
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateIssuerSigningKey = true,
@@ -37,7 +71,6 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-
 //Authorize
 builder.Services.AddAuthorization(options =>
 {
@@ -45,14 +78,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("StaffOnly", policy => policy.RequireRole("2"));
     options.AddPolicy("StudentOnly", policy => policy.RequireRole("3"));
     options.AddPolicy("LecturerOnly", policy => policy.RequireRole("4"));
-    options.AddPolicy("ParentOnly", policy => policy.RequireRole("5"));
 });
 
 
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);                  //automapper
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddServicesConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
@@ -62,11 +95,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(builder =>
+{
+    builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+});
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

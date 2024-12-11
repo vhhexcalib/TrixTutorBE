@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Configuration
+namespace DataAccess.Context.Configuration
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
@@ -26,7 +26,7 @@ namespace DataAccess.Configuration
                     Id = 2,
                     RoleName = "Staff",
                     Quantity = 0,
-                }, 
+                },
                 new Role
                 {
                     Id = 3,
@@ -37,12 +37,6 @@ namespace DataAccess.Configuration
                 {
                     Id = 4,
                     RoleName = "Tutor",
-                    Quantity = 0,
-                },
-                new Role
-                {
-                    Id = 5,
-                    RoleName = "Parent",
                     Quantity = 0,
                 }
                 );
