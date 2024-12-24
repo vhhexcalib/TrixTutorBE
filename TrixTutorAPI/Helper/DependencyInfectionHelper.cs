@@ -13,10 +13,13 @@ namespace TrixTutorAPI.Helper
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
-
+            services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
             //service
             services.AddScoped<ISystemAccountService, SystemAccountService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IRoleService, RoleService>();
+
 
 
             return services;

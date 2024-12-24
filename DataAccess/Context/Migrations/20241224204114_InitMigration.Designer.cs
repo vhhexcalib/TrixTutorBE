@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20241211193856_InitMigration")]
+    [Migration("20241224204114_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -65,6 +65,32 @@ namespace DataAccess.Context.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Account");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "HCM",
+                            Age = 15,
+                            Email = "Student@gmail.com",
+                            IsBan = false,
+                            IsEmailConfirm = true,
+                            Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
+                            Phone = "1234567890",
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "HCM",
+                            Age = 35,
+                            Email = "Tutor@gmail.com",
+                            IsBan = false,
+                            IsEmailConfirm = true,
+                            Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
+                            Phone = "0987654321",
+                            RoleId = 4
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.BankInformation", b =>
@@ -144,25 +170,25 @@ namespace DataAccess.Context.Migrations
                         new
                         {
                             Id = 1,
-                            Quantity = 0,
+                            Quantity = 1,
                             RoleName = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            Quantity = 0,
+                            Quantity = 1,
                             RoleName = "Staff"
                         },
                         new
                         {
                             Id = 3,
-                            Quantity = 0,
+                            Quantity = 1,
                             RoleName = "Student"
                         },
                         new
                         {
                             Id = 4,
-                            Quantity = 0,
+                            Quantity = 1,
                             RoleName = "Tutor"
                         });
                 });
@@ -201,7 +227,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Email = "Admin@gmail.com",
                             IsBan = false,
-                            Password = "7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358",
+                            Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             RoleId = 1
                         },
                         new
@@ -209,7 +235,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Email = "Staff@gmail.com",
                             IsBan = false,
-                            Password = "b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1",
+                            Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             RoleId = 2
                         });
                 });

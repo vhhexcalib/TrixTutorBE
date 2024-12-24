@@ -13,10 +13,19 @@ namespace Service.Mappings
     {
         public AutoMapperConfig()
         {
+            //login
             CreateMap<LoginDTO, SystemAccount>()
                             .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
                             .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
+            CreateMap<LoginDTO, Account>()
+                            .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
+                            .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
+            //system account
             CreateMap<SystemAccount, CurrentUserObject>().ReverseMap();
+            //account
+            CreateMap<RegisterAccountDTO, Account>();
+            CreateMap<Account, CurrentUserObject>().ReverseMap();
+
         }
     }
 }
