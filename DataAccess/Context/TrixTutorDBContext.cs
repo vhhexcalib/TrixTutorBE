@@ -29,6 +29,7 @@ namespace DataAccess.Context
         {
 
             modelBuilder.ApplyConfiguration(new SystemAccountConfiguration());
+            modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Entity<Account>()
@@ -54,7 +55,6 @@ namespace DataAccess.Context
                 .OnDelete(DeleteBehavior.Restrict);
         }
         //Add-Migration InitMigration -Context TrixTutorDBContext -Project DataAccess -StartupProject TrixTutorAPI -OutputDir Context/Migrations      
-        //Add-Migration InitMigration -Context EduToyRentDbContext -Project EduToyRent.DataAccess -StartupProject EduToyRent.API -OutputDir Context/Migrations
         //Update-Database
     }
 }

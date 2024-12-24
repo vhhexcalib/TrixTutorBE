@@ -1,17 +1,18 @@
 ﻿using BusinessObject;
+using Service.DTOs.AccountDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Interfaces
+namespace Service.Interfaces
 {
-    public interface IAccountRepository : IRepository<Account>
+    public interface IAccountService
     {
-        Task<Account> LoginAsync(string email, string password); 
+        Task<dynamic> LoginAsync(LoginDTO loginDTO);
         Task<bool> CheckEmailExistAsync(string email);
         Task<bool> CheckPhoneExistAsync(string phone);
-        Task<bool> CreateAccount(Account account);
+        Task<dynamic> CreateAccount(RegisterAccountDTO registerAccount);
     }
 }

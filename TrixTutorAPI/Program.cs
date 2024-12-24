@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.DTOs.TokenDTO;
+using Service.Interfaces;
 using Service.Mappings;
+using Service.Services;
 using System.Text;
 using TrixTutorAPI.Helper;
 

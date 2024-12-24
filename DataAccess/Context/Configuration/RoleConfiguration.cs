@@ -1,4 +1,4 @@
-﻿using BusinessObject;
+﻿    using BusinessObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -19,25 +19,25 @@ namespace DataAccess.Context.Configuration
                 {
                     Id = 1,
                     RoleName = "Admin",
-                    Quantity = 0,
+                    Quantity = 1
                 },
                 new Role
                 {
                     Id = 2,
                     RoleName = "Staff",
-                    Quantity = 0,
+                    Quantity = 1
                 },
                 new Role
                 {
                     Id = 3,
                     RoleName = "Student",
-                    Quantity = 0,
+                    Quantity = 1
                 },
                 new Role
                 {
                     Id = 4,
                     RoleName = "Tutor",
-                    Quantity = 0,
+                    Quantity = 1
                 }
                 );
         }

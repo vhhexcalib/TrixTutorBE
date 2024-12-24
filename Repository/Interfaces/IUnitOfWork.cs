@@ -10,6 +10,7 @@ namespace Repository.Interfaces
     {
         IAccountRepository AccountRepository { get; }
         ISystemAccountRepository SystemAccountRepository { get; }
+        IRoleRepository RoleRepository { get; }
         Task<string> SaveAsync();
     }
 }
