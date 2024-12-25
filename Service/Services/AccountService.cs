@@ -112,7 +112,7 @@ namespace Service.Services
             }
             else
             {
-                return Result.Failure(OTPErrors.ValidOTP);
+                return Result.Failure(OTPErrors.InvalidOTP);
             }
         }
     }
