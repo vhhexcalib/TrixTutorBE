@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessObject;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using Repository.Interfaces;
@@ -36,12 +37,15 @@ namespace Service.Services
                 Credentials = new NetworkCredential(email, password)
             };
             string subject = "TRIX TUTOR REGISTERING CONFIRMATION EMAIL";
-            string body = RandomGenerateOTP(); 
+            string body = RandomGenerateOTP();
             string emailBody = GenerateEmailBody(receptor, body);
             var message = new MailMessage(email, receptor, subject, emailBody)
             {
                 IsBodyHtml = true
             };
+            var otp = new ConfirmationOTP() { Email = receptor, OTP = body, CreatedAt = DateTime.Now };
+            await _unitOfWork.ConfirmationOTPRepository.AddAsync(otp);
+            await _unitOfWork.SaveAsync();
             await smtpClient.SendMailAsync(message);
         }
 

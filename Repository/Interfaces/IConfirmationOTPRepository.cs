@@ -11,5 +11,6 @@ namespace Repository.Interfaces
     {
         Task<bool> CheckEmailExistAsync(string email);
         Task<ConfirmationOTP> GetOTPByEmail(string email);
+        Task<ConfirmationOTP> GetExpiredOTPAsync();
     }
 }

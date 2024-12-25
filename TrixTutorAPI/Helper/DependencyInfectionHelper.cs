@@ -15,7 +15,6 @@ namespace TrixTutorAPI.Helper
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
             services.AddScoped<IConfirmationOTPRepository, ConfirmationOTPRepository>();
-
             //service
             services.AddScoped<ISystemAccountService, SystemAccountService>();
             services.AddScoped<ITokenService, TokenService>();

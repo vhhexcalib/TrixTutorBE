@@ -24,6 +24,7 @@ namespace Repository.Repositories
             AccountRepository = new AccountRepository(_context);
             SystemAccountRepository = new SystemAccountRepository(_context);
             RoleRepository = new RoleRepository(_context);
+            ConfirmationOTPRepository = new ConfirmationOTPRepository(_context);
 
         }
         public async Task<string> SaveAsync()

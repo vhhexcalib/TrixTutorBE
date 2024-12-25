@@ -11,7 +11,7 @@ namespace Service.Exceptions
     {
         public static Error AccountIsBan => new("Login Account", "Your account is banned!!");
         public static Error InvalidAccount => new("Login Account", "Wrong email or password");
-        public static Error AccountUnverified => new("Create Account", "Account have not verified by email yet");
+        public static Error AccountUnverified => new("Login Account", "Account have not verified by email yet");
 
     }
 }

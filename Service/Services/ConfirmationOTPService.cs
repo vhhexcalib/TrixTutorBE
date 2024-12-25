@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Repository.Interfaces;
 using Service.Interfaces;
 using System;
@@ -6,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Service.Services
 {
     public class ConfirmationOTPService : IConfirmationOTPService
@@ -22,6 +24,6 @@ namespace Service.Services
         {
             return await _unitOfWork.ConfirmationOTPRepository.CheckEmailExistAsync(email);
         }
-
+        
     }
 }
