@@ -23,6 +23,8 @@ namespace DataAccess.Context
         public DbSet<Certificate> Certificate { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<SystemAccount> SystemAccount { get; set; }
+        public DbSet<ConfirmationOTP> ConfirmationOTP { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

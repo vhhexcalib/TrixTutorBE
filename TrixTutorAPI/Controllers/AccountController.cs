@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Service.Common;
 using Service.DTOs.AccountDTO;
 using Service.Interfaces;
 using System.Net.WebSockets;
@@ -54,6 +55,7 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
+
                 var result = await _accountService.CreateAccount(registerAccountDTO);
                 if(result.IsSuccess) return Ok(result);
                 return BadRequest(result);
@@ -63,5 +65,24 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPost("otp-confirmation")]
+        public async Task<IActionResult> OTPConfirmation(string email, string otp)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.OTPConfirmation(email, otp);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

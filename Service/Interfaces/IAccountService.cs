@@ -14,5 +14,6 @@ namespace Service.Interfaces
         Task<bool> CheckEmailExistAsync(string email);
         Task<bool> CheckPhoneExistAsync(string phone);
         Task<dynamic> CreateAccount(RegisterAccountDTO registerAccount);
+        Task<dynamic> OTPConfirmation(string otp, string email);
     }
 }

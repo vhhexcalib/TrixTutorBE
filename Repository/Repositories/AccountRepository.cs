@@ -22,6 +22,11 @@ namespace Repository.Repositories
             
             return await _context.Account.FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
         }
+        public async Task<Account> GetAccountByEmail(string email)
+        {
+
+            return await _context.Account.FirstOrDefaultAsync(a => a.Email == email);
+        }
         public async Task<bool> CheckEmailExistAsync(string email)
         {
             return await _context.Account.AnyAsync(x => x.Email == email);

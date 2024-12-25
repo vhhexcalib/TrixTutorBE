@@ -11,6 +11,7 @@ namespace Repository.Interfaces
         IAccountRepository AccountRepository { get; }
         ISystemAccountRepository SystemAccountRepository { get; }
         IRoleRepository RoleRepository { get; }
+        IConfirmationOTPRepository ConfirmationOTPRepository { get; }
         Task<string> SaveAsync();
     }
 }

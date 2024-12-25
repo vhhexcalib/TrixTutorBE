@@ -21,11 +21,16 @@ namespace Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
-        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, ITokenService tokenService)
+        private readonly IEmailService _emailService;
+        private readonly IConfirmationOTPService _confirmationOTPService;
+
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, ITokenService tokenService, IEmailService emailService, IConfirmationOTPService confirmationOTPService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _tokenService = tokenService;
+            _emailService = emailService;
+            _confirmationOTPService = confirmationOTPService;
         }
         public async Task<dynamic> LoginAsync(LoginDTO loginDTO)
         {
@@ -83,7 +88,32 @@ namespace Service.Services
             role.Quantity++;
             await _unitOfWork.RoleRepository.UpdateAsync(role);
             await _unitOfWork.SaveAsync();
+            await _emailService.SendEmail(createdAccount.Email);
             return Result.Success();
+        }
+        public async Task<dynamic> OTPConfirmation(string otp, string email)
+        {
+            var otpfounded= await _unitOfWork.ConfirmationOTPRepository.GetOTPByEmail(email);
+            if (otpfounded != null)
+            {
+                if(otpfounded.OTP == otp)
+                {
+                    await _unitOfWork.ConfirmationOTPRepository.DeleteAsync(otpfounded);
+                    var account = await _unitOfWork.AccountRepository.GetAccountByEmail(email);
+                    account.IsEmailConfirm = true;
+                    await _unitOfWork.AccountRepository.UpdateAsync(account);
+                    await _unitOfWork.SaveAsync();
+                    return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(OTPErrors.IncorrectOTP);
+                }
+            }
+            else
+            {
+                return Result.Failure(OTPErrors.ValidOTP);
+            }
         }
     }
 }
