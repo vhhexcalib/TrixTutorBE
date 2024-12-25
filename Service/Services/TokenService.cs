@@ -40,9 +40,9 @@ namespace Service.Services
                 {
             new Claim(JwtRegisteredClaimNames.Sub, currentUserObject.AccountId.ToString()),  // AccountId
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim("AccountId", currentUserObject.AccountId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, currentUserObject.AccountEmail),        // Email
-            new Claim("RoleId", currentUserObject.RoleId?.ToString()),                   // RoleId
-            new Claim("AccountId", currentUserObject.AccountId.ToString())
+            new Claim("RoleId", currentUserObject.RoleId?.ToString())                   // RoleId
         }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
@@ -57,13 +57,6 @@ namespace Service.Services
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var accessToken = jwtTokenHandler.WriteToken(token);
             return accessToken;
-        }
-
-        private DateTime ConvertUnixTimeToDateTime(long utcExpireDate)
-        {
-            var dateTimeInterval = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
-            return dateTimeInterval;
-        }
+        }      
     }
 }

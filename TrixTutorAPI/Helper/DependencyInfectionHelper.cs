@@ -13,10 +13,15 @@ namespace TrixTutorAPI.Helper
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
-
+            services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
+            services.AddScoped<IConfirmationOTPRepository, ConfirmationOTPRepository>();
             //service
             services.AddScoped<ISystemAccountService, SystemAccountService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IConfirmationOTPService, ConfirmationOTPService>();
 
 
             return services;

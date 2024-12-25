@@ -14,11 +14,18 @@ namespace Repository.Repositories
         private readonly TrixTutorDBContext _context;
         public IAccountRepository AccountRepository { get; set; }
         public ISystemAccountRepository SystemAccountRepository { get; set; }
+        public IRoleRepository RoleRepository { get; set; }
+        public IConfirmationOTPRepository ConfirmationOTPRepository { get; set; }
+
+
         public UnitOfWork(TrixTutorDBContext context)
         {
             _context = context;
             AccountRepository = new AccountRepository(_context);
             SystemAccountRepository = new SystemAccountRepository(_context);
+            RoleRepository = new RoleRepository(_context);
+            ConfirmationOTPRepository = new ConfirmationOTPRepository(_context);
+
         }
         public async Task<string> SaveAsync()
         {

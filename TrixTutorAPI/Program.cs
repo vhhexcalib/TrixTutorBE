@@ -2,8 +2,12 @@ using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repository.Interfaces;
+using Repository.Repositories;
 using Service.DTOs.TokenDTO;
+using Service.Interfaces;
 using Service.Mappings;
+using Service.Services;
 using System.Text;
 using TrixTutorAPI.Helper;
 
@@ -86,7 +90,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServicesConfiguration(builder.Configuration);
-
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddHostedService<ConfirmationOTPBackgroundService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

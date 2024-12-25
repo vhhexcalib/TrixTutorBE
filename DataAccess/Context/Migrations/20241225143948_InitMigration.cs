@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -12,6 +13,21 @@ namespace DataAccess.Context.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ConfirmationOTP",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OTP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfirmationOTP", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -122,10 +138,19 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Quantity", "RoleName" },
                 values: new object[,]
                 {
-                    { 1, 0, "Admin" },
-                    { 2, 0, "Staff" },
-                    { 3, 0, "Student" },
-                    { 4, 0, "Tutor" }
+                    { 1, 1, "Admin" },
+                    { 2, 1, "Staff" },
+                    { 3, 1, "Student" },
+                    { 4, 1, "Tutor" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Account",
+                columns: new[] { "Id", "Address", "Age", "Email", "IsBan", "IsEmailConfirm", "Password", "Phone", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "HCM", 15, "Student@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", 35, "Tutor@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -133,8 +158,8 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Email", "IsBan", "Password", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Admin@gmail.com", false, "7676aaafb027c825bd9abab78b234070e702752f625b752e55e55b48e607e358", 1 },
-                    { 2, "Staff@gmail.com", false, "b5465d786a2b98bbd4b8b798da4f86b34c52f64dc9a382b50c0fdb0f73f8baf1", 2 }
+                    { 1, "Admin@gmail.com", false, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 1 },
+                    { 2, "Staff@gmail.com", false, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -166,6 +191,9 @@ namespace DataAccess.Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "Certificate");
+
+            migrationBuilder.DropTable(
+                name: "ConfirmationOTP");
 
             migrationBuilder.DropTable(
                 name: "SystemAccount");

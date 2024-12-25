@@ -9,26 +9,34 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Context.Configuration
 {
-    public class SystemAccountConfiguration : IEntityTypeConfiguration<SystemAccount>
+    public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
-        public void Configure(EntityTypeBuilder<SystemAccount> builder)
+        public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.HasData
                 (
-                new SystemAccount
+                new Account
                 {
                     Id = 1,
-                    Email = "Admin@gmail.com",
+                    Email = "Student@gmail.com",
                     Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", //Trixtutor@123
-                    RoleId = 1,
+                    RoleId = 3,
+                    IsEmailConfirm = true,
+                    Address = "HCM",
+                    Age = 15,
+                    Phone = "1234567890",                    
                     IsBan = false
                 },
-                 new SystemAccount
+                 new Account
                  {
                      Id = 2,
-                     Email = "Staff@gmail.com",
+                     Email = "Tutor@gmail.com",
                      Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", //Trixtutor@123
-                     RoleId = 2,
+                     RoleId = 4,
+                     IsEmailConfirm = true,
+                     Address = "HCM",
+                     Age = 35,
+                     Phone = "0987654321",
                      IsBan = false
                  }
                 );
