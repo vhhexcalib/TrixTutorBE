@@ -11,6 +11,8 @@ namespace TrixTutorAPI.Controllers
     {
         private readonly IEmailService _emailService;
         private readonly IConfirmationOTPService _confirmationOTPService;
+        private readonly IAccountService _accountService;
+
 
         public EmailController(IEmailService emailService, IConfirmationOTPService confirmationOTPService)
         {
@@ -26,13 +28,17 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
-                var existedOTP = _confirmationOTPService.CheckEmailExistAsync(receptor);
-                if (existedOTP != null) return BadRequest("The OTP is still valid, please enter the OTP");
-                else
+                if (await _accountService.CheckEmailExistAsync(receptor))
                 {
-                    await _emailService.SendEmail(receptor);
-                    return Ok("The OTP email has been resent");
+                    var existedOTP = _confirmationOTPService.CheckEmailExistAsync(receptor);
+                    if (existedOTP != null) return BadRequest("The OTP is still valid, please enter the OTP");
+                    else
+                    {
+                        await _emailService.SendEmail(receptor);
+                        return Ok("The OTP email has been resent");
+                    }
                 }
+                else return BadRequest("The email has not been created as an account, please create an account");
             }
             catch (Exception ex)
             {
