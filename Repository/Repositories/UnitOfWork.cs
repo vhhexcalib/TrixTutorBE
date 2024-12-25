@@ -15,6 +15,8 @@ namespace Repository.Repositories
         public IAccountRepository AccountRepository { get; set; }
         public ISystemAccountRepository SystemAccountRepository { get; set; }
         public IRoleRepository RoleRepository { get; set; }
+        public IConfirmationOTPRepository ConfirmationOTPRepository { get; set; }
+
 
         public UnitOfWork(TrixTutorDBContext context)
         {

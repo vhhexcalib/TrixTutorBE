@@ -88,7 +88,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServicesConfiguration(builder.Configuration);
-
+builder.Services.AddTransient<IEmailService, EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

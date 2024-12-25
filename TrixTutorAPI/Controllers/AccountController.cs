@@ -54,6 +54,7 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
+
                 var result = await _accountService.CreateAccount(registerAccountDTO);
                 if(result.IsSuccess) return Ok(result);
                 return BadRequest(result);
@@ -63,5 +64,7 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+
     }
 }

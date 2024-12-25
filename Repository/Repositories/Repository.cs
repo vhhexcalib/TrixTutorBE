@@ -32,6 +32,11 @@ namespace Repository.Repositories
             _dbSet.Update(entity);
             return true;
         }
+        public async Task<bool> DeleteAsync(T entity)
+        {
+            _dbSet.Remove(entity);
+            return true;
+        }
 
     }
 
