@@ -16,7 +16,6 @@ namespace BusinessObject
         public string Rating { get; set; }
         public string TotalReport { get; set; }
         public string FeedbackContent { get; set; }
-
         [ForeignKey("Account")]
         public int FeedbackById { get; set; }
         public virtual Account Account { get; set; }
