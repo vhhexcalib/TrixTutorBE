@@ -16,8 +16,8 @@ namespace BusinessObject
         public string Certification { get; set; }
         public bool Verified { get; set; }
         public bool IsDeleted { get; set; }
-        [ForeignKey("Account")]
-        public int AccountId { get; set; }
-        public virtual Account Account { get; set; }
+        [ForeignKey("TutorInformation")]
+        public int TutorId { get; set; } 
+        public virtual TutorInformation TutorInformation { get; set; }
     }
 }
