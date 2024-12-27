@@ -16,6 +16,12 @@ namespace Repository.Repositories
         public ISystemAccountRepository SystemAccountRepository { get; set; }
         public IRoleRepository RoleRepository { get; set; }
         public IConfirmationOTPRepository ConfirmationOTPRepository { get; set; }
+        public ITutorCategoryRepository TutorCategoryRepository { get; set; }
+        public ITutorContactRepository TutorContactRepository { get; set; }
+        public ITutorInformationRepository TutorInformationRepository { get; set; }
+        public IFeedbackRepository FeedbackRepository { get; set; }
+        public IBankInformationRepository BankInformationRepository { get; set; }
+
 
 
         public UnitOfWork(TrixTutorDBContext context)
@@ -25,6 +31,11 @@ namespace Repository.Repositories
             SystemAccountRepository = new SystemAccountRepository(_context);
             RoleRepository = new RoleRepository(_context);
             ConfirmationOTPRepository = new ConfirmationOTPRepository(_context);
+            TutorCategoryRepository = new TutorCategoryRepository(_context);
+            TutorContactRepository = new TutorContactRepository(_context);
+            TutorInformationRepository = new TutorInformationRepository(_context);
+            FeedbackRepository = new FeedbackRepository(_context);
+            BankInformationRepository = new BankInformationRepository(_context);
 
         }
         public async Task<string> SaveAsync()

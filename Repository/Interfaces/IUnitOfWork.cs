@@ -12,6 +12,11 @@ namespace Repository.Interfaces
         ISystemAccountRepository SystemAccountRepository { get; }
         IRoleRepository RoleRepository { get; }
         IConfirmationOTPRepository ConfirmationOTPRepository { get; }
+        ITutorCategoryRepository TutorCategoryRepository { get; }
+        ITutorContactRepository TutorContactRepository { get; }
+        ITutorInformationRepository TutorInformationRepository { get; }
+        IFeedbackRepository FeedbackRepository { get; }
+        IBankInformationRepository BankInformationRepository { get; }
         Task<string> SaveAsync();
     }
 }

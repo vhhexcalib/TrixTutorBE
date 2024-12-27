@@ -26,7 +26,6 @@ namespace Repository.Repositories
         {
             return await _context.ConfirmationOTP.FirstOrDefaultAsync(x => x.Email == email);
         }
-
         public async Task<ConfirmationOTP> GetExpiredOTPAsync()
         {
             var now = DateTime.Now;

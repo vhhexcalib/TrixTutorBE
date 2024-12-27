@@ -91,7 +91,7 @@ namespace Service.Services
             await _emailService.SendEmail(createdAccount.Email);
             return Result.Success();
         }
-        public async Task<dynamic> OTPConfirmation(string otp, string email)
+        public async Task<dynamic> OTPConfirmation(string email, string otp)
         {
             var otpfounded= await _unitOfWork.ConfirmationOTPRepository.GetOTPByEmail(email);
             if (otpfounded != null)
@@ -115,5 +115,34 @@ namespace Service.Services
                 return Result.Failure(OTPErrors.InvalidOTP);
             }
         }
+        public async Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            string oldPassword = await HassPassword.HassPass(password.OldPassword);
+            if (account.Password == oldPassword)
+            {
+                account.Password = await HassPassword.HassPass(password.Password);
+                var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
+                await _unitOfWork.SaveAsync();
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(ChangePasswordErrors.WrongOldPassword);
+            }
+        }
+        public async Task<dynamic> GetProfile(CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            ProfileDTO profile = new ProfileDTO()
+            {
+                Email = account.Email,
+                Address = account.Address,
+                Age = account.Age,
+                Phone = account.Phone
+            };
+            return Result.SuccessWithObject(profile);
+        }
+
     }
 }

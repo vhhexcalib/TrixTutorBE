@@ -49,7 +49,6 @@ namespace Repository.Repositories
             {
                 return false; // Returns false if an exception occurs
             }
-        }
-
+        }     
     }
 }
