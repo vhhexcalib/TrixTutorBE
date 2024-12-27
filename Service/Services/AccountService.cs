@@ -139,7 +139,8 @@ namespace Service.Services
                 Email = account.Email,
                 Address = account.Address,
                 Age = account.Age,
-                Phone = account.Phone
+                Phone = account.Phone,
+                Avatar = account.Avatar
             };
             return Result.SuccessWithObject(profile);
         }

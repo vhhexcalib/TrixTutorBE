@@ -37,6 +37,10 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -70,6 +74,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Age = 15,
+                            Avatar = "imgurl",
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -82,6 +87,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Age = 35,
+                            Avatar = "imgurl",
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,

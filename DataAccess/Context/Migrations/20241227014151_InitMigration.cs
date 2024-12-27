@@ -65,6 +65,7 @@ namespace DataAccess.Context.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
@@ -236,11 +237,11 @@ namespace DataAccess.Context.Migrations
 
             migrationBuilder.InsertData(
                 table: "Account",
-                columns: new[] { "Id", "Address", "Age", "Email", "IsBan", "IsEmailConfirm", "Password", "Phone", "RoleId" },
+                columns: new[] { "Id", "Address", "Age", "Avatar", "Email", "IsBan", "IsEmailConfirm", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", 15, "Student@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", 35, "Tutor@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", 15, "imgurl", "Student@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", 35, "imgurl", "Tutor@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
