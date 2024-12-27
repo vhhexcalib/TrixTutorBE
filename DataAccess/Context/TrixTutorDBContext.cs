@@ -106,7 +106,7 @@ namespace DataAccess.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        //Add-Migration InitMigration -Context TrixTutorDBContext -Project DataAccess -StartupProject TrixTutorAPI -OutputDir Context/Migrations      
+        //Add-Migration InitMigration -Context TrixTutorDBContext -Project DataAccess -StartupProject TrixTutorAPI -OutputDir Context/Migrations
         //Update-Database
     }
 }

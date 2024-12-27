@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20241226001159_InitMigration")]
+    [Migration("20241227014151_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -39,6 +39,10 @@ namespace DataAccess.Context.Migrations
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -73,6 +77,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Age = 15,
+                            Avatar = "imgurl",
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -85,6 +90,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Age = 35,
+                            Avatar = "imgurl",
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
