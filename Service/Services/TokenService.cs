@@ -32,22 +32,21 @@ namespace Service.Services
         public async Task<SecurityToken> GenerateTokenAsync(CurrentUserObject currentUserObject)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);  // Secret Key
-
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(JwtRegisteredClaimNames.Sub, currentUserObject.AccountId.ToString()),  // AccountId
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim("AccountId", currentUserObject.AccountId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, currentUserObject.AccountEmail),        // Email
-            new Claim("RoleId", currentUserObject.RoleId?.ToString())                   // RoleId
-        }),
+                    new Claim(JwtRegisteredClaimNames.Sub, currentUserObject.AccountId.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, currentUserObject.RoleId.ToString()),
+                    new Claim(ClaimTypes.Email, currentUserObject.AccountEmail),
+                    new Claim("AccountId", currentUserObject.AccountId.ToString())
+
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
-
             var token = jwtTokenHandler.CreateToken(tokenDescription);
             return token;
         }

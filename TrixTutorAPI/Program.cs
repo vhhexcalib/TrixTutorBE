@@ -55,7 +55,6 @@ var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSettings"));
 var secretKey = builder.Configuration["AppSettings:SecretKey"];
 var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,6 +81,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("StaffOnly", policy => policy.RequireRole("2"));
     options.AddPolicy("StudentOnly", policy => policy.RequireRole("3"));
     options.AddPolicy("LecturerOnly", policy => policy.RequireRole("4"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("3", "4"));
 });
 
 
