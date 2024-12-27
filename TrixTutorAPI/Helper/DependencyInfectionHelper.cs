@@ -22,7 +22,7 @@ namespace TrixTutorAPI.Helper
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IConfirmationOTPService, ConfirmationOTPService>();
-
+            services.AddScoped<IFileService, FileService>();
 
             return services;
         }
