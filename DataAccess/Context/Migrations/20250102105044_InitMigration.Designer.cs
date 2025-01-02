@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20241227014151_InitMigration")]
+    [Migration("20250102105044_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />

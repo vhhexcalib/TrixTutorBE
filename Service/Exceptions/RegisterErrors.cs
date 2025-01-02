@@ -11,6 +11,8 @@ namespace Service.Exceptions
     {
         public static Error InvalidEmail => new("Create Account", "Email has been used, please use another email");
         public static Error InvalidPhone => new("Create Account", "Phone number has been used, please use another number");
+        public static Error FailCreating => new("Create Account", "The account have not been created yet");
+
 
 
     }

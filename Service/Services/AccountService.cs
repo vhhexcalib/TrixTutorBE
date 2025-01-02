@@ -84,6 +84,12 @@ namespace Service.Services
             createdAccount.IsBan = false;
             createdAccount.RoleId = 3;
             await _unitOfWork.AccountRepository.CreateAccount(createdAccount);
+            await _unitOfWork.SaveAsync();
+            var existedaccount = await _unitOfWork.AccountRepository.GetAccountByEmail(registerAccount.Email);
+            if (existedaccount == null)
+            {
+                return Result.Failure(RegisterErrors.InvalidEmail);
+            }
             var role = await _unitOfWork.RoleRepository.GetByIdAsync(createdAccount.RoleId);
             role.Quantity++;
             await _unitOfWork.RoleRepository.UpdateAsync(role);
