@@ -106,27 +106,6 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankInformation",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BankNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BankInformation", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BankInformation_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Feedback",
                 columns: table => new
                 {
@@ -179,6 +158,25 @@ namespace DataAccess.Context.Migrations
                         principalTable: "TutorCategory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BankInformation",
+                columns: table => new
+                {
+                    TutorId = table.Column<int>(type: "int", nullable: false),
+                    BankNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankInformation", x => x.TutorId);
+                    table.ForeignKey(
+                        name: "FK_BankInformation_TutorInformation_TutorId",
+                        column: x => x.TutorId,
+                        principalTable: "TutorInformation",
+                        principalColumn: "TutorId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,12 +255,6 @@ namespace DataAccess.Context.Migrations
                 name: "IX_Account_RoleId",
                 table: "Account",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankInformation_AccountId",
-                table: "BankInformation",
-                column: "AccountId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Certificate_TutorId",

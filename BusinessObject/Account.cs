@@ -24,7 +24,6 @@ namespace BusinessObject
         public bool IsBan { get; set; }
         public bool IsEmailConfirm { get; set; }
         public virtual Role Role { get; set; } 
-        public virtual BankInformation BankInformations { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual TutorInformation TutorInformation { get; set; }
         public Account()

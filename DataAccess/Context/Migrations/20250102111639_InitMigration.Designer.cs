@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20250102105044_InitMigration")]
+    [Migration("20250102111639_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -102,13 +102,7 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.BankInformation", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
+                    b.Property<int>("TutorId")
                         .HasColumnType("int");
 
                     b.Property<string>("BankName")
@@ -119,10 +113,7 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasKey("TutorId");
 
                     b.ToTable("BankInformation");
                 });
@@ -409,13 +400,13 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.BankInformation", b =>
                 {
-                    b.HasOne("BusinessObject.Account", "Account")
-                        .WithOne("BankInformations")
-                        .HasForeignKey("BusinessObject.BankInformation", "AccountId")
+                    b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
+                        .WithOne("BankInformation")
+                        .HasForeignKey("BusinessObject.BankInformation", "TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("TutorInformation");
                 });
 
             modelBuilder.Entity("BusinessObject.Certificate", b =>
@@ -483,9 +474,6 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.Account", b =>
                 {
-                    b.Navigation("BankInformations")
-                        .IsRequired();
-
                     b.Navigation("Feedbacks");
 
                     b.Navigation("TutorInformation")
@@ -506,6 +494,9 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.TutorInformation", b =>
                 {
+                    b.Navigation("BankInformation")
+                        .IsRequired();
+
                     b.Navigation("Certificates");
 
                     b.Navigation("TutorContact")

@@ -83,6 +83,7 @@ namespace Service.Services
             createdAccount.IsEmailConfirm = false;
             createdAccount.IsBan = false;
             createdAccount.RoleId = 3;
+            createdAccount.Avatar = "avatar link";
             await _unitOfWork.AccountRepository.CreateAccount(createdAccount);
             await _unitOfWork.SaveAsync();
             var existedaccount = await _unitOfWork.AccountRepository.GetAccountByEmail(registerAccount.Email);

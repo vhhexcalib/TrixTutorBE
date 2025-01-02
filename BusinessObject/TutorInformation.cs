@@ -27,6 +27,7 @@ namespace BusinessObject
 
         [ForeignKey("TutorCategory")]
         public int TutorCategoryId { get; set; }
+        public virtual BankInformation BankInformation { get; set; }
         public virtual TutorCategory TutorCategory { get; set; }
         public virtual ICollection<Certificate> Certificates { get; set; }
         public virtual TutorContact TutorContact { get; set; }
