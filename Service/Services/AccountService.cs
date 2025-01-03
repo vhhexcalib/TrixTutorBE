@@ -128,7 +128,7 @@ namespace Service.Services
             string oldPassword = await HassPassword.HassPass(password.OldPassword);
             if (account.Password == oldPassword)
             {
-                account.Password = await HassPassword.HassPass(password.Password);
+                account.Password = await HassPassword.HassPass(password.NewPassword);
                 var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
                 await _unitOfWork.SaveAsync();
                 return Result.Success();
