@@ -42,6 +42,7 @@ builder.Services.AddSwaggerGen(option =>
     });
     option.DocumentFilter<CustomDocumentFilter>();
     option.SchemaFilter<SimpleEnumSchemaFilter>();
+    option.OperationFilter<SwaggerFileOperationFilter>();
 });
 // Add services to the container.
 //Add cors

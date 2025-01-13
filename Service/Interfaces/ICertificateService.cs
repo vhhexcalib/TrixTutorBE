@@ -10,6 +10,6 @@ namespace Service.Interfaces
 {
     public interface ICertificateService
     {
-        Task<dynamic> UploadCertificateAsync(CertificateDTO certificateDTO, CurrentUserObject currentUserObject);
+        Task<dynamic> UploadCertificatesAsync(CertificateDTO certificateDTO, CurrentUserObject currentUserObject);
     }
 }

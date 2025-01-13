@@ -22,5 +22,6 @@ namespace Repository.Repositories
 
             return await _context.Certificate.AnyAsync(a => a.TutorId == id);
         }
+
     }
 }

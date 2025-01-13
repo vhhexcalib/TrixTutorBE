@@ -34,12 +34,19 @@ namespace TrixTutorAPI.Controllers
                 var account = await _unitOfWork.AccountRepository.GetAccountByEmail(receptor);
                 if (account != null)
                 {
-                    var flag = await _confirmationOTPService.CheckEmailExistAsync(receptor);
-                    if (flag) return BadRequest("The OTP is still valid, please enter the OTP");
+                    if (account.IsEmailConfirm == true)
+                    {
+                        return BadRequest("The email has been verified, please login!");
+                    }
                     else
                     {
-                        await _emailService.SendEmail(receptor);
-                        return Ok("The OTP email has been resent");
+                        var flag = await _confirmationOTPService.CheckEmailExistAsync(receptor);
+                        if (flag) return BadRequest("The OTP is still valid, please enter the OTP");
+                        else
+                        {
+                            await _emailService.SendEmail(receptor);
+                            return Ok("The OTP email has been resent");
+                        }
                     }
                 }
                 else return BadRequest("The email has not been created as an account, please create an account");

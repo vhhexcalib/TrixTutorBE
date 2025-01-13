@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20250113074359_InitMigration")]
+    [Migration("20250113095948_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -132,6 +132,9 @@ namespace DataAccess.Context.Migrations
 
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("UploadedAt")
+                        .HasColumnType("date");
 
                     b.Property<bool>("Verified")
                         .HasColumnType("bit");

@@ -3,6 +3,7 @@ using BusinessObject;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using Repository.Interfaces;
+using Service.Common;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -38,12 +39,13 @@ namespace Service.Services
             };
             string subject = "TRIX TUTOR REGISTERING CONFIRMATION EMAIL";
             string body = RandomGenerateOTP();
+            string encodedotp = await HassPassword.HassPass(body);
             string emailBody = GenerateEmailBody(receptor, body);
             var message = new MailMessage(email, receptor, subject, emailBody)
             {
                 IsBodyHtml = true
             };
-            var otp = new ConfirmationOTP() { Email = receptor, OTP = body, CreatedAt = DateTime.Now };
+            var otp = new ConfirmationOTP() { Email = receptor, OTP = encodedotp, CreatedAt = DateTime.Now };
             await _unitOfWork.ConfirmationOTPRepository.AddAsync(otp);
             await _unitOfWork.SaveAsync();
             await smtpClient.SendMailAsync(message);
@@ -71,7 +73,7 @@ namespace Service.Services
         private string RandomGenerateOTP()
         {
             Random rnd = new Random();
-            int newOtp = rnd.Next(10000000, 99999999);
+            int newOtp = rnd.Next(100000, 999999);
             string otp = newOtp.ToString();
             return otp;
         }

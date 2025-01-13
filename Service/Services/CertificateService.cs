@@ -26,28 +26,61 @@ namespace Service.Services
             _mapper = mapper;
             _certFileService = certFileService;
         }
-        public async Task<dynamic> UploadCertificateAsync(CertificateDTO certificateDTO, CurrentUserObject currentUserObject)
+        public async Task<dynamic> UploadCertificatesAsync(CertificateDTO certificateDTO, CurrentUserObject currentUserObject)
         {
-            var check = await _unitOfWork.CertificateRepository.CheckExistCertificateByTutorID(currentUserObject.AccountId);
-            if (!check)
-            {
-                if (certificateDTO.Certification.Length > 500 * 1024 * 1024)
-                {
-                    return "Certificate file size exceeds the 500MB limit";
-                }
-                var certFileUrl = await _certFileService.SaveFile("certificate", certificateDTO.AttachmentFile);
+            var newCertificates = new List<Certificate>();
+            var errors = new List<string>();
 
-                var newCert = new Certificate
+            foreach (var attachmentFile in certificateDTO.AttachmentFiles)
+            {
+                // Validate file size
+                if (attachmentFile.Length > 500 * 1024 * 1024)
                 {
-                    Certification = certFileUrl,
-                    TutorId = currentUserObject.AccountId,
-                    Verified = false
-                };
-                await _unitOfWork.CertificateRepository.AddAsync(newCert);
-                await _unitOfWork.SaveAsync();
-                return Result.Success();
+                    return Result.Failure(CertificateErrors.OverLimitSize);
+                }
+
+                try
+                {
+                    // Save certificate file
+                    var certFileUrl = await _certFileService.SaveFile("certificate", attachmentFile);
+                    // Create certificate entity
+                    var newCert = new Certificate
+                    {
+                        Certification = certFileUrl,
+                        TutorId = currentUserObject.AccountId,
+                        Verified = false,
+                        UploadedAt = DateOnly.FromDateTime(DateTime.Now)
+                    };
+
+                    newCertificates.Add(newCert);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"Failed to process file {attachmentFile.FileName}: {ex.Message}");
+                }
             }
-            else { return Result.Failure(CertificateErrors.ExistedCertificate);  }
+
+            // Save all valid certificates
+            if (newCertificates.Any())
+            {
+                try
+                {
+                    await _unitOfWork.CertificateRepository.AddRangeAsync(newCertificates);
+                    var saveResult = await _unitOfWork.SaveAsync();
+
+                    if (saveResult != "Save Change Success")
+                    {
+                        return Result.Failure(CertificateErrors.UploadFail);
+                    }
+                    else return Result.Success();
+                }
+                catch (Exception ex)
+                {
+                    return Result.Failure(CertificateErrors.UploadFail);
+                }
+            }
+
+            return Result.Failure(CertificateErrors.UploadFail);
         }
     }
 }

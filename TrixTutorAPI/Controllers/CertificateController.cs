@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
 using Service.Interfaces;
-using Service.Services;
 using TrixTutorAPI.Helper;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Service.DTOs.AccountDTO;
 
 namespace TrixTutorAPI.Controllers
 {
@@ -21,17 +22,20 @@ namespace TrixTutorAPI.Controllers
         }
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost("certificate")]
-        public async Task<IActionResult> UploadCertificate([FromForm] CertificateDTO certificateDTO)
+        [HttpPost("certificates")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadCertificates([FromForm] CertificateDTO certificateDTOs)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-                var result = await _certificateService.UploadCertificateAsync(certificateDTO, currentUserObject);
+                var result = await _certificateService.UploadCertificatesAsync(certificateDTOs, currentUserObject);
+
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
             }
@@ -40,6 +44,5 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
     }
 }

@@ -130,6 +130,9 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("UploadedAt")
+                        .HasColumnType("date");
+
                     b.Property<bool>("Verified")
                         .HasColumnType("bit");
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject;
 using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
@@ -76,6 +77,11 @@ namespace Repository.Repositories
         public async Task<bool> DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
+            return true;
+        }
+        public async Task<bool> AddRangeAsync(IEnumerable<T> entities)
+        {
+           await _dbSet.AddRangeAsync(entities);
             return true;
         }
 

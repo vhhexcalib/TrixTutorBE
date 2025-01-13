@@ -187,6 +187,7 @@ namespace DataAccess.Context.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Certification = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Verified = table.Column<bool>(type: "bit", nullable: false),
+                    UploadedAt = table.Column<DateOnly>(type: "date", nullable: false),
                     TutorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
