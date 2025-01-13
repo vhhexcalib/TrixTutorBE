@@ -12,7 +12,7 @@ namespace Service.Interfaces
         Task<string> SaveFile(string containerName, IFormFile file);
         Task DeleteFile(string containerName, string FileRoute);
         Task<string> EditFile(string containerName, IFormFile file, string path);
-        public Task<string> SaveFileCourse(IFormFile file);
+        public Task<string> SaveFile(IFormFile file);
         public Task<string> SaveFileStepURL(string url);
     }
 }

@@ -21,6 +21,8 @@ namespace Repository.Repositories
         public ITutorInformationRepository TutorInformationRepository { get; set; }
         public IFeedbackRepository FeedbackRepository { get; set; }
         public IBankInformationRepository BankInformationRepository { get; set; }
+        public ICertificateRepository CertificateRepository { get; set; }
+
 
 
 
@@ -36,7 +38,7 @@ namespace Repository.Repositories
             TutorInformationRepository = new TutorInformationRepository(_context);
             FeedbackRepository = new FeedbackRepository(_context);
             BankInformationRepository = new BankInformationRepository(_context);
-
+            CertificateRepository = new CertificateRepository(_context);
         }
         public async Task<string> SaveAsync()
         {

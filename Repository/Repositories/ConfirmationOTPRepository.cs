@@ -31,7 +31,7 @@ namespace Repository.Repositories
             var now = DateTime.Now;
 
             var expiredOTP = await _context.ConfirmationOTP
-                .Where(x => now >= x.CreatedAt.AddMinutes(5))
+                .Where(x => now >= x.CreatedAt.AddMinutes(1))
                 .FirstOrDefaultAsync();
 
             return expiredOTP;

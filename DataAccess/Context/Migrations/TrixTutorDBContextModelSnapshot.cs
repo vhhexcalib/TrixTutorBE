@@ -127,11 +127,11 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("UploadedAt")
+                        .HasColumnType("date");
 
                     b.Property<bool>("Verified")
                         .HasColumnType("bit");
@@ -308,6 +308,14 @@ namespace DataAccess.Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TutorCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Toan hoc",
+                            Quantity = 1
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.TutorContact", b =>
@@ -382,6 +390,22 @@ namespace DataAccess.Context.Migrations
                     b.HasIndex("TutorCategoryId");
 
                     b.ToTable("TutorInformation");
+
+                    b.HasData(
+                        new
+                        {
+                            TutorId = 1,
+                            CV = "link",
+                            Degree = "link",
+                            ExperienceYear = "10Year",
+                            GeneralProfile = "general profile",
+                            HighestSalaryPerHour = 0m,
+                            Language = "Vietnamese",
+                            LowestSalaryPerHour = 0m,
+                            TeachingStyle = "fun",
+                            TotalTeachDay = 0,
+                            TutorCategoryId = 1
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Account", b =>

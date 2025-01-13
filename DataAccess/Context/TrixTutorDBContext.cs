@@ -34,6 +34,9 @@ namespace DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Tutor Category Configuration
+            modelBuilder.ApplyConfiguration(new TutorCategoryConfiguration());
+
             // SystemAccount Configuration
             modelBuilder.ApplyConfiguration(new SystemAccountConfiguration());
 
@@ -42,6 +45,9 @@ namespace DataAccess.Context
 
             // Role Configuration
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
+            // Tutor Information Configuration
+            modelBuilder.ApplyConfiguration(new TutorInformationConfiguration());
 
             // Account -> Role: 1-N
             modelBuilder.Entity<Account>()

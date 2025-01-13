@@ -42,6 +42,7 @@ builder.Services.AddSwaggerGen(option =>
     });
     option.DocumentFilter<CustomDocumentFilter>();
     option.SchemaFilter<SimpleEnumSchemaFilter>();
+    option.OperationFilter<SwaggerFileOperationFilter>();
 });
 // Add services to the container.
 //Add cors
@@ -98,7 +99,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(); 
 }
 app.UseCors(builder =>
 {

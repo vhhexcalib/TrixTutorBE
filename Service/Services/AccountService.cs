@@ -100,10 +100,12 @@ namespace Service.Services
         }
         public async Task<dynamic> OTPConfirmation(string email, string otp)
         {
+            string encodedOtp = await HassPassword.HassPass(otp);
             var otpfounded= await _unitOfWork.ConfirmationOTPRepository.GetOTPByEmail(email);
+
             if (otpfounded != null)
             {
-                if(otpfounded.OTP == otp)
+                if(otpfounded.OTP == encodedOtp)
                 {
                     await _unitOfWork.ConfirmationOTPRepository.DeleteAsync(otpfounded);
                     var account = await _unitOfWork.AccountRepository.GetAccountByEmail(email);

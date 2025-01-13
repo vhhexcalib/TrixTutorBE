@@ -21,6 +21,7 @@ public static class DependencyInjectionHelper
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
         services.AddScoped<IConfirmationOTPRepository, ConfirmationOTPRepository>();
+        services.AddScoped<ICertFileRepository, CertFileRepository>();
 
         // Register services
         services.AddScoped<ISystemAccountService, SystemAccountService>();
@@ -30,6 +31,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IConfirmationOTPService, ConfirmationOTPService>();
         services.AddScoped<IFileService, FileService>();
+        services.AddScoped<ICertificateService, CertificateService>();
+        services.AddScoped<ICertFileService, CertFileService>();
 
         return services;
     }

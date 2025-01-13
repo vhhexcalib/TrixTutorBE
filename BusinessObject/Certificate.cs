@@ -15,7 +15,7 @@ namespace BusinessObject
         public int Id { get; set; }
         public string Certification { get; set; }
         public bool Verified { get; set; }
-        public bool IsDeleted { get; set; }
+        public DateOnly UploadedAt { get; set; }
         [ForeignKey("TutorInformation")]
         public int TutorId { get; set; } 
         public virtual TutorInformation TutorInformation { get; set; }
