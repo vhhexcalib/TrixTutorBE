@@ -70,7 +70,7 @@ namespace TrixTutorAPI.Controllers
             }
         }
         [HttpPost("{email}/otp-confirmation")]
-        public async Task<IActionResult> OTPConfirmation(string email, string otp)
+        public async Task<IActionResult> OTPConfirmation([FromBody] OtpDTO otp)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
-                var result = await _accountService.OTPConfirmation(email, otp);
+                var result = await _accountService.OTPConfirmation(otp.Email, otp.OTP);
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
             }
