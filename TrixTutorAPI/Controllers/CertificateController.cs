@@ -22,7 +22,7 @@ namespace TrixTutorAPI.Controllers
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("certificate")]
-        public async Task<IActionResult> UploadCertificate([FromBody] CertificateDTO certificateDTO)
+        public async Task<IActionResult> UploadCertificate([FromForm] CertificateDTO certificateDTO)
         {
             if (!ModelState.IsValid)
             {

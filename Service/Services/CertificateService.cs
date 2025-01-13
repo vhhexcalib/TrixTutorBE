@@ -35,10 +35,11 @@ namespace Service.Services
                 {
                     return "Certificate file size exceeds the 500MB limit";
                 }
-                var courseFileUrl = await _certFileService.SaveFile(certificateDTO.AttachmentFile);
+                var certFileUrl = await _certFileService.SaveFile("certificate", certificateDTO.AttachmentFile);
+
                 var newCert = new Certificate
                 {
-                    Certification = courseFileUrl,
+                    Certification = certFileUrl,
                     TutorId = currentUserObject.AccountId,
                     Verified = false
                 };
