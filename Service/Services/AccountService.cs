@@ -83,7 +83,14 @@ namespace Service.Services
             createdAccount.IsEmailConfirm = false;
             createdAccount.IsBan = false;
             createdAccount.RoleId = 3;
+            createdAccount.Avatar = "avatar link";
             await _unitOfWork.AccountRepository.CreateAccount(createdAccount);
+            await _unitOfWork.SaveAsync();
+            var existedaccount = await _unitOfWork.AccountRepository.GetAccountByEmail(registerAccount.Email);
+            if (existedaccount == null)
+            {
+                return Result.Failure(RegisterErrors.InvalidEmail);
+            }
             var role = await _unitOfWork.RoleRepository.GetByIdAsync(createdAccount.RoleId);
             role.Quantity++;
             await _unitOfWork.RoleRepository.UpdateAsync(role);
@@ -121,7 +128,7 @@ namespace Service.Services
             string oldPassword = await HassPassword.HassPass(password.OldPassword);
             if (account.Password == oldPassword)
             {
-                account.Password = await HassPassword.HassPass(password.Password);
+                account.Password = await HassPassword.HassPass(password.NewPassword);
                 var update = await _unitOfWork.AccountRepository.UpdateAsync(account);
                 await _unitOfWork.SaveAsync();
                 return Result.Success();

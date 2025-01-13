@@ -57,11 +57,12 @@ namespace DataAccess.Context
                 .HasForeignKey(sa => sa.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Account -> BankInformation: 1-1
-            modelBuilder.Entity<Account>()
-                .HasOne(a => a.BankInformations) 
-                .WithOne(b => b.Account)   
-                .HasForeignKey<BankInformation>(b => b.AccountId);  
+            // TutorInformation -> BankInformation: 1-1
+            modelBuilder.Entity<TutorInformation>()
+                .HasOne(ti => ti.BankInformation)
+                .WithOne(bi => bi.TutorInformation)
+                .HasForeignKey<BankInformation>(bi => bi.TutorId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Account -> Feedback: 1-N
             modelBuilder.Entity<Account>()

@@ -11,13 +11,11 @@ namespace BusinessObject
     public class BankInformation
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        [ForeignKey("TutorInformation")]
+        public int TutorId { get; set; }
+        public virtual TutorInformation TutorInformation { get; set; }
         public string BankNumber { get; set; }
         public string BankName { get; set; }
 
-        [ForeignKey("Account")]
-        public int AccountId { get; set; }
-        public Account Account { get; set; }
     }
 }

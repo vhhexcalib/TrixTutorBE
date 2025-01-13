@@ -23,7 +23,7 @@ namespace Service.Mappings
             //system account
             CreateMap<SystemAccount, CurrentUserObject>().ReverseMap();
             //account
-            CreateMap<RegisterAccountDTO, Account>();
+            CreateMap<RegisterAccountDTO, Account>().ReverseMap();
             CreateMap<Account, CurrentUserObject>().ReverseMap();
 
         }
