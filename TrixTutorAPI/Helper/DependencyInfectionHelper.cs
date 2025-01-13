@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Service.Interfaces;
@@ -10,11 +11,19 @@ namespace TrixTutorAPI.Helper
     {
         public static IServiceCollection AddServicesConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            // Register BlobServiceClient
+            services.AddSingleton(_ =>
+            {
+                var connectionString = configuration["AzureBlobStorage:ConnectionString"];
+                return new BlobServiceClient(connectionString);
+            });
+
             //repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
             services.AddScoped<IConfirmationOTPRepository, ConfirmationOTPRepository>();
+
             //service
             services.AddScoped<ISystemAccountService, SystemAccountService>();
             services.AddScoped<ITokenService, TokenService>();

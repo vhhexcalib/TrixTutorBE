@@ -32,7 +32,7 @@ namespace Service.Services
             return _certFileRepository.SaveFile(containerName, file);
         }
 
-        public Task<string> SaveFileCourse(IFormFile file) => _certFileRepository.SaveFile(file);
+        public Task<string> SaveFile(IFormFile file) => _certFileRepository.SaveFile(file);
         public Task<string> SaveFileStepURL(string url) => _certFileRepository.SaveFileFromUrl(url);
     }
 }

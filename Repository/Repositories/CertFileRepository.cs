@@ -8,6 +8,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using DataAccess.Context;
 
 namespace Repository.Repositories
 {
@@ -16,12 +17,13 @@ namespace Repository.Repositories
         private readonly BlobServiceClient _blobServiceClient;
         private readonly string _connectionString;
         private readonly string _containerName;
-
-        public CertFileRepository(IConfiguration configuration)
+        private readonly TrixTutorDBContext _context;
+        public CertFileRepository(IConfiguration configuration, TrixTutorDBContext context)
         {
             _connectionString = configuration["AzureBlobStorage:ConnectionString"];
             _containerName = configuration["AzureBlobStorage:ContainerName"];
             _blobServiceClient = new BlobServiceClient(_connectionString);
+            _context = context;
         }
 
         public async Task<string> SaveFile(string containerName, IFormFile file)

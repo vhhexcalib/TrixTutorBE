@@ -17,6 +17,7 @@ namespace Repository.Interfaces
         ITutorInformationRepository TutorInformationRepository { get; }
         IFeedbackRepository FeedbackRepository { get; }
         IBankInformationRepository BankInformationRepository { get; }
+        ICertificateRepository CertificateRepository { get; }
         Task<string> SaveAsync();
     }
 }

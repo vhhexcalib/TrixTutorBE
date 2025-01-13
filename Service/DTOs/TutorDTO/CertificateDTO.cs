@@ -13,8 +13,5 @@ namespace Service.DTOs.TutorDTO
     {
         public IFormFile AttachmentFile { get; set; } = null!;
         public string Certification { get; set; }
-        public bool Verified { get; set; }
-        public bool IsDeleted { get; set; }
-        public int TutorId { get; set; }
     }
 }
