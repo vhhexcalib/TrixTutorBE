@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.TutorDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,17 @@ namespace Service.Mappings
             //account
             CreateMap<RegisterAccountDTO, Account>().ReverseMap();
             CreateMap<Account, CurrentUserObject>().ReverseMap();
+            CreateMap<Account, TutorProfileDTO>()
+            .ForMember(dest => dest.GeneralProfile, opt => opt.MapFrom(src => src.TutorInformation.GeneralProfile))
+            .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.TutorInformation.Language))
+            .ForMember(dest => dest.Degree, opt => opt.MapFrom(src => src.TutorInformation.Degree))
+            .ForMember(dest => dest.ExperienceYear, opt => opt.MapFrom(src => src.TutorInformation.ExperienceYear))
+            .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
+            .ForMember(dest => dest.CV, opt => opt.MapFrom(src => src.TutorInformation.CV))
+            .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
+            .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
+            .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
+            .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
 
         }
     }

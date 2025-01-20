@@ -33,6 +33,7 @@ public static class DependencyInjectionHelper
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<ICertificateService, CertificateService>();
         services.AddScoped<ICertFileService, CertFileService>();
+        services.AddScoped<ITutorInformationService, TutorInformationService>();
 
         return services;
     }

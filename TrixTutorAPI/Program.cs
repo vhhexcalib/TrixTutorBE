@@ -9,6 +9,7 @@ using Service.Interfaces;
 using Service.Mappings;
 using Service.Services;
 using System.Text;
+using System.Text.Json.Serialization;
 using TrixTutorAPI.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,7 +85,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("LecturerOnly", policy => policy.RequireRole("4"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("3", "4"));
 });
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);                  //automapper
 builder.Services.AddControllers();
