@@ -9,6 +9,6 @@ namespace Repository.Interfaces
 {
     public interface ITutorInformationRepository : IRepository<TutorInformation>
     {
-
+        Task<Account> GetProfile(int id);
     }
 }

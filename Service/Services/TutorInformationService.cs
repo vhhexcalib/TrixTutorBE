@@ -1,25 +1,79 @@
 ﻿using AutoMapper;
 using BusinessObject;
+using Microsoft.AspNetCore.Http;
 using Repository.Interfaces;
+using Service.Common;
+using Service.DTOs.AccountDTO;
+using Service.DTOs.TutorDTO;
+using Service.Exceptions;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Service.Services
 {
     public class TutorInformationService : ITutorInformationService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICertFileService _certFileService;
         private readonly IMapper _mapper;
 
-        public TutorInformationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public TutorInformationService(IUnitOfWork unitOfWork, IMapper mapper, ICertFileService certFileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _certFileService = certFileService;
         }
-        
+        public async Task<dynamic> GetProfile(CurrentUserObject currentUserObject)
+        {
+            var account = await _unitOfWork.TutorInformationRepository.GetProfile(currentUserObject.AccountId);
+            if (account == null || account.TutorInformation == null)
+            {
+                return Result.Failure(TutorErrors.FailGettingAccount);
+            }
+
+            var tutorProfile = _mapper.Map<TutorProfileDTO>(account);
+
+            // Lấy tên danh mục
+            var tutorCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(account.TutorInformation.TutorCategoryId);
+            tutorProfile.TutorCategoryName = tutorCategory.Name;
+
+            return Result.SuccessWithObject(tutorProfile);
+        }
+        public async Task<dynamic> UploadAvatar(IFormFile attachmentFile, CurrentUserObject currentUserObject)
+        {
+            // Validate file size
+            if (attachmentFile.Length > 500 * 1024 * 1024)
+            {
+                return Result.Failure(TutorErrors.OverLimitSize);
+            }
+
+            try
+            {
+                // Save avata file
+                var avaFileUrl = await _certFileService.SaveFile(attachmentFile);
+                var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+                account.Avatar = avaFileUrl;
+                // Save the avata to the database
+                await _unitOfWork.AccountRepository.UpdateAsync(account);
+                var saveResult = await _unitOfWork.SaveAsync();
+
+                if (saveResult != "Save Change Success")
+                {
+                    return Result.Failure(TutorErrors.UploadFail);
+                }
+
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                return Result.Failure(TutorErrors.UploadFail);
+            }
+        }
     }
 }

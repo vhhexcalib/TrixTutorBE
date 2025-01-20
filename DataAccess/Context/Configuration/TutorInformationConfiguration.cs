@@ -17,7 +17,7 @@ namespace DataAccess.Context.Configuration
                 (
                 new TutorInformation
                 {
-                    TutorId = 1,
+                    TutorId = 2,
                     GeneralProfile = "general profile",
                     Language = "Vietnamese",
                     Degree = "link",
@@ -28,7 +28,6 @@ namespace DataAccess.Context.Configuration
                     HighestSalaryPerHour = 0,
                     TeachingStyle = "fun",
                     TutorCategoryId = 1,
-                    
                 }
                 );
         }
