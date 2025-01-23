@@ -210,6 +210,5 @@ namespace Service.Services
             return _mapper.Map<IEnumerable<AllTutorDTO>>(accounts);
         }
 
-
     }
 }

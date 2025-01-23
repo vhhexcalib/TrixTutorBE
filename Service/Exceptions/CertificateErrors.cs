@@ -15,5 +15,7 @@ namespace Service.Exceptions
         public static Error SaveManyUploadFail => new("Upload Certificate", "Lưu nhiều chứng chỉ tải lên không thành công.");
         public static Error FailProcess => new("Upload Certificate", "Xử lý chứng chỉ không thành công.");
         public static Error OverLimitSize => new("Upload Certificate", "Dung lượng tệp không được vượt quá giới hạn 500MB.");
+        public static Error FailGetCertificatesByTutorId => new("Get Certificates", "Giảng viên chưa upload chứng chỉ.");
+
     }
 }

@@ -68,7 +68,7 @@ namespace Service.Services
                     await _unitOfWork.CertificateRepository.AddRangeAsync(newCertificates);
                     var saveResult = await _unitOfWork.SaveAsync();
 
-                    if (saveResult != "Save Change Thành Công")
+                    if (saveResult != "Save Change Success")
                     {
                         return Result.Failure(CertificateErrors.SaveUploadFail);
                     }
@@ -82,5 +82,11 @@ namespace Service.Services
 
             return Result.Failure(CertificateErrors.UploadFail);
         }
+        public async Task<IEnumerable<TutorCertificatesDTO>> GetCertificatesByTutorId(int id)
+        {
+            var listCert = await _unitOfWork.CertificateRepository.GetCertificatesByTutorId(id);           
+            return _mapper.Map<IEnumerable<TutorCertificatesDTO>>(listCert);
+        }
     }
+
 }

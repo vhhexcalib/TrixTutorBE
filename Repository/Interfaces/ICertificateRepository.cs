@@ -10,5 +10,6 @@ namespace Repository.Interfaces
     public interface ICertificateRepository : IRepository<Certificate>
     {
         Task<bool> CheckExistCertificateByTutorID(int id);
+        Task<IEnumerable<Certificate>> GetCertificatesByTutorId(int tutorId);
     }
 }

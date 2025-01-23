@@ -7,6 +7,7 @@ using TrixTutorAPI.Helper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Service.DTOs.AccountDTO;
+using Service.Services;
 
 namespace TrixTutorAPI.Controllers
 {
@@ -20,7 +21,7 @@ namespace TrixTutorAPI.Controllers
         {
             _certificateService = certificateService;
         }
-        [Authorize(Policy = "UserOnly")]
+        [Authorize(Policy = "LecturerOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("certificates")]
         [Consumes("multipart/form-data")]
@@ -38,6 +39,23 @@ namespace TrixTutorAPI.Controllers
 
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpGet("{id}/certificates")]
+        public async Task<IActionResult> GetCertificatesByTutorId(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _certificateService.GetCertificatesByTutorId(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {

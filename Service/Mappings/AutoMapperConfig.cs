@@ -44,6 +44,9 @@ namespace Service.Mappings
             CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
             //tutor category
             CreateMap<TutorCategory, TutorCategoryDTO>().ReverseMap();
+            //certificate
+            CreateMap<Certificate, TutorCertificatesDTO>().ReverseMap();
+
         }
     }
 }

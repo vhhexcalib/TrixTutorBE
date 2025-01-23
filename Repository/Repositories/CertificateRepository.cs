@@ -22,5 +22,9 @@ namespace Repository.Repositories
 
             return await _context.Certificate.AnyAsync(a => a.TutorId == id);
         }
+        public async Task<IEnumerable<Certificate>> GetCertificatesByTutorId(int tutorId)
+        {
+            return await _context.Certificate.Where(c => c.TutorId == tutorId).ToListAsync();
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Service.Interfaces
     public interface ICertificateService
     {
         Task<dynamic> UploadCertificatesAsync(CertificateDTO certificateDTO, CurrentUserObject currentUserObject);
+        Task<IEnumerable<TutorCertificatesDTO>> GetCertificatesByTutorId(int id);
     }
 }
