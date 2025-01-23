@@ -70,7 +70,7 @@ namespace Service.Services
 
                     if (saveResult != "Save Change Success")
                     {
-                        return Result.Failure(CertificateErrors.UploadFail);
+                        return Result.Failure(CertificateErrors.SaveUploadFail);
                     }
                     else return Result.Success();
                 }
