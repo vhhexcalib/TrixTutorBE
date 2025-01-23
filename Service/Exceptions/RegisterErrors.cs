@@ -9,9 +9,9 @@ namespace Service.Exceptions
 {
     public static class RegisterErrors
     {
-        public static Error InvalidEmail => new("Create Account", "Email has been used, please use another email");
-        public static Error InvalidPhone => new("Create Account", "Phone number has been used, please use another number");
-        public static Error FailCreating => new("Create Account", "The account have not been created yet");
+        public static Error InvalidEmail => new("Create Account", "Email đã được sử dụng, vui lòng sử dụng email khác");
+        public static Error InvalidPhone => new("Create Account", "Số điện thoại đã được sử dụng, vui lòng sử dụng số khác");
+        public static Error FailCreating => new("Create Account", "Tài khoản chưa được tạo thành công");
 
 
 

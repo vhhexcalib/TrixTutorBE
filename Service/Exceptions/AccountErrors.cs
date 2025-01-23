@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Service.Exceptions
 {
-    public class ChangePasswordErrors
+    public class AccountErrors
     {
-        public static Error WrongOldPassword => new("Change Password", "Mật khẩu cũ của bạn không đúng!!");
+        public static Error FailGetProfile => new("Get profile", "Tài khoản không tồn tại vui lòng chọn tài khoản khác");
     }
 }

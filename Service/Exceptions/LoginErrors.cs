@@ -9,9 +9,9 @@ namespace Service.Exceptions
 {
     public static class LoginErrors
     {
-        public static Error AccountIsBan => new("Login Account", "Your account is banned!!");
-        public static Error InvalidAccount => new("Login Account", "Wrong email or password");
-        public static Error AccountUnverified => new("Login Account", "Account have not verified by email yet");
+        public static Error AccountIsBan => new("Login Account", "Tài khoản của bạn bị khóa!!");
+        public static Error InvalidAccount => new("Login Account", "Sai email hoặc mật khẩu");
+        public static Error AccountUnverified => new("Login Account", "Tài khoản chưa được xác thực email");
 
     }
 }

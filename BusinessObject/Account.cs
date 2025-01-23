@@ -16,11 +16,12 @@ namespace BusinessObject
         public string Email { get; set; }
         public string Password { get; set; }
         public string Address { get; set; }
+        public string Name { get; set; }
+        public DateOnly Birthday { get; set; }
         public string Avatar { get; set; }
         public string Phone { get; set; }
         [ForeignKey("Role")]
         public int RoleId { get; set; } 
-        public int Age { get; set; }
         public bool IsBan { get; set; }
         public bool IsEmailConfirm { get; set; }
         public virtual Role Role { get; set; } 

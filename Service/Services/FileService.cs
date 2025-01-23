@@ -26,7 +26,7 @@ namespace Service.Services
         {
             if (file == null)
             {
-                throw new ArgumentNullException(nameof(file), "File cannot be null");
+                throw new ArgumentNullException(nameof(file), "File không được null");
             }
 
             // Simulate an asynchronous operation (if needed)
@@ -49,7 +49,7 @@ namespace Service.Services
             // Check file extension
             if (!Array.Exists(allowedExtensions, ext => ext == fileExtension))
             {
-                throw new InvalidOperationException("Unsupported file format.");
+                throw new InvalidOperationException("Định dạng tệp không được hỗ trợ.");
             }
 
             if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == "png")
@@ -86,7 +86,7 @@ namespace Service.Services
             bool exists = await blobClient.ExistsAsync();
             if (!exists)
             {
-                throw new Exception("File upload failed. The file does not exist in the container.");
+                throw new Exception("Tải tệp lên không thành công. Tệp không tồn tại trong container.");
             }
 
             return blobClient.Uri.AbsoluteUri;

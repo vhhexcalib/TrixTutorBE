@@ -12,6 +12,6 @@ namespace Service.DTOs.AccountDTO
         public string Address { get; set; }
         public string Phone { get; set; }
         public string Avatar { get; set; }
-        public int Age { get; set; }
+        public DateOnly Birthday { get; set; }
     }
 }

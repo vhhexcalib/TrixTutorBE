@@ -23,7 +23,6 @@ namespace DataAccess.Context.Configuration
                     Degree = "link",
                     ExperienceYear = "10Year",
                     TotalTeachDay = 0,
-                    CV = "link",
                     LowestSalaryPerHour = 0,
                     HighestSalaryPerHour = 0,
                     TeachingStyle = "fun",

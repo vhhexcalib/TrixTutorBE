@@ -5,7 +5,7 @@ namespace Service.DTOs.TutorDTO
 {
     public class CertificateDTO
     {
-        [Required(ErrorMessage = "Attachment file is required.")]
+        [Required(ErrorMessage = "Tệp đính kèm là bắt buộc.")]
         public List<IFormFile> AttachmentFiles { get; set; } = new List<IFormFile>();
     }
 }

@@ -56,7 +56,7 @@ namespace Service.Services
                 }
                 catch (Exception ex)
                 {
-                    errors.Add($"Failed to process file {attachmentFile.FileName}: {ex.Message}");
+                    errors.Add($"Thất bại trong việc thao tác file {attachmentFile.FileName} vì lí do: {ex.Message}");
                 }
             }
 
@@ -68,7 +68,7 @@ namespace Service.Services
                     await _unitOfWork.CertificateRepository.AddRangeAsync(newCertificates);
                     var saveResult = await _unitOfWork.SaveAsync();
 
-                    if (saveResult != "Save Change Success")
+                    if (saveResult != "Save Change Thành Công")
                     {
                         return Result.Failure(CertificateErrors.SaveUploadFail);
                     }

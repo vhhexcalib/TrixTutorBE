@@ -9,11 +9,12 @@ namespace Service.DTOs.AccountDTO
 {
     public class OtpDTO
     {
-        [Required]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [Required(ErrorMessage = "Vui lòng nhập email.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; }
-        [Required]
-        [MinLength(6, ErrorMessage = "OTP should be minimum 6 characters")]
+
+        [Required(ErrorMessage = "Vui lòng nhập mã OTP.")]
+        [MinLength(6, ErrorMessage = "Mã OTP phải có ít nhất 6 ký tự.")]
         public string OTP { get; set; }
     }
 }

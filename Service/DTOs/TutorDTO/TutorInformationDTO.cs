@@ -9,25 +9,36 @@ namespace Service.DTOs.TutorDTO
 {
     public class TutorInformationDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Thông tin hồ sơ chung là bắt buộc.")]
         public string GeneralProfile { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Ngôn ngữ là bắt buộc.")]
         public string Language { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Trình độ học vấn là bắt buộc.")]
         public string Degree { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Số năm kinh nghiệm là bắt buộc.")]
         public string ExperienceYear { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Tổng số ngày dạy là bắt buộc.")]
         public int TotalTeachDay { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "CV là bắt buộc.")]
         public string CV { get; set; }
-        [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "LowestSalaryPerHour must be greater than or equal to 0.")]
+
+        [Required(ErrorMessage = "Mức lương tối thiểu mỗi giờ là bắt buộc.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Mức lương tối thiểu mỗi giờ phải lớn hơn hoặc bằng 0.")]
         public decimal LowestSalaryPerHour { get; set; }
-        [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "HighestSalaryPerHour must be greater than or equal to 0.")]
+
+        [Required(ErrorMessage = "Mức lương tối đa mỗi giờ là bắt buộc.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Mức lương tối đa mỗi giờ phải lớn hơn hoặc bằng 0.")]
         public decimal HighestSalaryPerHour { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Phong cách giảng dạy là bắt buộc.")]
         public string TeachingStyle { get; set; }
+
+        [Required(ErrorMessage = "Môn học giảng dạy là bắt buộc")]
+        public int TutorCategoryId { get; set; }
     }
 }

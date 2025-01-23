@@ -9,23 +9,29 @@ namespace Service.DTOs.AccountDTO
 {
     public class RegisterAccountDTO
     {
-        [Required]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [Required(ErrorMessage = "Vui lòng nhập email.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; }
 
-        [Required]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Password must contain at least one uppercase letter and one special character.")]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
+        [MinLength(8, ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự.")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Mật khẩu phải có ít nhất một chữ cái viết hoa và một ký tự đặc biệt.")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập ngày sinh.")]
+        [RegularExpression(@"^\d{2}-\d{2}-\d{4}$", ErrorMessage = "Ngày sinh không hợp lệ. Định dạng phải là dd-MM-yyyy.")]
+        public string Birthday { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập họ và tên.")]
+        [RegularExpression(@"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƯĂẮẶẲẴÂẦẤẬẪÇÉÈÊỀẾỆỄÌÍÒÓÔÕƠÙÚƯĂĐĩũơƯăắằẳẵâầấậẫễéèêềếệễòóôõơùúüÿýỳỵỹỶỸ\s]+$", ErrorMessage = "Họ và tên chỉ được chứa chữ và khoảng trắng.")]
         public string Address { get; set; }
 
-        [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải có đúng 10 chữ số.")]
         public string Phone { get; set; }
 
-        [Required]
-        [Range(1, 99, ErrorMessage = "Age must be between 1 and 99.")]
+        [Required(ErrorMessage = "Vui lòng nhập tuổi.")]
+        [Range(1, 99, ErrorMessage = "Tuổi phải nằm trong khoảng từ 1 đến 99.")]
         public int Age { get; set; }
     }
 }

@@ -65,10 +65,11 @@ namespace DataAccess.Context.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<DateOnly>(type: "date", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
                     IsBan = table.Column<bool>(type: "bit", nullable: false),
                     IsEmailConfirm = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -91,6 +92,7 @@ namespace DataAccess.Context.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsBan = table.Column<bool>(type: "bit", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -137,7 +139,6 @@ namespace DataAccess.Context.Migrations
                     Degree = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExperienceYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalTeachDay = table.Column<int>(type: "int", nullable: false),
-                    CV = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LowestSalaryPerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     HighestSalaryPerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TeachingStyle = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -240,26 +241,26 @@ namespace DataAccess.Context.Migrations
 
             migrationBuilder.InsertData(
                 table: "Account",
-                columns: new[] { "Id", "Address", "Age", "Avatar", "Email", "IsBan", "IsEmailConfirm", "Password", "Phone", "RoleId" },
+                columns: new[] { "Id", "Address", "Avatar", "Birthday", "Email", "IsBan", "IsEmailConfirm", "Name", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", 15, "imgurl", "Student@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", 35, "imgurl", "Tutor@gmail.com", false, true, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", "imgurl", new DateOnly(2025, 1, 24), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", "imgurl", new DateOnly(2025, 1, 24), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
                 table: "SystemAccount",
-                columns: new[] { "Id", "Email", "IsBan", "Password", "RoleId" },
+                columns: new[] { "Id", "Email", "IsBan", "Name", "Password", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Admin@gmail.com", false, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 1 },
-                    { 2, "Staff@gmail.com", false, "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 2 }
+                    { 1, "Admin@gmail.com", false, "Admin", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 1 },
+                    { 2, "Staff@gmail.com", false, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "TutorInformation",
-                columns: new[] { "TutorId", "CV", "Degree", "ExperienceYear", "GeneralProfile", "HighestSalaryPerHour", "Language", "LowestSalaryPerHour", "TeachingStyle", "TotalTeachDay", "TutorCategoryId" },
-                values: new object[] { 2, "link", "link", "10Year", "general profile", 0m, "Vietnamese", 0m, "fun", 0, 1 });
+                columns: new[] { "TutorId", "Degree", "ExperienceYear", "GeneralProfile", "HighestSalaryPerHour", "Language", "LowestSalaryPerHour", "TeachingStyle", "TotalTeachDay", "TutorCategoryId" },
+                values: new object[] { 2, "link", "10Year", "general profile", 0m, "Vietnamese", 0m, "fun", 0, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_RoleId",

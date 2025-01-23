@@ -24,6 +24,5 @@ namespace Repository.Repositories
                 .FirstOrDefaultAsync(pf => pf.Id == id);
             return profile;
         }
-
     }
 }

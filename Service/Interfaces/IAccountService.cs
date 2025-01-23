@@ -1,8 +1,10 @@
 ﻿using BusinessObject;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.TutorDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,5 +19,9 @@ namespace Service.Interfaces
         Task<dynamic> OTPConfirmation(string otp, string email);
         Task<dynamic> ChangePassword(PasswordDTO password, CurrentUserObject currentUserObject);
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
+        Task<IEnumerable<AllAccountDTO>> GetAllAccountsAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true);
+        Task<dynamic> GetProfileByIdBasedOnRole(int id);
+        Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true);
+
     }
 }

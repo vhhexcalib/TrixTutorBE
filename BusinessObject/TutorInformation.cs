@@ -19,7 +19,6 @@ namespace BusinessObject
         public string Degree { get; set; }
         public string ExperienceYear { get; set; }
         public int TotalTeachDay { get; set; }
-        public string CV { get; set; }
         public decimal LowestSalaryPerHour { get; set; }
         public decimal HighestSalaryPerHour { get; set; }
         public string TeachingStyle { get; set; }

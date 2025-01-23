@@ -20,6 +20,7 @@ namespace DataAccess.Context.Configuration
                     Id = 1,
                     Email = "Admin@gmail.com",
                     Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", //Trixtutor@123
+                    Name = "Admin",
                     RoleId = 1,
                     IsBan = false
                 },
@@ -28,6 +29,7 @@ namespace DataAccess.Context.Configuration
                      Id = 2,
                      Email = "Staff@gmail.com",
                      Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", //Trixtutor@123
+                     Name = "Tutor",
                      RoleId = 2,
                      IsBan = false
                  }

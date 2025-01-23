@@ -34,12 +34,12 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -50,6 +50,10 @@ namespace DataAccess.Context.Migrations
 
                     b.Property<bool>("IsEmailConfirm")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -73,11 +77,12 @@ namespace DataAccess.Context.Migrations
                         {
                             Id = 1,
                             Address = "HCM",
-                            Age = 15,
                             Avatar = "imgurl",
+                            Birthday = new DateOnly(2025, 1, 24),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
+                            Name = "Student",
                             Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             Phone = "1234567890",
                             RoleId = 3
@@ -86,11 +91,12 @@ namespace DataAccess.Context.Migrations
                         {
                             Id = 2,
                             Address = "HCM",
-                            Age = 35,
                             Avatar = "imgurl",
+                            Birthday = new DateOnly(2025, 1, 24),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
+                            Name = "Tutor",
                             Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             Phone = "0987654321",
                             RoleId = 4
@@ -258,6 +264,10 @@ namespace DataAccess.Context.Migrations
                     b.Property<bool>("IsBan")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -277,6 +287,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Email = "Admin@gmail.com",
                             IsBan = false,
+                            Name = "Admin",
                             Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             RoleId = 1
                         },
@@ -285,6 +296,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Email = "Staff@gmail.com",
                             IsBan = false,
+                            Name = "Tutor",
                             Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             RoleId = 2
                         });
@@ -349,10 +361,6 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CV")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Degree")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -395,7 +403,6 @@ namespace DataAccess.Context.Migrations
                         new
                         {
                             TutorId = 2,
-                            CV = "link",
                             Degree = "link",
                             ExperienceYear = "10Year",
                             GeneralProfile = "general profile",

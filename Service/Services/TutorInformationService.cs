@@ -27,7 +27,8 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _certFileService = certFileService;
-        }
+        }      
+
         public async Task<dynamic> GetProfile(CurrentUserObject currentUserObject)
         {
             var account = await _unitOfWork.TutorInformationRepository.GetProfile(currentUserObject.AccountId);
@@ -74,6 +75,28 @@ namespace Service.Services
                 // Log the error if needed
                 return Result.Failure(TutorErrors.UploadFail);
             }
+        }
+        public async Task<dynamic> CreateTutorInformation(CurrentUserObject currentUserObject, TutorInformationDTO tutorInformationDTO)
+        {
+            var existTutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);
+            if (existTutor == null)
+            {
+                return Result.Failure(TutorErrors.ExistTutorInformation);
+            }
+            var noneExistTutorCategory = await _unitOfWork.TutorContactRepository.GetByIdAsync(tutorInformationDTO.TutorCategoryId);
+            if (noneExistTutorCategory == null)
+            {
+                return Result.Failure(TutorErrors.NoneExistTutorCategory);
+            }
+            var createdInformation = _mapper.Map<TutorInformation>(tutorInformationDTO);
+            await _unitOfWork.TutorInformationRepository.AddAsync(createdInformation);
+            await _unitOfWork.SaveAsync();
+            var existedTutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);
+            if (existedTutor == null)
+            {
+                return Result.Failure(TutorErrors.FailCreatingTutorInformation);
+            }
+            return Result.Success();
         }
     }
 }

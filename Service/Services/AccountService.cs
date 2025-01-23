@@ -6,6 +6,7 @@ using Repository.Repositories;
 using Service.Common;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TokenDTO;
+using Service.DTOs.TutorDTO;
 using Service.Exceptions;
 using Service.Interfaces;
 using System;
@@ -40,7 +41,7 @@ namespace Service.Services
             if (account != null)
             {
                 if (account.IsBan) return Result.Failure(LoginErrors.AccountIsBan);
-                if(!account.IsEmailConfirm) return Result.Failure(LoginErrors.AccountUnverified);
+                if (!account.IsEmailConfirm) return Result.Failure(LoginErrors.AccountUnverified);
                 var currentUser = _mapper.Map<CurrentUserObject>(account);
                 currentUser.AccountEmail = account.Email;
                 currentUser.AccountId = account.Id;
@@ -79,7 +80,7 @@ namespace Service.Services
                 return Result.Failure(RegisterErrors.InvalidPhone);
             }
             var createdAccount = _mapper.Map<Account>(registerAccount);
-            createdAccount.Password =  await HassPassword.HassPass(registerAccount.Password);
+            createdAccount.Password = await HassPassword.HassPass(registerAccount.Password);
             createdAccount.IsEmailConfirm = false;
             createdAccount.IsBan = false;
             createdAccount.RoleId = 3;
@@ -101,11 +102,11 @@ namespace Service.Services
         public async Task<dynamic> OTPConfirmation(string email, string otp)
         {
             string encodedOtp = await HassPassword.HassPass(otp);
-            var otpfounded= await _unitOfWork.ConfirmationOTPRepository.GetOTPByEmail(email);
+            var otpfounded = await _unitOfWork.ConfirmationOTPRepository.GetOTPByEmail(email);
 
             if (otpfounded != null)
             {
-                if(otpfounded.OTP == encodedOtp)
+                if (otpfounded.OTP == encodedOtp)
                 {
                     await _unitOfWork.ConfirmationOTPRepository.DeleteAsync(otpfounded);
                     var account = await _unitOfWork.AccountRepository.GetAccountByEmail(email);
@@ -147,12 +148,68 @@ namespace Service.Services
             {
                 Email = account.Email,
                 Address = account.Address,
-                Age = account.Age,
+                Birthday = account.Birthday,
                 Phone = account.Phone,
                 Avatar = account.Avatar
             };
             return Result.SuccessWithObject(profile);
         }
+        public async Task<dynamic> GetProfileByIdBasedOnRole(int id)
+        {
+
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
+            if (account == null) 
+            { 
+                return Result.Failure(AccountErrors.FailGetProfile); 
+            }
+            else
+            {
+                if (account.RoleId == 3)
+                {
+                    ProfileDTO profile = new ProfileDTO()
+                    {
+                        Email = account.Email,
+                        Address = account.Address,
+                        Birthday = account.Birthday,
+                        Phone = account.Phone,
+                        Avatar = account.Avatar
+                    };
+                    return Result.SuccessWithObject(profile);
+                }
+                if (account.RoleId == 4)
+                {
+                    var tutorAccount = await _unitOfWork.TutorInformationRepository.GetProfile(id);
+                    if (tutorAccount == null || tutorAccount.TutorInformation == null)
+                    {
+                        return Result.Failure(TutorErrors.FailGettingAccount);
+                    }
+
+                    var tutorProfile = _mapper.Map<TutorProfileDTO>(tutorAccount);
+
+                    // Lấy tên danh mục
+                    var tutorCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(tutorAccount.TutorInformation.TutorCategoryId);
+                    tutorProfile.TutorCategoryName = tutorCategory.Name;
+
+                    return Result.SuccessWithObject(tutorProfile);
+                }
+                return Result.Failure(TutorErrors.FailGettingAccount);
+            }
+        }
+        public async Task<IEnumerable<AllAccountDTO>> GetAllAccountsAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true)
+        {
+            var accounts = await _unitOfWork.AccountRepository.GetAllAccountsAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc);
+            return _mapper.Map<IEnumerable<AllAccountDTO>>(accounts);
+        }
+
+        public async Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true)
+        {
+            // Gọi repository để lấy thông tin tài khoản gia sư
+            var accounts = await _unitOfWork.AccountRepository.GetAllAvailableTutorAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc);
+
+            // Ánh xạ sang DTO và trả về
+            return _mapper.Map<IEnumerable<AllTutorDTO>>(accounts);
+        }
+
 
     }
 }

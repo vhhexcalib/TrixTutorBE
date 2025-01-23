@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Common;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.TutorDTO;
 using Service.Interfaces;
 using System.Net.WebSockets;
 using System.Security.Claims;
@@ -16,13 +17,15 @@ namespace TrixTutorAPI.Controllers
     {
         private readonly ISystemAccountService _systemAccountService;
         private readonly IAccountService _accountService;
+        private readonly ITutorInformationService _tutorInformationService;
         private readonly ITokenService _tokenService;
 
-        public AccountController(ISystemAccountService systemAccountService, ITokenService tokenService, IAccountService accountService)
+        public AccountController(ISystemAccountService systemAccountService, ITokenService tokenService, IAccountService accountService, ITutorInformationService tutorInformationService)
         {
             _systemAccountService = systemAccountService;
             _tokenService = tokenService;
             _accountService = accountService;
+            _tutorInformationService = tutorInformationService;
         }
 
         [HttpPost("login")]
@@ -50,7 +53,7 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPost("accounts")]
+        [HttpPost("account")]
         public async Task<IActionResult> CreateAccount([FromBody] RegisterAccountDTO registerAccountDTO)
         {
             if (!ModelState.IsValid)
@@ -129,23 +132,42 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        //// GET: api/Account/profile
-        //[HttpGet("profiles")]
-        //[Authorize] // Chỉ cho phép người dùng đã xác thực
-        //public IActionResult GetProfilse()
-        //{
-        //    // Lấy thông tin người dùng từ Claims
-        //    var userClaims = User.Claims;
-
-        //    // Tạo một đối tượng để lưu thông tin người dùng
-        //    var userProfile = new
-        //    {
-        //        AccountId = userClaims.FirstOrDefault(c => c.Type == "AccountId")?.Value,
-        //        Email = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-        //        Role = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value
-        //    };
-
-        //    return Ok(userProfile); // Trả về thông tin người dùng
-        //}
+        [HttpGet("{id}/tutor-student")]
+        public async Task<IActionResult> GetProfileById(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.GetProfileByIdBasedOnRole(id);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "SystemAccountOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("accounts")]
+        public async Task<IActionResult> GetAllAccounts([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByBirthdayAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.GetAllAccountsAsync(page, size, search, sortByBirthdayAsc);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.TutorDTO;
 using Service.Interfaces;
 using TrixTutorAPI.Helper;
 
@@ -59,6 +60,44 @@ namespace TrixTutorAPI.Controllers
                 var result = await _tutorInformationService.UploadAvatar(attachmentFile, currentUserObject);
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "StudentOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("tutor-information")]
+        public async Task<IActionResult> CreateTutorInformation([FromBody] TutorInformationDTO tutorInformationDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _tutorInformationService.CreateTutorInformation(currentUserObject, tutorInformationDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpGet("available-tutors")]
+        public async Task<IActionResult> GetAllAvailableTutors([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByBirthdayAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _accountService.GetAllAvailableTutorAsync(page, size, search, sortByBirthdayAsc);
+                return Ok(result);
             }
             catch (Exception ex)
             {

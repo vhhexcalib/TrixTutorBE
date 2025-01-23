@@ -32,12 +32,18 @@ namespace Service.Mappings
             .ForMember(dest => dest.Degree, opt => opt.MapFrom(src => src.TutorInformation.Degree))
             .ForMember(dest => dest.ExperienceYear, opt => opt.MapFrom(src => src.TutorInformation.ExperienceYear))
             .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
-            .ForMember(dest => dest.CV, opt => opt.MapFrom(src => src.TutorInformation.CV))
             .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
             .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
             .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
             .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
-
+            CreateMap<Account, AllAccountDTO>().ReverseMap();
+            CreateMap<Account, AllTutorDTO>()
+                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategory.Name))
+                .ReverseMap();
+            //tutor information
+            CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
+            //tutor category
+            CreateMap<TutorCategory, TutorCategoryDTO>().ReverseMap();
         }
     }
 }

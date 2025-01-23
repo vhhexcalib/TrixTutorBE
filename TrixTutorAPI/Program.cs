@@ -84,6 +84,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("StudentOnly", policy => policy.RequireRole("3"));
     options.AddPolicy("LecturerOnly", policy => policy.RequireRole("4"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("3", "4"));
+    options.AddPolicy("SystemAccountOnly", policy => policy.RequireRole("1", "2"));
+
 });
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

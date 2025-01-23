@@ -9,11 +9,12 @@ namespace Service.DTOs.AccountDTO
 {
     public class LoginDTO
     {
-        [Required]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [Required(ErrorMessage = "Email không được để trống.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; }
-        [Required]
-        [MinLength(6, ErrorMessage = "Password should be minimum 6 characters")]
+
+        [Required(ErrorMessage = "Mật khẩu không được để trống.")]
+        [MinLength(6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự.")]
         public string Password { get; set; }
     }
 }
