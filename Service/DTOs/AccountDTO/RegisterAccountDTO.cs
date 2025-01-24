@@ -19,8 +19,7 @@ namespace Service.DTOs.AccountDTO
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập ngày sinh.")]
-        [RegularExpression(@"^\d{2}-\d{2}-\d{4}$", ErrorMessage = "Ngày sinh không hợp lệ. Định dạng phải là dd-MM-yyyy.")]
-        public DateOnly Birthday { get; set; }
+        public DateTime Birthday { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập họ và tên.")]
         [RegularExpression(@"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƯĂẮẶẲẴÂẦẤẬẪÇÉÈÊỀẾỆỄÌÍÒÓÔÕƠÙÚƯĂĐĩũơƯăắằẳẵâầấậẫễéèêềếệễòóôõơùúüÿýỳỵỹỶỸ\s]+$", ErrorMessage = "Họ và tên chỉ được chứa chữ và khoảng trắng.")]

@@ -2,11 +2,6 @@
 using BusinessObject;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Mappings
 {
@@ -14,39 +9,62 @@ namespace Service.Mappings
     {
         public AutoMapperConfig()
         {
-            //login
+            // Login
             CreateMap<LoginDTO, SystemAccount>()
-                            .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
-                            .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
+                .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
+                .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
+
             CreateMap<LoginDTO, Account>()
-                            .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
-                            .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
-            //system account
+                .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email))
+                .ForMember(x => x.Password, opt => opt.MapFrom(x => x.Password));
+
+            // System account
             CreateMap<SystemAccount, CurrentUserObject>().ReverseMap();
-            //account
-            CreateMap<RegisterAccountDTO, Account>().ReverseMap();
+
+            // Account <-> RegisterAccountDTO mapping
+            CreateMap<RegisterAccountDTO, Account>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Birthday)))
+                .ReverseMap()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToDateTime(TimeOnly.MinValue)));
+
+            // AllAccountDTO mapping
+            CreateMap<Account, AllAccountDTO>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday))
+                .ReverseMap()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToDateTime(TimeOnly.MinValue)));
+
+            // AllTutorDTO mapping
+            CreateMap<Account, AllTutorDTO>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday))
+                .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.TutorInformation.Language))
+                .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
+                .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
+                .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
+                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategory.Name))
+                .ReverseMap()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToDateTime(TimeOnly.MinValue)));
+
+            // Account mappings
             CreateMap<Account, CurrentUserObject>().ReverseMap();
             CreateMap<Account, TutorProfileDTO>()
-            .ForMember(dest => dest.GeneralProfile, opt => opt.MapFrom(src => src.TutorInformation.GeneralProfile))
-            .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.TutorInformation.Language))
-            .ForMember(dest => dest.Degree, opt => opt.MapFrom(src => src.TutorInformation.Degree))
-            .ForMember(dest => dest.ExperienceYear, opt => opt.MapFrom(src => src.TutorInformation.ExperienceYear))
-            .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
-            .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
-            .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
-            .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
-            .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
-            CreateMap<Account, AllAccountDTO>().ReverseMap();
-            CreateMap<Account, AllTutorDTO>()
-                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategory.Name))
-                .ReverseMap();
-            //tutor information
-            CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
-            //tutor category
-            CreateMap<TutorCategory, TutorCategoryDTO>().ReverseMap();
-            //certificate
-            CreateMap<Certificate, TutorCertificatesDTO>().ReverseMap();
+                .ForMember(dest => dest.GeneralProfile, opt => opt.MapFrom(src => src.TutorInformation.GeneralProfile))
+                .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.TutorInformation.Language))
+                .ForMember(dest => dest.Degree, opt => opt.MapFrom(src => src.TutorInformation.Degree))
+                .ForMember(dest => dest.ExperienceYear, opt => opt.MapFrom(src => src.TutorInformation.ExperienceYear))
+                .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
+                .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
+                .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
+                .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
+                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
 
+            // Tutor information
+            CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
+
+            // Tutor category
+            CreateMap<TutorCategory, TutorCategoryDTO>().ReverseMap();
+
+            // Certificate
+            CreateMap<Certificate, TutorCertificatesDTO>().ReverseMap();
         }
     }
 }

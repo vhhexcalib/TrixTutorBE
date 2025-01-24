@@ -79,6 +79,7 @@ namespace Service.Services
             {
                 return Result.Failure(RegisterErrors.InvalidPhone);
             }
+
             var createdAccount = _mapper.Map<Account>(registerAccount);
             createdAccount.Password = await HassPassword.HassPass(registerAccount.Password);
             createdAccount.IsEmailConfirm = false;
