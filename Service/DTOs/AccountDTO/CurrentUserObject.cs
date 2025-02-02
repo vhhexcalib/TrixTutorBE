@@ -11,6 +11,7 @@ namespace Service.DTOs.AccountDTO
         public int AccountId { get; set; }
         public string AccountEmail { get; set; }
         public int? RoleId { get; set; }
+        public string AccountName { get; set; }
 
     }
 }

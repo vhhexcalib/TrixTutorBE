@@ -45,6 +45,19 @@ namespace Service.Services
 
             return Result.SuccessWithObject(tutorProfile);
         }
+        public async Task<dynamic> GetProfileById(int id)
+        {
+            var account = await _unitOfWork.TutorInformationRepository.GetProfile(id);
+            if (account == null || account.TutorInformation == null)
+            {
+                return Result.Failure(TutorErrors.FailGettingAccount);
+            }
+            var tutorProfile = _mapper.Map<TutorProfileDTO>(account);
+            // Lấy tên danh mục
+            var tutorCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(account.TutorInformation.TutorCategoryId);
+            tutorProfile.TutorCategoryName = tutorCategory.Name;
+            return Result.SuccessWithObject(tutorProfile);
+        }
         public async Task<dynamic> UploadAvatar(IFormFile attachmentFile, CurrentUserObject currentUserObject)
         {
             // Validate file size

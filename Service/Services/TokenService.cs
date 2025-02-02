@@ -41,7 +41,8 @@ namespace Service.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, currentUserObject.RoleId.ToString()),
                     new Claim(ClaimTypes.Email, currentUserObject.AccountEmail),
-                    new Claim("AccountId", currentUserObject.AccountId.ToString())
+                    new Claim("AccountId", currentUserObject.AccountId.ToString()),
+                    new Claim("AccountName", currentUserObject.AccountName)
 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),

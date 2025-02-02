@@ -46,6 +46,7 @@ namespace Service.Services
                 currentUser.AccountEmail = account.Email;
                 currentUser.AccountId = account.Id;
                 currentUser.RoleId = account.RoleId;
+                currentUser.AccountName = account.Name;
                 var token = await _tokenService.GenerateTokenAsync(currentUser);
                 var accesstoken = await _tokenService.GenerateAccessTokenAsync(token);
                 var tokenDTO = new TokenDTO
