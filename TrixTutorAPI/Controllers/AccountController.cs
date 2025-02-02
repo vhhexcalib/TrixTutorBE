@@ -113,7 +113,7 @@ namespace TrixTutorAPI.Controllers
         }
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("{id}")]
+        [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
             if (!ModelState.IsValid)

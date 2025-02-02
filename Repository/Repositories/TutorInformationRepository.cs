@@ -1,6 +1,7 @@
 ﻿using BusinessObject;
 using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,9 @@ namespace Repository.Repositories
         public async Task<Account> GetProfile(int id)
         {
             var profile = await _context.Account
-                .Include(ti => ti.TutorInformation)
-                .FirstOrDefaultAsync(pf => pf.Id == id);
+    .Include(a => a.TutorInformation)
+    .ThenInclude(ti => ti.TutorCategory) // Include luôn danh mục gia sư
+    .FirstOrDefaultAsync(a => a.Id == id);
             return profile;
         }
     }

@@ -41,7 +41,7 @@ namespace Service.Services
 
             // Lấy tên danh mục
             var tutorCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(account.TutorInformation.TutorCategoryId);
-            tutorProfile.TutorCategoryName = tutorCategory.Name;
+            tutorProfile.TutorCategoryName = account.TutorInformation.TutorCategory?.Name ?? "Chưa có danh mục";
 
             return Result.SuccessWithObject(tutorProfile);
         }

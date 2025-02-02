@@ -56,7 +56,6 @@ namespace Service.Mappings
                 .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
                 .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
                 .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
-
             // Tutor information
             CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
 
