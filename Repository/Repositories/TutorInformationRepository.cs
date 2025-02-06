@@ -21,9 +21,12 @@ namespace Repository.Repositories
         public async Task<Account> GetProfile(int id)
         {
             var profile = await _context.Account
-    .Include(a => a.TutorInformation)
-    .ThenInclude(ti => ti.TutorCategory) // Include luôn danh mục gia sư
-    .FirstOrDefaultAsync(a => a.Id == id);
+                .Include(a => a.TutorInformation)
+                    .ThenInclude(ti => ti.BankInformation) // Include luôn danh mục thông tin ngân hàng
+                .Include(a => a.TutorInformation)
+                    .ThenInclude(ti => ti.TutorCategory) // Include luôn danh mục gia sư
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             return profile;
         }
     }

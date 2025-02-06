@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,7 @@ namespace Service.DTOs.TutorDTO
         public decimal HighestSalaryPerHour { get; set; }
         public string TeachingStyle { get; set; }
         public string TutorCategoryName { get; set; }
+        public string BankName { get; set; }
+        public string BankNumber { get; set; }
     }
 }

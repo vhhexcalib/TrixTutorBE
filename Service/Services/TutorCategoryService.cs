@@ -11,6 +11,7 @@ using Service.Common;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
 using Service.Exceptions;
+using Service.DTOs.CategoryDTO;
 
 namespace Service.Services
 {
@@ -29,21 +30,24 @@ namespace Service.Services
             var categories = await _unitOfWork.TutorCategoryRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<TutorCategoryDTO>>(categories);
         }
-        public async Task<dynamic> GetProfile(CurrentUserObject currentUserObject)
+        public async Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO)
         {
-            var account = await _unitOfWork.TutorInformationRepository.GetProfile(currentUserObject.AccountId);
-            if (account == null || account.TutorInformation == null)
+            var category = new TutorCategory() {Name = createCategoryDTO.CategoryName, Quantity = 0 };
+            var categorybyname = await _unitOfWork.TutorCategoryRepository.GetTutorCategoryByName(category.Name);
+            if(categorybyname == null)
             {
-                return Result.Failure(TutorErrors.FailGettingAccount);
+                return Result.Failure(CategoryErrors.ExistedCategory);
             }
-
-            var tutorProfile = _mapper.Map<TutorProfileDTO>(account);
-
-            // Lấy tên danh mục
-            var tutorCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(account.TutorInformation.TutorCategoryId);
-            tutorProfile.TutorCategoryName = tutorCategory.Name;
-
-            return Result.SuccessWithObject(tutorProfile);
+            await _unitOfWork.TutorCategoryRepository.AddAsync(category);
+            var result = await _unitOfWork.SaveAsync();
+            if (result == "Save Change Success")
+            {
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(CategoryErrors.CreateCategoryFailed);
+            }
         }
     }
 }

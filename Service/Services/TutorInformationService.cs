@@ -102,6 +102,7 @@ namespace Service.Services
                 return Result.Failure(TutorErrors.NoneExistTutorCategory);
             }
             var createdInformation = _mapper.Map<TutorInformation>(tutorInformationDTO);
+            var bankInformation = new BankInformation {TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber" };
             await _unitOfWork.TutorInformationRepository.AddAsync(createdInformation);
             await _unitOfWork.SaveAsync();
             var existedTutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);

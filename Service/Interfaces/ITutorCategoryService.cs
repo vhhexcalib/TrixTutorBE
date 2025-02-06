@@ -1,4 +1,5 @@
-﻿using Service.DTOs.TutorDTO;
+﻿using Service.DTOs.CategoryDTO;
+using Service.DTOs.TutorDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Service.Interfaces
     public interface ITutorCategoryService
     {
         Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync();
+        Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO);
     }
 }

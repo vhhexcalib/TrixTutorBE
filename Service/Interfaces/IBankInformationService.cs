@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.DTOs.AccountDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Service.Interfaces
 {
     public interface IBankInformationService
     {
+        Task<dynamic> UpdateBankInformation(CurrentUserObject currentUserObject, string bankName, string bankNumber);
     }
 }

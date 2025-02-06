@@ -9,6 +9,6 @@ namespace Repository.Interfaces
 {
     public interface ITutorCategoryRepository : IRepository<TutorCategory>
     {
-
+        Task<TutorCategory> GetTutorCategoryByName(string name);
     }
 }

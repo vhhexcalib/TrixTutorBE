@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.CategoryDTO;
 using Service.DTOs.TutorDTO;
 
 namespace Service.Mappings
