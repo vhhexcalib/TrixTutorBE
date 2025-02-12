@@ -17,7 +17,7 @@ using TrixTutorAPI.Helper;
 var builder = WebApplication.CreateBuilder(args);
 // Get JSON from Environment Variable
 var jsonConfig = Environment.GetEnvironmentVariable("APP_SETTINGS_JSON");
-
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 if (!string.IsNullOrEmpty(jsonConfig))
 {
     try
