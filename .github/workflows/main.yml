@@ -40,5 +40,6 @@ jobs:
 
       - name: Set Environment Variables
         run: |
+          # Escape the JSON value to prevent errors due to special characters
           echo "APP_SETTINGS_JSON=${{ secrets.APP_SETTINGS_JSON }}" >> $GITHUB_ENV
           echo "SECRET_SETTINGS_JSON=${{ secrets.SECRET_SETTINGS_JSON }}" >> $GITHUB_ENV
