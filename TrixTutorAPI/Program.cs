@@ -42,14 +42,13 @@ else
 var email = builder.Configuration["EMAIL_CONFIGURATION:EMAIL"];
 var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"];
 var connectionString = builder.Configuration.GetConnectionString("MyDb");
-
+builder.Services.AddTrixTutorDBContext(connectionString);
 // log console to test
 Console.WriteLine($"Email: {email}");
 Console.WriteLine($"Azure Connection: {azureConnection}");
 Console.WriteLine($"DB Connection: {connectionString}");
 
 
-builder.Services.AddTrixTutorDBContext(connectionString);
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "TrixTutorAPI", Version = "v1" });
