@@ -1,5 +1,6 @@
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repository.Interfaces;
@@ -9,11 +10,45 @@ using Service.Interfaces;
 using Service.Mappings;
 using Service.Services;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrixTutorAPI.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
+// Get JSON from Environment Variable
+var jsonConfig = Environment.GetEnvironmentVariable("APP_SETTINGS_JSON");
+
+if (!string.IsNullOrEmpty(jsonConfig))
+{
+    try
+    {
+        var configRoot = new ConfigurationBuilder()
+            .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(jsonConfig)))
+            .Build();
+
+        builder.Configuration.AddConfiguration(configRoot);
+    }
+    catch (JsonException ex)
+    {
+        // Log error here if JSON is invalid
+        Console.WriteLine($"Error parsing JSON: {ex.Message}");
+    }
+}
+else
+{
+    Console.WriteLine("APP_SETTINGS_JSON is not set or empty.");
+}
+// Test if can take variable
+var email = builder.Configuration["EMAIL_CONFIGURATION:EMAIL"];
+var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"];
 var connectionString = builder.Configuration.GetConnectionString("MyDb");
+
+// log console to test
+Console.WriteLine($"Email: {email}");
+Console.WriteLine($"Azure Connection: {azureConnection}");
+Console.WriteLine($"DB Connection: {connectionString}");
+
+
 builder.Services.AddTrixTutorDBContext(connectionString);
 builder.Services.AddSwaggerGen(option =>
 {
@@ -45,6 +80,7 @@ builder.Services.AddSwaggerGen(option =>
     option.SchemaFilter<SimpleEnumSchemaFilter>();
     option.OperationFilter<SwaggerFileOperationFilter>();
 });
+
 // Add services to the container.
 //Add cors
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(policy =>
