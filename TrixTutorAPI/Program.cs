@@ -87,6 +87,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SystemAccountOnly", policy => policy.RequireRole("1", "2"));
 
 });
+//DI
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
