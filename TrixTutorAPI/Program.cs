@@ -16,12 +16,38 @@ using TrixTutorAPI.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 // Get JSON from Environment Variable
-var config = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .AddEnvironmentVariables()
-    .Build();
+// L?y JSON t? bi?n môi tr??ng
+var json = Environment.GetEnvironmentVariable("APP_SETTINGS_JSON");
 
-var connectionString = config["ConnectionStrings:AzureStorage"];
+if (!string.IsNullOrEmpty(json))
+{
+    try
+    {
+        var jsonConfig = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+
+        foreach (var k in jsonConfig.Keys)
+        {
+            if (jsonConfig[k].ValueKind == JsonValueKind.Object)
+            {
+                foreach (var subKey in jsonConfig[k].EnumerateObject())
+                {
+                    builder.Configuration[$"{k}:{subKey.Name}"] = subKey.Value.ToString();
+                }
+            }
+            else
+            {
+                builder.Configuration[k] = jsonConfig[k].ToString();
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"L?i khi parse APP_SETTINGS_JSON: {ex.Message}");
+    }
+}
+
+var connectionString = builder.Configuration["ConnectionStrings:AzureStorage"];
+
 if (string.IsNullOrEmpty(connectionString))
 {
     throw new ArgumentNullException(nameof(connectionString), "AzureStorage connection string is missing.");
@@ -33,9 +59,8 @@ var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"]
 connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddTrixTutorDBContext(connectionString);
 // log console to test
-Console.WriteLine($"Email: {email}");
-Console.WriteLine($"Azure Connection: {azureConnection}");
-Console.WriteLine($"DB Connection: {connectionString}");
+Console.WriteLine($"Email: {builder.Configuration["EMAIL_CONFIGURATION:EMAIL"]}");
+Console.WriteLine($"Azure Connection: {builder.Configuration["AzureBlobStorage:ConnectionString"]}");
 
 
 builder.Services.AddSwaggerGen(option =>
