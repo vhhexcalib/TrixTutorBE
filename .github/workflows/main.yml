@@ -18,7 +18,8 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set Environment Variables
-        run: echo "APP_SETTINGS_JSON=${{ secrets.APP_SETTINGS_JSON }}" >> $GITHUB_ENV
+        run: |
+            echo "APP_SETTINGS_JSON=${{ vars.APP_SETTINGS_JSON }}" >> $GITHUB_ENV
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
