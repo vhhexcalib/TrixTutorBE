@@ -20,6 +20,9 @@ jobs:
       - name: Set Environment Variables
         run: |
             echo "APP_SETTINGS_JSON=${{ vars.APP_SETTINGS_JSON }}" >> $GITHUB_ENV
+            
+      - name: Debug Environment Variables
+        run: echo "$APP_SETTINGS_JSON"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
