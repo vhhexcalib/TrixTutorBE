@@ -15,48 +15,11 @@ using System.Text.Json.Serialization;
 using TrixTutorAPI.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
-// Get JSON from Environment Variable
-// L?y JSON t? bi?n môi tr??ng
-var json = Environment.GetEnvironmentVariable("APP_SETTINGS_JSON");
-
-if (!string.IsNullOrEmpty(json))
-{
-    try
-    {
-        var jsonConfig = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
-
-        foreach (var k in jsonConfig.Keys)
-        {
-            if (jsonConfig[k].ValueKind == JsonValueKind.Object)
-            {
-                foreach (var subKey in jsonConfig[k].EnumerateObject())
-                {
-                    builder.Configuration[$"{k}:{subKey.Name}"] = subKey.Value.ToString();
-                }
-            }
-            else
-            {
-                builder.Configuration[k] = jsonConfig[k].ToString();
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"L?i khi parse APP_SETTINGS_JSON: {ex.Message}");
-    }
-}
-
-var connectionString = builder.Configuration["ConnectionStrings:AzureStorage"];
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new ArgumentNullException(nameof(connectionString), "AzureStorage connection string is missing.");
-}
 
 // Test if can take variable
 var email = builder.Configuration["EMAIL_CONFIGURATION:EMAIL"];
 var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"];
-connectionString = builder.Configuration.GetConnectionString("MyDb");
+var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddTrixTutorDBContext(connectionString);
 // log console to test
 Console.WriteLine($"Email: {builder.Configuration["EMAIL_CONFIGURATION:EMAIL"]}");
