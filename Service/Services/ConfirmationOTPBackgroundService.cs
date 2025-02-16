@@ -25,10 +25,7 @@ public class ConfirmationOTPBackgroundService : BackgroundService
                 {
                     await unitOfWork.ConfirmationOTPRepository.DeleteAsync(expiredOtp);
                     await unitOfWork.SaveAsync();
-                    Console.WriteLine($"Đã xóa OTP hết hạn: {expiredOtp.ToString()}");
                 }
-                else
-                    Console.WriteLine("Không có OTP nào hết hạn");
 
             }
 
