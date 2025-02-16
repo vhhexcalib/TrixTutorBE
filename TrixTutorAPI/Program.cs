@@ -1,5 +1,6 @@
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repository.Interfaces;
@@ -9,12 +10,22 @@ using Service.Interfaces;
 using Service.Mappings;
 using Service.Services;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrixTutorAPI.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Test if can take variable
+var email = builder.Configuration["EMAIL_CONFIGURATION:EMAIL"];
+var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"];
 var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddTrixTutorDBContext(connectionString);
+// log console to test
+Console.WriteLine($"Email: {builder.Configuration["EMAIL_CONFIGURATION:EMAIL"]}");
+Console.WriteLine($"Azure Connection: {builder.Configuration["AzureBlobStorage:ConnectionString"]}");
+
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "TrixTutorAPI", Version = "v1" });
@@ -45,6 +56,7 @@ builder.Services.AddSwaggerGen(option =>
     option.SchemaFilter<SimpleEnumSchemaFilter>();
     option.OperationFilter<SwaggerFileOperationFilter>();
 });
+
 // Add services to the container.
 //Add cors
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(policy =>
@@ -87,6 +99,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SystemAccountOnly", policy => policy.RequireRole("1", "2"));
 
 });
+//DI
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -103,10 +116,10 @@ builder.Services.AddHostedService<ConfirmationOTPBackgroundService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(); 
+    app.UseSwaggerUI();
 }
 app.UseCors(builder =>
 {
