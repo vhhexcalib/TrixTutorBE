@@ -10,6 +10,8 @@ namespace Service.DTOs.TutorDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string? ParentCategory { get; set; } // Lưu tên danh mục cha
         public int Quantity { get; set; }
     }
+
 }

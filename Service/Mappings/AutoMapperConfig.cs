@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Features;
 using BusinessObject;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.CategoryDTO;
@@ -62,6 +63,8 @@ namespace Service.Mappings
 
             // Tutor category
             CreateMap<TutorCategory, TutorCategoryDTO>().ReverseMap();
+
+
 
             // Certificate
             CreateMap<Certificate, TutorCertificatesDTO>().ReverseMap();

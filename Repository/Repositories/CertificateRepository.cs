@@ -19,7 +19,6 @@ namespace Repository.Repositories
         }
         public async Task<bool> CheckExistCertificateByTutorID(int id)
         {
-
             return await _context.Certificate.AnyAsync(a => a.TutorId == id);
         }
         public async Task<IEnumerable<Certificate>> GetCertificatesByTutorId(int tutorId)

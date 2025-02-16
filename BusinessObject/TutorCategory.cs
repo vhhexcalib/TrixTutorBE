@@ -14,14 +14,14 @@ namespace BusinessObject
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ParentCategory { get; set; }
         public int Quantity { get; set; }
+
         public virtual ICollection<TutorInformation> TutorInformations { get; set; }
 
         public TutorCategory()
         {
             TutorInformations = new HashSet<TutorInformation>();
         }
-
     }
+
 }

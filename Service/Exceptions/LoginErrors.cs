@@ -12,6 +12,7 @@ namespace Service.Exceptions
         public static Error AccountIsBan => new("Login Account", "Tài khoản của bạn bị khóa!!");
         public static Error InvalidAccount => new("Login Account", "Sai email hoặc mật khẩu");
         public static Error AccountUnverified => new("Login Account", "Tài khoản chưa được xác thực email");
+        public static Error CertificateNotFound => new("Login Tutor", "Tài khoản giảng viên chưa cập nhật bằng cấp, vui lòng cập nhật bằng cấp!");
 
     }
 }

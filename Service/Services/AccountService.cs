@@ -160,9 +160,9 @@ namespace Service.Services
         {
 
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(id);
-            if (account == null) 
-            { 
-                return Result.Failure(AccountErrors.FailGetProfile); 
+            if (account == null)
+            {
+                return Result.Failure(AccountErrors.FailGetProfile);
             }
             else
             {

@@ -12,6 +12,7 @@ using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
 using Service.Exceptions;
 using Service.DTOs.CategoryDTO;
+using System.Linq.Expressions;
 
 namespace Service.Services
 {
@@ -25,11 +26,16 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync()
+        public async Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync(string? search = null,bool sortByQuantityAsc = true,int page = 1,int size = 10)
         {
-            var categories = await _unitOfWork.TutorCategoryRepository.GetAllAsync();
+            // Gọi repository để lấy danh mục có tìm kiếm và sắp xếp
+            var categories = await _unitOfWork.TutorCategoryRepository.GetAllTutorCategoriesAsync(
+                search, sortByQuantityAsc, page, size);
+
+            // Ánh xạ danh mục sang DTO
             return _mapper.Map<IEnumerable<TutorCategoryDTO>>(categories);
         }
+
         public async Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO)
         {
             var category = new TutorCategory() {Name = createCategoryDTO.CategoryName, Quantity = 0 };

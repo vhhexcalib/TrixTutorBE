@@ -16,15 +16,16 @@ namespace TrixTutorAPI.Controllers
             _tutorCategoryService = tutorCategoryService;
         }
         [HttpGet("categories")]
-        public async Task<IActionResult> GetProfileById()
+        public async Task<IActionResult> GetAllCategories([FromQuery] int page = 1,[FromQuery] int size = 10,[FromQuery] string? search = null,[FromQuery] bool sortByQuantityAsc = true) 
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
-                var result = await _tutorCategoryService.GetAllCategoryAsync();
+                var result = await _tutorCategoryService.GetAllCategoryAsync(search, sortByQuantityAsc, page, size);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -32,6 +33,7 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPost("category")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
         {

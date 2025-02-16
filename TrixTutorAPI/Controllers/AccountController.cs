@@ -72,7 +72,7 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPost("{email}/otp-confirmation")]
+        [HttpPut("otp-confirmation")]
         public async Task<IActionResult> OTPConfirmation([FromBody] OtpDTO otp)
         {
             if (!ModelState.IsValid)

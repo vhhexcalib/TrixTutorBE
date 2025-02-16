@@ -21,10 +21,6 @@ var email = builder.Configuration["EMAIL_CONFIGURATION:EMAIL"];
 var azureConnection = builder.Configuration["AzureBlobStorage:ConnectionString"];
 var connectionString = builder.Configuration.GetConnectionString("MyDb");
 builder.Services.AddTrixTutorDBContext(connectionString);
-// log console to test
-Console.WriteLine($"Email: {builder.Configuration["EMAIL_CONFIGURATION:EMAIL"]}");
-Console.WriteLine($"Azure Connection: {builder.Configuration["AzureBlobStorage:ConnectionString"]}");
-
 
 builder.Services.AddSwaggerGen(option =>
 {

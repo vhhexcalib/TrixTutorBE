@@ -10,5 +10,6 @@ namespace Repository.Interfaces
     public interface ITutorCategoryRepository : IRepository<TutorCategory>
     {
         Task<TutorCategory> GetTutorCategoryByName(string name);
+        Task<IEnumerable<TutorCategory>> GetAllTutorCategoriesAsync(string? search = null, bool sortByQuantityAsc = true, int page = 1, int size = 10);
     }
 }

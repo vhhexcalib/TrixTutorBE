@@ -10,7 +10,7 @@ namespace Service.Interfaces
 {
     public interface ITutorCategoryService
     {
-        Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync();
+        Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync(string? search = null, bool sortByQuantityAsc = true, int page = 1, int size = 10);
         Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO);
     }
 }
