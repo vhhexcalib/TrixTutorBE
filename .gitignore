@@ -398,3 +398,4 @@ appsettings.json
 
 # JetBrains Rider
 *.sln.iml
+TrixTutorAPI/appsettings.json
