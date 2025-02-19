@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessObject;
+using Service.DTOs.RoleDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,6 @@ namespace Service.Interfaces
 {
     public interface IRoleService
     {
+        Task<IEnumerable<RoleDTO>> GetAllRole();
     }
 }

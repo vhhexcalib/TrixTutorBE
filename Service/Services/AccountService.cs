@@ -203,10 +203,10 @@ namespace Service.Services
             return _mapper.Map<IEnumerable<AllAccountDTO>>(accounts);
         }
 
-        public async Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true)
+        public async Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true, string flag = "")
         {
             // Gọi repository để lấy thông tin tài khoản gia sư
-            var accounts = await _unitOfWork.AccountRepository.GetAllAvailableTutorAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc);
+            var accounts = await _unitOfWork.AccountRepository.GetAllAvailableTutorAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc, flag: flag);
 
             // Ánh xạ sang DTO và trả về
             return _mapper.Map<IEnumerable<AllTutorDTO>>(accounts);

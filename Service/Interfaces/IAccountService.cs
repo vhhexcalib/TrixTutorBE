@@ -21,7 +21,6 @@ namespace Service.Interfaces
         Task<dynamic> GetProfile(CurrentUserObject currentUserObject);
         Task<IEnumerable<AllAccountDTO>> GetAllAccountsAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true);
         Task<dynamic> GetProfileByIdBasedOnRole(int id);
-        Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true);
-
+        Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true, string flag = "");
     }
 }

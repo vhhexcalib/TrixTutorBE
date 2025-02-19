@@ -91,7 +91,7 @@ namespace TrixTutorAPI.Controllers
         }
 
         [HttpGet("available-tutors")]
-        public async Task<IActionResult> GetAllAvailableTutors([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByBirthdayAsc = true)
+        public async Task<IActionResult> GetAllAvailableTutors([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByBirthdayAsc = true, [FromQuery] string flag = "")
         {
             if (!ModelState.IsValid)
             {
@@ -99,7 +99,7 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
-                var result = await _accountService.GetAllAvailableTutorAsync(page, size, search, sortByBirthdayAsc);
+                var result = await _accountService.GetAllAvailableTutorAsync(page, size, search, sortByBirthdayAsc, flag);
                 return Ok(result);
             }
             catch (Exception ex)

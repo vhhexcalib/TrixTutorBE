@@ -84,7 +84,7 @@ namespace Repository.Repositories
             return await query.Skip((page - 1) * size).Take(size).ToListAsync();
         }
 
-        public async Task<IEnumerable<Account>> GetAllAvailableTutorAsync(Expression<Func<Account, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByBirthdayAsc = true)
+        public async Task<IEnumerable<Account>> GetAllAvailableTutorAsync(Expression<Func<Account, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByBirthdayAsc = true, string flag = "")
         {
             // Base query: Lọc các tài khoản không bị cấm, đã xác nhận email, và có Role là Tutor (RoleId = 4)
             IQueryable<Account> query = _context.Set<Account>()
@@ -96,13 +96,41 @@ namespace Repository.Repositories
                 query = query.Where(filter);
             }
 
-            // Tìm kiếm theo tên tài khoản hoặc tên danh mục gia sư
-            if (!string.IsNullOrEmpty(search))
+            if (flag.Equals("Name"))
             {
-                query = query.Where(a => a.Name.Contains(search) ||
-                                         a.TutorInformation.TutorCategory.Name.Contains(search));
+                // Tìm kiếm theo tên tài khoản 
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(a => a.Name.Contains(search));
+                }
             }
-
+            if (flag.Equals("Subject"))
+            {
+                // Tìm kiếm theo tên danh mục gia sư
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(a => a.TutorInformation.TutorCategory.Name.Contains(search));
+                }
+            }
+            if (flag.Equals("Address"))
+            {
+                // Tìm kiếm theo tên địa chỉ
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(a => a.Address.Contains(search));
+                }
+            }
+            if (flag.Equals(""))
+            {
+                // Tìm kiếm theo tất cả biến
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(a => a.Address.Contains(search)
+                    || a.TutorInformation.TutorCategory.Name.Contains(search)
+                    || a.Address.Contains(search)
+                    );
+                }
+            }
             // Sắp xếp theo ngày sinh (Birthday)
             query = sortByBirthdayAsc
                 ? query.OrderBy(a => a.Birthday)
