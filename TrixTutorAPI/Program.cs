@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Net.payOS;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Service.DTOs.TokenDTO;
@@ -85,12 +84,6 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
-//payOs
-PayOS payOS = new PayOS(builder.Configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
-                    builder.Configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
-                    builder.Configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
-
-builder.Services.AddSingleton(payOS);
 
 //Authorize
 builder.Services.AddAuthorization(options =>

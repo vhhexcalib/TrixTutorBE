@@ -27,6 +27,9 @@ namespace BusinessObject
         public virtual Role Role { get; set; } 
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual TutorInformation TutorInformation { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<TransactionHistory> TransactionHistories { get; set; }
+        public virtual Wallet Wallet { get; set; }
         public Account()
         {
             Feedbacks = new HashSet<Feedback>();

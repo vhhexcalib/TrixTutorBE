@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace BusinessObject
 {
-    public class Transaction
+    public class TransactionHistory
     {
         [Key]
         public int Id { get; set; }
-        [Key]
         [ForeignKey("Account")]
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string TransactionStatus { get; set; } //rút hay chuyển
 
     }
 }

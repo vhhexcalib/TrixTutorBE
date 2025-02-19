@@ -28,6 +28,9 @@ namespace DataAccess.Context
         public DbSet<TutorCategory> TutorCategory { get; set; }
         public DbSet<TutorContact> TutorContact { get; set; }
         public DbSet<TutorInformation> TutorInformation { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<TransactionHistory> TransactionHistory { get; set; }
+        public DbSet<Wallet> Wallet { get; set; }
 
 
         #endregion
@@ -82,6 +85,26 @@ namespace DataAccess.Context
                 .WithOne(t => t.Account)
                 .HasForeignKey<TutorInformation>(t => t.TutorId)
                 .OnDelete(DeleteBehavior.Cascade);
+            // Payment -> Account: N-1
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Account)
+                .WithMany(a => a.Payments)
+                .HasForeignKey(p => p.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Wallet -> Account: 1-1
+            modelBuilder.Entity<Wallet>()
+                .HasOne(w => w.Account)
+                .WithOne(a => a.Wallet)
+                .HasForeignKey<Wallet>(w => w.TutorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // TransactionHistory -> Account: N-1
+            modelBuilder.Entity<TransactionHistory>()
+                .HasOne(th => th.Account)
+                .WithMany(a => a.TransactionHistories)
+                .HasForeignKey(th => th.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // TutorInformation -> TutorContact: 1-1
             modelBuilder.Entity<TutorContact>()
