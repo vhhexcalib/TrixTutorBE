@@ -22,7 +22,9 @@ namespace Repository.Repositories
         public IFeedbackRepository FeedbackRepository { get; set; }
         public IBankInformationRepository BankInformationRepository { get; set; }
         public ICertificateRepository CertificateRepository { get; set; }
-
+        public IWalletRepository WalletRepository { get; set; }
+        public IPaymentRepository PaymentRepository { get; set; }
+        public ITransactionHistory TransactionHistory { get; set; }
 
 
 
@@ -39,6 +41,9 @@ namespace Repository.Repositories
             FeedbackRepository = new FeedbackRepository(_context);
             BankInformationRepository = new BankInformationRepository(_context);
             CertificateRepository = new CertificateRepository(_context);
+            WalletRepository = new WalletRepository(_context);
+            PaymentRepository = new PaymentRepository(_context);
+            TransactionHistory = new TransactionHistoryRepository(_context);
         }
         public async Task<string> SaveAsync()
         {

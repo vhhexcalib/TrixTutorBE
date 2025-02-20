@@ -203,6 +203,49 @@ namespace DataAccess.Context.Migrations
                     b.ToTable("Feedback");
                 });
 
+            modelBuilder.Entity("BusinessObject.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BankCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResponseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Payment");
+                });
+
             modelBuilder.Entity("BusinessObject.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -300,6 +343,39 @@ namespace DataAccess.Context.Migrations
                             Password = "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c",
                             RoleId = 2
                         });
+                });
+
+            modelBuilder.Entity("BusinessObject.TransactionHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("TransactionHistory");
                 });
 
             modelBuilder.Entity("BusinessObject.TutorCategory", b =>
@@ -589,6 +665,27 @@ namespace DataAccess.Context.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BusinessObject.Wallet", b =>
+                {
+                    b.Property<int>("TutorId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("LastChangeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("LastChangeDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("TutorId");
+
+                    b.ToTable("Wallet");
+                });
+
             modelBuilder.Entity("BusinessObject.Account", b =>
                 {
                     b.HasOne("BusinessObject.Role", "Role")
@@ -633,6 +730,17 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("BusinessObject.Payment", b =>
+                {
+                    b.HasOne("BusinessObject.Account", "Account")
+                        .WithMany("Payments")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("BusinessObject.SystemAccount", b =>
                 {
                     b.HasOne("BusinessObject.Role", "Role")
@@ -642,6 +750,17 @@ namespace DataAccess.Context.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("BusinessObject.TransactionHistory", b =>
+                {
+                    b.HasOne("BusinessObject.Account", "Account")
+                        .WithMany("TransactionHistories")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BusinessObject.TutorContact", b =>
@@ -674,11 +793,29 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("TutorCategory");
                 });
 
+            modelBuilder.Entity("BusinessObject.Wallet", b =>
+                {
+                    b.HasOne("BusinessObject.Account", "Account")
+                        .WithOne("Wallet")
+                        .HasForeignKey("BusinessObject.Wallet", "TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("BusinessObject.Account", b =>
                 {
                     b.Navigation("Feedbacks");
 
+                    b.Navigation("Payments");
+
+                    b.Navigation("TransactionHistories");
+
                     b.Navigation("TutorInformation")
+                        .IsRequired();
+
+                    b.Navigation("Wallet")
                         .IsRequired();
                 });
 

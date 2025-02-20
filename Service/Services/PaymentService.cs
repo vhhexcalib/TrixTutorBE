@@ -12,7 +12,7 @@ using Repository.Interfaces;
 
 namespace Service.Services
 {
-    public class PaymentService : IRequest<PaymentLinkDTO>, IPaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper; 
@@ -21,15 +21,6 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public string PaymentCurrency { get; set; } = string.Empty;
-        public string BankInformationId { get; set; } = string.Empty;
-        public decimal RequiredAmount { get; set; }
-        public DateTime PaymentDate { get; set; } = DateTime.Now;
-        public DateTime ExpireDate { get; set; } = DateTime.Now.AddMinutes(15);
-        public string PaymentLanguage { get; set; } = string.Empty;
-        public string AccountId { get; set; } = string.Empty;
-        public string PaymentDestinationId { get; set; } = string.Empty;
-
 
     }
 }

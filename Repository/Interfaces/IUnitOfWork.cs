@@ -18,6 +18,10 @@ namespace Repository.Interfaces
         IFeedbackRepository FeedbackRepository { get; }
         IBankInformationRepository BankInformationRepository { get; }
         ICertificateRepository CertificateRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
+        ITransactionHistory TransactionHistory { get; }
+
         Task<string> SaveAsync();
     }
 }

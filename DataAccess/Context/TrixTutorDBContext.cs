@@ -132,6 +132,25 @@ namespace DataAccess.Context
             modelBuilder.Entity<TutorInformation>()
                 .Property(ti => ti.HighestSalaryPerHour)
                 .HasColumnType("decimal(18, 2)"); // Precision 18, scale 2 (2 decimal places)
+                              
+            // Payment - Cấu hình Amount
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
+
+            // TransactionHistory - Cấu hình Amount
+            modelBuilder.Entity<TransactionHistory>()
+                .Property(th => th.Amount)
+                .HasPrecision(18, 2);
+
+            // Wallet - Cấu hình Balance và LastChangeAmount
+            modelBuilder.Entity<Wallet>()
+                .Property(w => w.Balance)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Wallet>()
+                .Property(w => w.LastChangeAmount)
+                .HasPrecision(18, 2);
 
             base.OnModelCreating(modelBuilder);
         }
