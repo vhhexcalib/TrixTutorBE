@@ -53,7 +53,6 @@ namespace Service.Services
                 items.Add(item);
             }
             var domain = "http://localhost:3000";
-
             Payment payment = new Payment()
             {
                 OrderId = orderId,
