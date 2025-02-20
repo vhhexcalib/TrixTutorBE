@@ -78,7 +78,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 16),
+                            Birthday = new DateOnly(2025, 2, 20),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -92,7 +92,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 16),
+                            Birthday = new DateOnly(2025, 2, 20),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -116,9 +116,22 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OwnerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("TutorId");
 
                     b.ToTable("BankInformation");
+
+                    b.HasData(
+                        new
+                        {
+                            TutorId = 2,
+                            BankName = "BankName",
+                            BankNumber = "1234567890",
+                            OwnerName = "Tutor"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Certificate", b =>
@@ -314,15 +327,10 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("TutorCategory");
 
@@ -330,265 +338,181 @@ namespace DataAccess.Context.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Khoa học tự nhiên",
+                            Name = "Toán học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Khoa học xã hội & Nhân văn",
+                            Name = "Vật lý",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Ngoại ngữ",
+                            Name = "Hóa học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Khoa học máy tính & Công nghệ",
+                            Name = "Sinh học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Nghệ thuật & Giải trí",
+                            Name = "Lịch sử",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 6,
-                            Name = "Thể thao & Sức khỏe",
+                            Name = "Địa lý",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 7,
-                            Name = "Kinh tế & Kinh doanh",
+                            Name = "Ngữ văn",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 8,
-                            Name = "Kỹ thuật & Công nghệ",
+                            Name = "Tâm lý học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 9,
-                            Name = "Y học & Dược học",
+                            Name = "Triết học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 10,
-                            Name = "Toán học",
-                            ParentCategoryId = 1,
+                            Name = "Xã hội học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 11,
-                            Name = "Vật lý",
-                            ParentCategoryId = 1,
+                            Name = "Luật học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 12,
-                            Name = "Hóa học",
-                            ParentCategoryId = 1,
+                            Name = "Tiếng Anh",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 13,
-                            Name = "Sinh học",
-                            ParentCategoryId = 1,
+                            Name = "Tiếng Pháp",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 14,
-                            Name = "Lịch sử",
-                            ParentCategoryId = 2,
+                            Name = "Tiếng Đức",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 15,
-                            Name = "Địa lý",
-                            ParentCategoryId = 2,
+                            Name = "Tiếng Trung",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 16,
-                            Name = "Ngữ văn",
-                            ParentCategoryId = 2,
+                            Name = "Tiếng Nhật",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 17,
-                            Name = "Tâm lý học",
-                            ParentCategoryId = 2,
+                            Name = "Lập trình",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 18,
-                            Name = "Triết học",
-                            ParentCategoryId = 2,
+                            Name = "Công nghệ thông tin",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 19,
-                            Name = "Xã hội học",
-                            ParentCategoryId = 2,
+                            Name = "Thiết kế đồ họa",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 20,
-                            Name = "Luật học",
-                            ParentCategoryId = 2,
+                            Name = "Âm nhạc",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 21,
-                            Name = "Tiếng Anh",
-                            ParentCategoryId = 3,
+                            Name = "Mỹ thuật",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 22,
-                            Name = "Tiếng Pháp",
-                            ParentCategoryId = 3,
+                            Name = "Giáo dục thể chất",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 23,
-                            Name = "Tiếng Đức",
-                            ParentCategoryId = 3,
+                            Name = "Tài chính & Kinh tế",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 24,
-                            Name = "Tiếng Trung",
-                            ParentCategoryId = 3,
+                            Name = "Kinh doanh & Quản lý",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 25,
-                            Name = "Tiếng Nhật",
-                            ParentCategoryId = 3,
+                            Name = "Marketing",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 26,
-                            Name = "Lập trình",
-                            ParentCategoryId = 4,
+                            Name = "Kế toán",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 27,
-                            Name = "Công nghệ thông tin",
-                            ParentCategoryId = 4,
+                            Name = "Kỹ thuật cơ khí",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 28,
-                            Name = "Thiết kế đồ họa",
-                            ParentCategoryId = 4,
+                            Name = "Kỹ thuật điện - điện tử",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 29,
-                            Name = "Âm nhạc",
-                            ParentCategoryId = 5,
+                            Name = "Y học",
                             Quantity = 1
                         },
                         new
                         {
                             Id = 30,
-                            Name = "Mỹ thuật",
-                            ParentCategoryId = 5,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Name = "Giáo dục thể chất",
-                            ParentCategoryId = 6,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "Tài chính & Kinh tế",
-                            ParentCategoryId = 7,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Name = "Kinh doanh & Quản lý",
-                            ParentCategoryId = 7,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 34,
-                            Name = "Marketing",
-                            ParentCategoryId = 33,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 35,
-                            Name = "Kế toán",
-                            ParentCategoryId = 33,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 36,
-                            Name = "Kỹ thuật cơ khí",
-                            ParentCategoryId = 8,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 37,
-                            Name = "Kỹ thuật điện - điện tử",
-                            ParentCategoryId = 8,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 38,
-                            Name = "Y học",
-                            ParentCategoryId = 9,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 39,
                             Name = "Dược học",
-                            ParentCategoryId = 9,
                             Quantity = 1
                         });
                 });
@@ -733,15 +657,6 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("BusinessObject.TutorCategory", b =>
-                {
-                    b.HasOne("BusinessObject.TutorCategory", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentCategoryId");
-
-                    b.Navigation("ParentCategory");
-                });
-
             modelBuilder.Entity("BusinessObject.TutorContact", b =>
                 {
                     b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
@@ -789,8 +704,6 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.TutorCategory", b =>
                 {
-                    b.Navigation("SubCategories");
-
                     b.Navigation("TutorInformations");
                 });
 

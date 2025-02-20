@@ -36,6 +36,7 @@ namespace Service.Services
                 var currentUser = _mapper.Map<CurrentUserObject>(account);
                 currentUser.AccountEmail = account.Email;
                 currentUser.AccountId = account.Id;
+                currentUser.AccountName = account.Name;
                 currentUser.RoleId = account.RoleId;
                 var token = await _tokenService.GenerateTokenAsync(currentUser);
                 var accesstoken = await _tokenService.GenerateAccessTokenAsync(token);

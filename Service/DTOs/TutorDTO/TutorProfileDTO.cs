@@ -28,5 +28,7 @@ namespace Service.DTOs.TutorDTO
         public string TutorCategoryName { get; set; }
         public string BankName { get; set; }
         public string BankNumber { get; set; }
+        public string OwnerName { get; set; }
+
     }
 }

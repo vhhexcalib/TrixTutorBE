@@ -49,6 +49,9 @@ namespace DataAccess.Context
             // Tutor Information Configuration
             modelBuilder.ApplyConfiguration(new TutorInformationConfiguration());
 
+            //Bank Information Configuration
+            modelBuilder.ApplyConfiguration(new BankInformationConfiguration());
+
             // Account -> Role: 1-N
             modelBuilder.Entity<Account>()
                 .HasOne(a => a.Role)
