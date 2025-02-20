@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BusinessObject;
 using Repository.Interfaces;
 using Service.Common;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.BankDTO;
 using Service.Exceptions;
 using Service.Interfaces;
 using System;
@@ -22,15 +24,16 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<dynamic> UpdateBankInformation(CurrentUserObject currentUserObject, string bankName, string bankNumber)
+        public async Task<dynamic> UpdateBankInformation(CurrentUserObject currentUserObject, UpdateBankInformationDTO updateBankInformationDTO)
         {
             var bankInformation = await _unitOfWork.BankInformationRepository.GetByIdAsync(currentUserObject.AccountId);
             if(bankInformation == null)
             {
                 return Result.Failure(BankInformationErrors.FailFindExistBankInformation);
             }
-            bankInformation.BankName = bankName;
-            bankInformation.BankNumber = bankNumber;
+            bankInformation.BankNumber = updateBankInformationDTO.BankNumber;
+            bankInformation.BankName = updateBankInformationDTO.BankName;
+            bankInformation.OwnerName = updateBankInformationDTO.OwnerName;
             await _unitOfWork.BankInformationRepository.UpdateAsync(bankInformation);
             var result = await _unitOfWork.SaveAsync();
             if (result == "Save Change Success")

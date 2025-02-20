@@ -2,6 +2,7 @@
 using AutoMapper.Features;
 using BusinessObject;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.BankDTO;
 using Service.DTOs.CategoryDTO;
 using Service.DTOs.RoleDTO;
 using Service.DTOs.TutorDTO;
@@ -58,7 +59,10 @@ namespace Service.Mappings
                 .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
                 .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
                 .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
-                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId));
+                .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId))
+                .ForMember(dest => dest.BankName, opt => opt.MapFrom(src => src.TutorInformation.BankInformation.BankName))
+                .ForMember(dest => dest.BankNumber, opt => opt.MapFrom(src => src.TutorInformation.BankInformation.BankNumber))
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.TutorInformation.BankInformation.OwnerName)); ;
             // Tutor information
             CreateMap<TutorInformation, TutorInformationDTO>().ReverseMap();
 
@@ -70,6 +74,10 @@ namespace Service.Mappings
 
             // Certificate
             CreateMap<Certificate, TutorCertificatesDTO>().ReverseMap();
+
+            // Bank information
+            CreateMap<BankInformation, UpdateBankInformationDTO>().ReverseMap();
+
         }
     }
 }

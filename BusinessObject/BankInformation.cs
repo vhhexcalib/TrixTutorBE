@@ -16,6 +16,8 @@ namespace BusinessObject
         public virtual TutorInformation TutorInformation { get; set; }
         public string BankNumber { get; set; }
         public string BankName { get; set; }
+        public string OwnerName { get; set; }
+
 
     }
 }
