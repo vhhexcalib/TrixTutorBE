@@ -33,65 +33,65 @@ namespace Service.Services
             var checksumKey = _configuration["PayOSSettings:ChecksumKey"];
             payOS = new PayOS(clientId, apiKey, checksumKey);
         }
-        //public async Task<dynamic> CreatePaymentLinkForSale(int orderId)
-        //{
-        //    var payment = await _unitOfWork.PaymentRepository.
-        //    if (payment != null && payment.Any())
-        //    {
-        //        return Result.Failure(payment.PaymentError);
-        //    }
-        //    var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
-        //    if (orderNow == null)
-        //        return Result.Failure(OrderErrors.OrderIsNull);
-        //    if (orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
-        //    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
-        //    var odSaleList = _mapper.Map<List<ODSaleDTO>>(odList);
-        //    List<ItemData> items = new List<ItemData>();
-        //    foreach (var odSale in odSaleList)
-        //    {
-        //        ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.Price);
-        //        items.Add(item);
-        //    }
-        //    var domain = "http://localhost:3000";
-        //    Payment payment = new Payment()
-        //    {
-        //        OrderId = orderId,
-        //        AccountId = orderNow.Account.AccountId,
-        //        Amount = orderNow.FinalMoney,
-        //        PaymentMethod = "Pay all",
-        //        Status = 0,
-        //        TransactionId = "o",
-        //        TransactionDate = DateTime.Now,
-        //        BankCode = "",
-        //        ResponseCode = ""
-        //    };
-        //    var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
-        //    await _unitOfWork.SaveAsync();
+        public async Task<dynamic> CreatePayment(int orderId)
+        {
+            var payment = await _unitOfWork.PaymentRepository.
+            if (payment != null && payment.Any())
+            {
+                return Result.Failure(payment.PaymentError);
+            }
+            var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
+            if (orderNow == null)
+                return Result.Failure(OrderErrors.OrderIsNull);
+            if (orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
+            var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
+            var odSaleList = _mapper.Map<List<ODSaleDTO>>(odList);
+            List<ItemData> items = new List<ItemData>();
+            foreach (var odSale in odSaleList)
+            {
+                ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.Price);
+                items.Add(item);
+            }
+            var domain = "http://localhost:3000";
+            Payment payment = new Payment()
+            {
+                OrderId = orderId,
+                AccountId = orderNow.Account.AccountId,
+                Amount = orderNow.FinalMoney,
+                PaymentMethod = "Pay all",
+                Status = 0,
+                TransactionId = "o",
+                TransactionDate = DateTime.Now,
+                BankCode = "",
+                ResponseCode = ""
+            };
+            var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
+            await _unitOfWork.SaveAsync();
 
-        //    PaymentData paymentData = new PaymentData(
-        //        orderCode: payment.PaymentId,
-        //        amount: (int)payment.Amount,
-        //        description: $"Order sale paymentId:{payment.PaymentId}",
-        //        items: items,
-        //        cancelUrl: domain + "/paymentinfo",
-        //        returnUrl: domain + "/paymentinfo",
+            PaymentData paymentData = new PaymentData(
+                orderCode: payment.PaymentId,
+                amount: (int)payment.Amount,
+                description: $"Order sale paymentId:{payment.PaymentId}",
+                items: items,
+                cancelUrl: domain + "/paymentinfo",
+                returnUrl: domain + "/paymentinfo",
 
-        //        buyerName: orderNow.Account.AccountName
-        //        );
-        //    try
-        //    {
-        //        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-        //        PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
-        //        payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
-        //        await _unitOfWork.PaymentRepository.UpdateAsync(payment);
-        //        await _unitOfWork.SaveAsync();
-        //        return Result.SuccessWithObject(createPayment.checkoutUrl);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //}
+                buyerName: orderNow.Account.AccountName
+                );
+            try
+            {
+                CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
+                payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment);
+                await _unitOfWork.SaveAsync();
+                return Result.SuccessWithObject(createPayment.checkoutUrl);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
+        }
 
         //public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
         //{

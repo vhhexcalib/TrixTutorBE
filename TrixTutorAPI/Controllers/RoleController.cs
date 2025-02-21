@@ -6,7 +6,7 @@ namespace TrixTutorAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : Controller
+    public class RoleController : ControllerBase
     {
         private readonly ITokenService _tokenService;
         private readonly IRoleService _roleService;

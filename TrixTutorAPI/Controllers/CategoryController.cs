@@ -8,7 +8,7 @@ namespace TrixTutorAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : Controller
+    public class CategoryController : ControllerBase
     {
         private readonly ITutorCategoryService _tutorCategoryService;
         public CategoryController(ITutorCategoryService tutorCategoryService)

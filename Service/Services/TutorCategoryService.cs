@@ -38,7 +38,7 @@ namespace Service.Services
 
         public async Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO)
         {
-            var category = new TutorCategory() {Name = createCategoryDTO.CategoryName, Quantity = 0 };
+            var category = new TutorCategory() {Name = createCategoryDTO.CategoryName, Quantity = 0, RentingQuantity = 0 };
             var categorybyname = await _unitOfWork.TutorCategoryRepository.GetTutorCategoryByName(category.Name);
             if(categorybyname == null)
             {

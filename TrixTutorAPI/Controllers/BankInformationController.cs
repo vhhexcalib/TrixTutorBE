@@ -12,7 +12,7 @@ namespace TrixTutorAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BankInformationController : Controller
+    public class BankInformationController : ControllerBase
     {
         private readonly IBankInformationService _bankInformationService;
         private readonly ITokenService _tokenService;
