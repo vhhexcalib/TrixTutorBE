@@ -103,14 +103,14 @@ namespace Service.Services
             }
             var createdInformation = _mapper.Map<TutorInformation>(tutorInformationDTO);
             createdInformation.TutorId = currentUserObject.AccountId;
-            var bankInformation = new BankInformation {TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber" };
+            var bankInformation = new BankInformation {TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber", OwnerName = "ownername" };
             noneExistTutorCategory.Quantity++;
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            await _unitOfWork.TutorInformationRepository.AddAsync(createdInformation);
             account.RoleId = 4;
             await _unitOfWork.AccountRepository.UpdateAsync(account);
             await _unitOfWork.BankInformationRepository.AddAsync(bankInformation);
             await _unitOfWork.TutorCategoryRepository.UpdateAsync(noneExistTutorCategory);
-            await _unitOfWork.TutorInformationRepository.AddAsync(createdInformation);
             await _unitOfWork.SaveAsync();
             var existedTutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);
             if (existedTutor == null)

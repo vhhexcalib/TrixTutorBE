@@ -27,22 +27,46 @@ namespace Service.Services
         public async Task<dynamic> UpdateBankInformation(CurrentUserObject currentUserObject, UpdateBankInformationDTO updateBankInformationDTO)
         {
             var bankInformation = await _unitOfWork.BankInformationRepository.GetByIdAsync(currentUserObject.AccountId);
-            if(bankInformation == null)
+            if (bankInformation == null)
             {
-                return Result.Failure(BankInformationErrors.FailFindExistBankInformation);
-            }
-            bankInformation.BankNumber = updateBankInformationDTO.BankNumber;
-            bankInformation.BankName = updateBankInformationDTO.BankName;
-            bankInformation.OwnerName = updateBankInformationDTO.OwnerName;
-            await _unitOfWork.BankInformationRepository.UpdateAsync(bankInformation);
-            var result = await _unitOfWork.SaveAsync();
-            if (result == "Save Change Success")
-            {
-                return Result.Success();
+                var bank = new BankInformation
+                {
+                    TutorId = currentUserObject.AccountId,
+                    BankNumber = updateBankInformationDTO.BankNumber,
+                    BankName = updateBankInformationDTO.BankName,
+                    OwnerName = updateBankInformationDTO.OwnerName,
+                };
+                await _unitOfWork.BankInformationRepository.AddAsync(bank);
+                var result1 = await _unitOfWork.SaveAsync();
+                if (result1 == "Save Change Success")
+                {
+                    var findingBank = await _unitOfWork.BankInformationRepository.GetByIdAsync(currentUserObject.AccountId);
+                    if (findingBank == null)
+                    {
+                        return Result.Failure(BankInformationErrors.FailFindExistBankInformation);
+                    }
+                    else return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(BankInformationErrors.FailAddingBankInformation);
+                }
             }
             else
             {
-                return Result.Failure(BankInformationErrors.FailUpdateBankInformation);
+                bankInformation.BankNumber = updateBankInformationDTO.BankNumber;
+                bankInformation.BankName = updateBankInformationDTO.BankName;
+                bankInformation.OwnerName = updateBankInformationDTO.OwnerName;
+                await _unitOfWork.BankInformationRepository.UpdateAsync(bankInformation);
+                var result = await _unitOfWork.SaveAsync();
+                if (result == "Save Change Success")
+                {
+                    return Result.Success();
+                }
+                else
+                {
+                    return Result.Failure(BankInformationErrors.FailUpdateBankInformation);
+                }
             }
         }
     }
