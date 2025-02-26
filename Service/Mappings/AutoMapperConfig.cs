@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.Features;
 using BusinessObject;
+using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.BankDTO;
 using Service.DTOs.CategoryDTO;
+using Service.DTOs.FeedBackDTO;
 using Service.DTOs.RoleDTO;
 using Service.DTOs.TutorDTO;
 
@@ -77,6 +79,12 @@ namespace Service.Mappings
 
             // Bank information
             CreateMap<BankInformation, UpdateBankInformationDTO>().ReverseMap();
+
+            // Feedback
+            CreateMap<Feedback, FeedbackDTO>().ReverseMap();
+
+            // Mapping TutorContact <-> TutorContactDTO
+            CreateMap<TutorContact, ContactDTO>().ReverseMap();
 
         }
     }

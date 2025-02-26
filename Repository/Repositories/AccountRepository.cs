@@ -152,6 +152,45 @@ namespace Repository.Repositories
             // Phân trang
             return await query.Skip((page - 1) * size).Take(size).ToListAsync();
         }
+        public async Task<int> CountAsync(string? search = null)
+        {
+            IQueryable<Account> query = _context.Set<Account>();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.Name.Contains(search));
+            }
+
+            return await query.CountAsync();
+        }
+
+        public async Task<int> CountTutorsAsync(string? search = null, string flag = "")
+        {
+            IQueryable<Account> query = _context.Set<Account>()
+                .Where(x => x.IsBan == false && x.IsEmailConfirm == true && x.RoleId == 4);
+
+            if (flag.Equals("Name") && !string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.Name.Contains(search));
+            }
+            if (flag.Equals("Subject") && !string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.TutorInformation.TutorCategory.Name.Contains(search));
+            }
+            if (flag.Equals("Address") && !string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.Address.Contains(search));
+            }
+            if (string.IsNullOrEmpty(flag) && !string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.Name.Contains(search) ||
+                                         a.TutorInformation.TutorCategory.Name.Contains(search) ||
+                                         a.Address.Contains(search));
+            }
+
+            return await query.CountAsync();
+        }
+
 
     }
 }

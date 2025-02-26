@@ -1,5 +1,6 @@
 ﻿using BusinessObject;
 using DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,10 @@ namespace Repository.Repositories
         {
             _context = context;
         }
+        public async Task<IEnumerable<Feedback>> GetAllFeedbackByUserId(int courseId)
+        {
+            return await GetAllAsync(f => f.CourseId == courseId);
+        }
+
     }
 }

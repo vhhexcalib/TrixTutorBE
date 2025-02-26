@@ -16,5 +16,6 @@ namespace Service.Interfaces
         Task<dynamic> UploadAvatar(IFormFile attachmentFile, CurrentUserObject currentUserObject);
         Task<dynamic> CreateTutorInformation(CurrentUserObject currentUserObject, TutorInformationDTO tutorInformationDTO);
         Task<dynamic> GetProfileById(int id);
+        Task<dynamic> GetTutorWallet(CurrentUserObject currentUserObject);
     }
 }

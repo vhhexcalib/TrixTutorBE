@@ -25,6 +25,8 @@ namespace Repository.Repositories
         public IWalletRepository WalletRepository { get; set; }
         public IPaymentRepository PaymentRepository { get; set; }
         public ITransactionHistory TransactionHistory { get; set; }
+        public ISystemAccountWalletRepository SystemAccountWallet { get; set; }
+
 
 
 
@@ -44,6 +46,8 @@ namespace Repository.Repositories
             WalletRepository = new WalletRepository(_context);
             PaymentRepository = new PaymentRepository(_context);
             TransactionHistory = new TransactionHistoryRepository(_context);
+            SystemAccountWallet = new SystemAccountWalletRepository(_context);
+
         }
         public async Task<string> SaveAsync()
         {

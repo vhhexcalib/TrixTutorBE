@@ -41,6 +41,18 @@ namespace Repository.Repositories
 
             return categories;
         }
+        public async Task<int> CountTutorCategoriesAsync(string? search = null)
+        {
+            var query = _context.TutorCategory.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(c => c.Name.Contains(search));
+            }
+
+            return await query.CountAsync();
+        }
+
 
     }
 }

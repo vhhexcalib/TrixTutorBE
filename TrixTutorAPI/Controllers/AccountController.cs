@@ -5,6 +5,7 @@ using Service.Common;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
 using Service.Interfaces;
+using Service.Services;
 using System.Net.WebSockets;
 using System.Security.Claims;
 using TrixTutorAPI.Helper;
@@ -169,5 +170,6 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+       
     }
 }

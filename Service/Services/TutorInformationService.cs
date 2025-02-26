@@ -103,7 +103,7 @@ namespace Service.Services
             }
             var createdInformation = _mapper.Map<TutorInformation>(tutorInformationDTO);
             createdInformation.TutorId = currentUserObject.AccountId;
-            var bankInformation = new BankInformation {TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber", OwnerName = "ownername" };
+            var bankInformation = new BankInformation { TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber", OwnerName = "ownername" };
             noneExistTutorCategory.Quantity++;
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
             await _unitOfWork.TutorInformationRepository.AddAsync(createdInformation);
@@ -112,12 +112,26 @@ namespace Service.Services
             await _unitOfWork.BankInformationRepository.AddAsync(bankInformation);
             await _unitOfWork.TutorCategoryRepository.UpdateAsync(noneExistTutorCategory);
             await _unitOfWork.SaveAsync();
+            Wallet wallet = new Wallet() {TutorId = currentUserObject.AccountId, Balance = 0, LastChangeAmount = 0, LastChangeDate = DateTime.Now };
+            await _unitOfWork.WalletRepository.AddAsync(wallet);
+            await _unitOfWork.SaveAsync();
             var existedTutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);
             if (existedTutor == null)
             {
                 return Result.Failure(TutorErrors.FailCreatingTutorInformation);
             }
             return Result.Success();
+        }
+        public async Task<dynamic> GetTutorWallet(CurrentUserObject currentUserObject)
+        {
+            var wallets = await _unitOfWork.WalletRepository.GetByIdAsync(currentUserObject.AccountId);
+            WalletDTO wallet = new WalletDTO()
+            {
+                Balance = wallets.Balance,
+                LastChangeAmount = wallets.LastChangeAmount,
+                LastChangeDate = wallets.LastChangeDate
+            };
+            return Result.SuccessWithObject(wallet);
         }
     }
 }

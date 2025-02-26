@@ -9,6 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IFeedbackRepository : IRepository<Feedback>
     {
-
+        Task<IEnumerable<Feedback>> GetAllFeedbackByUserId(int userId);
     }
 }

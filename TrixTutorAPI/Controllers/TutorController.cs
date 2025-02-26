@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorDTO;
 using Service.Interfaces;
+using Service.Services;
 using TrixTutorAPI.Helper;
 
 namespace TrixTutorAPI.Controllers
@@ -126,6 +127,27 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
+        }
+        [Authorize(Policy = "LecturerOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("wallet")]
+        public async Task<IActionResult> GetSystemAccountWallet()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _tutorInformationService.GetTutorWallet(currentUserObject);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

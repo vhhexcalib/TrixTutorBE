@@ -11,5 +11,6 @@ namespace Service.Exceptions
     {
         public static Error ExistedContact => new("Create contact", "Đường dẫn các tài khoản mạng xã hội của tài khoản đã tồn tại, vui lòng chỉnh sửa nếu muốn thay đổi.");
         public static Error FailCreatingContact => new("Create contact", "Tạo đường dẫn tài khoản mạng xã hội của tài khoản thất bại, vui lòng thử lại.");
+        public static Error NotFoundContact => new("Get contact", "Đường dẫn các tài khoản mạng xã hội của tài khoản chưa tồn tại, vui lòng thêm mới.");
     }
 }

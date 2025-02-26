@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Service.Common;
+using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TokenDTO;
 using Service.DTOs.TutorDTO;
@@ -197,20 +198,32 @@ namespace Service.Services
                 return Result.Failure(TutorErrors.FailGettingAccount);
             }
         }
-        public async Task<IEnumerable<AllAccountDTO>> GetAllAccountsAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true)
+        public async Task<PagedResult<AllAccountDTO>> GetAllAccountsAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true)
         {
             var accounts = await _unitOfWork.AccountRepository.GetAllAccountsAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc);
-            return _mapper.Map<IEnumerable<AllAccountDTO>>(accounts);
+            var totalItems = await _unitOfWork.AccountRepository.CountAsync(search); // Đếm tổng số tài khoản phù hợp
+
+            return new PagedResult<AllAccountDTO>
+            {
+                Items = _mapper.Map<IEnumerable<AllAccountDTO>>(accounts),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / size)
+            };
         }
 
-        public async Task<IEnumerable<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true, string flag = "")
+        public async Task<PagedResult<AllTutorDTO>> GetAllAvailableTutorAsync(int page, int size, string? search = null, bool sortByBirthdayAsc = true, string flag = "")
         {
-            // Gọi repository để lấy thông tin tài khoản gia sư
             var accounts = await _unitOfWork.AccountRepository.GetAllAvailableTutorAsync(page: page, size: size, search: search, sortByBirthdayAsc: sortByBirthdayAsc, flag: flag);
+            var totalItems = await _unitOfWork.AccountRepository.CountTutorsAsync(search, flag); // Đếm tổng số gia sư phù hợp
 
-            // Ánh xạ sang DTO và trả về
-            return _mapper.Map<IEnumerable<AllTutorDTO>>(accounts);
+            return new PagedResult<AllTutorDTO>
+            {
+                Items = _mapper.Map<IEnumerable<AllTutorDTO>>(accounts),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / size)
+            };
         }
+
 
     }
 }

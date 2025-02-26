@@ -31,6 +31,12 @@ namespace DataAccess.Context
         public DbSet<Payment> Payment { get; set; }
         public DbSet<TransactionHistory> TransactionHistory { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
+        public DbSet<LearningHistory> LearningHistory { get; set; }
+        public DbSet<Courses> Courses { get; set; }
+        public DbSet<LearningSchedule> LearningSchedule { get; set; }
+        public DbSet<TeachingHistory> TeachingHistories { get; set; }
+        public DbSet<TeachingSchedule> TeachingSchedules { get; set; }
+        public DbSet<SystemAccountWallet> SystemAccountWallet { get; set; }
 
 
         #endregion
@@ -54,6 +60,14 @@ namespace DataAccess.Context
 
             //Bank Information Configuration
             modelBuilder.ApplyConfiguration(new BankInformationConfiguration());
+
+            //System Account Wallet Configuration
+            modelBuilder.ApplyConfiguration(new SystemAccountWalletConfiguration());
+
+            //Tutor Wallet Configuration
+            modelBuilder.ApplyConfiguration(new WalletConfiguration());
+
+
 
             // Account -> Role: 1-N
             modelBuilder.Entity<Account>()
@@ -154,6 +168,127 @@ namespace DataAccess.Context
             modelBuilder.Entity<Wallet>()
                 .Property(w => w.LastChangeAmount)
                 .HasPrecision(18, 2);
+            // Account -> Renting: 1-N (Account là Tutor)
+            modelBuilder.Entity<Renting>()
+                .HasOne(r => r.Tutor)
+                .WithMany(a => a.RentingsAsTutor)
+                .HasForeignKey(r => r.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Account -> Renting: 1-N (Account là Student)
+            modelBuilder.Entity<Renting>()
+                .HasOne(r => r.Student)
+                .WithMany(a => a.RentingsAsStudent)
+                .HasForeignKey(r => r.LastRentingStudent)
+                .OnDelete(DeleteBehavior.Restrict);
+            // Account -> LearningHistory (1-N)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.Account)
+                .WithMany(a => a.LearningHistories)
+                .HasForeignKey(lh => lh.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // LearningHistory -> Course (1-1)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.Course)
+                .WithOne()
+                .HasForeignKey<LearningHistory>(lh => lh.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // LearningHistory -> TutorInformation (1-1)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.TutorInformation)
+                .WithOne()
+                .HasForeignKey<LearningHistory>(lh => lh.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> TutorInformation (N-1)
+            modelBuilder.Entity<Courses>()
+                .HasOne(c => c.TutorInformation)
+                .WithMany(ti => ti.Courses)
+                .HasForeignKey(c => c.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // Account -> LearningSchedule (1-N)
+            modelBuilder.Entity<LearningSchedule>()
+                .HasOne(ls => ls.Account)
+                .WithMany(a => a.LearningSchedules)
+                .HasForeignKey(ls => ls.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TutorInformation -> LearningSchedule (1-N)
+            modelBuilder.Entity<LearningSchedule>()
+                .HasOne(ls => ls.TutorInformation)
+                .WithMany(ti => ti.LearningSchedules)
+                .HasForeignKey(ls => ls.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> LearningSchedule (1-N)
+            modelBuilder.Entity<LearningSchedule>()
+                .HasOne(ls => ls.Course)
+                .WithMany(c => c.LearningSchedules)
+                .HasForeignKey(ls => ls.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+            // Course -> TeachingHistory (1-N)
+            modelBuilder.Entity<TeachingHistory>()
+                .HasOne(th => th.Course)
+                .WithMany(c => c.TeachingHistories)
+                .HasForeignKey(th => th.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Account (Student) -> TeachingHistory (1-N)
+            modelBuilder.Entity<TeachingHistory>()
+                .HasOne(th => th.Account)
+                .WithMany(a => a.TeachingHistories)
+                .HasForeignKey(th => th.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TutorInformation -> TeachingHistory (1-N)
+            modelBuilder.Entity<TeachingHistory>()
+                .HasOne(th => th.TutorInformation)
+                .WithMany(ti => ti.TeachingHistories)
+                .HasForeignKey(th => th.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // Account (Student) -> TeachingSchedule (1-N)
+            modelBuilder.Entity<TeachingSchedule>()
+                .HasOne(ts => ts.Account)
+                .WithMany(a => a.TeachingSchedules)
+                .HasForeignKey(ts => ts.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TutorInformation -> TeachingSchedule (1-N)
+            modelBuilder.Entity<TeachingSchedule>()
+                .HasOne(ts => ts.TutorInformation)
+                .WithMany(ti => ti.TeachingSchedules)
+                .HasForeignKey(ts => ts.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> TeachingSchedule (1-N)
+            modelBuilder.Entity<TeachingSchedule>()
+                .HasOne(ts => ts.Course)
+                .WithMany(c => c.TeachingSchedules)
+                .HasForeignKey(ts => ts.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+            // Course decimal total price
+            modelBuilder.Entity<Courses>()
+                .Property(c => c.TotalPrice)
+                .HasPrecision(18, 2);
+
+            // SystemWallet decimal balance
+            modelBuilder.Entity<SystemAccountWallet>()
+                .Property(saw => saw.Balance)
+                .HasPrecision(18, 2);
+
+            // SystemWallet decimal last change amount
+            modelBuilder.Entity<SystemAccountWallet>()
+                .Property(saw => saw.LastChangeAmount)
+                .HasPrecision(18, 2);
+
+            // SystemWallet -> SystemAccount (1-1)
+            modelBuilder.Entity<SystemAccount>()
+            .HasOne(sa => sa.SystemAccountWallet)
+            .WithOne(saw => saw.SystemAccount)
+            .HasForeignKey<SystemAccountWallet>(saw => saw.AccountId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -13,6 +13,7 @@ using Service.DTOs.TutorDTO;
 using Service.Exceptions;
 using Service.DTOs.CategoryDTO;
 using System.Linq.Expressions;
+using Service.DTOs;
 
 namespace Service.Services
 {
@@ -26,15 +27,28 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<TutorCategoryDTO>> GetAllCategoryAsync(string? search = null,bool sortByQuantityAsc = true,int page = 1,int size = 10)
+        public async Task<PagedResult<TutorCategoryDTO>> GetAllCategoryAsync(string? search = null, bool sortByQuantityAsc = true, int page = 1, int size = 10)
         {
-            // Gọi repository để lấy danh mục có tìm kiếm và sắp xếp
+            // Lấy danh mục có tìm kiếm và sắp xếp
             var categories = await _unitOfWork.TutorCategoryRepository.GetAllTutorCategoriesAsync(
                 search, sortByQuantityAsc, page, size);
 
+            // Đếm tổng số danh mục để tính phân trang
+            int totalItems = await _unitOfWork.TutorCategoryRepository.CountTutorCategoriesAsync(search);
+            int totalPages = (int)Math.Ceiling((double)totalItems / size);
+
             // Ánh xạ danh mục sang DTO
-            return _mapper.Map<IEnumerable<TutorCategoryDTO>>(categories);
+            var categoryDtos = _mapper.Map<IEnumerable<TutorCategoryDTO>>(categories);
+
+            // Trả về kết quả dưới dạng PagedResult
+            return new PagedResult<TutorCategoryDTO>
+            {
+                Items = categoryDtos,
+                TotalItems = totalItems,
+                TotalPages = totalPages
+            };
         }
+
 
         public async Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO)
         {

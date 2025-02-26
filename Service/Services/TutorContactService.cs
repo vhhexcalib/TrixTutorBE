@@ -7,6 +7,7 @@ using AutoMapper;
 using BusinessObject;
 using Repository.Interfaces;
 using Service.Common;
+using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorContactDTO;
 using Service.Exceptions;
@@ -49,6 +50,16 @@ namespace Service.Services
             {
                 return Result.Failure(TutorContactErrors.FailCreatingContact);
             }
+        }
+        public async Task<dynamic> GetContactById(CurrentUserObject currentUserObject)
+        {
+            var contact = await _unitOfWork.TutorContactRepository.GetByIdAsync (currentUserObject.AccountId);
+            if (contact == null)
+            {
+                return Result.Failure(TutorContactErrors.NotFoundContact);
+            }
+            var contactDTO = _mapper.Map<ContactDTO>(contact);
+            return Result.SuccessWithObject(contactDTO);
         }
     }
 }

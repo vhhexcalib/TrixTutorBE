@@ -20,10 +20,9 @@ namespace Repository.Repositories
             _context = context;
             _dbSet = context.Set<T>();
         }
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
-                string? includeProperties = null, int page = 1, int size = 10)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
@@ -38,9 +37,9 @@ namespace Repository.Repositories
                 }
             }
 
-            // Phân trang
-            return await query.Skip((page - 1) * size).Take(size).ToListAsync();
+            return await query.ToListAsync();
         }
+
         public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -84,7 +83,6 @@ namespace Repository.Repositories
            await _dbSet.AddRangeAsync(entities);
             return true;
         }
-
     }
 
 }

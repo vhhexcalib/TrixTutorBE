@@ -11,5 +11,6 @@ namespace Repository.Interfaces
     {
         Task<TutorCategory> GetTutorCategoryByName(string name);
         Task<IEnumerable<TutorCategory>> GetAllTutorCategoriesAsync(string? search = null, bool sortByQuantityAsc = true, int page = 1, int size = 10);
+        Task<int> CountTutorCategoriesAsync(string? search = null);
     }
 }

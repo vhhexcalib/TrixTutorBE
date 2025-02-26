@@ -25,35 +25,29 @@ namespace BusinessObject
         public bool IsEmailConfirm { get; set; }
 
         public virtual Role Role { get; set; }
-
-        // Danh sách feedbacks mà tài khoản đã nhận
         public virtual ICollection<Feedback> Feedbacks { get; set; }
-
-        // Thông tin gia sư nếu tài khoản này là tutor
+        public virtual ICollection<LearningHistory> LearningHistories { get; set; } // Thêm quan hệ
+        public virtual ICollection<LearningSchedule> LearningSchedules { get; set; }
         public virtual TutorInformation TutorInformation { get; set; }
-
-        // Danh sách các giao dịch thanh toán
         public virtual ICollection<Payment> Payments { get; set; }
-
-        // Danh sách lịch sử giao dịch
         public virtual ICollection<TransactionHistory> TransactionHistories { get; set; }
-
-        // Ví của tài khoản
         public virtual Wallet Wallet { get; set; }
 
-        // **Quan hệ với bảng Renting**
-
-        // Danh sách các lần được thuê nếu tài khoản là tutor
         public virtual ICollection<Renting> RentingsAsTutor { get; set; }
-
-        // Danh sách các lần đi thuê nếu tài khoản là student
         public virtual ICollection<Renting> RentingsAsStudent { get; set; }
+        public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
+        public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
 
         public Account()
         {
             Feedbacks = new HashSet<Feedback>();
+            LearningHistories = new HashSet<LearningHistory>(); // Khởi tạo danh sách LearningHistory
             RentingsAsTutor = new HashSet<Renting>();
             RentingsAsStudent = new HashSet<Renting>();
+            LearningSchedules = new HashSet<LearningSchedule>(); 
+            TeachingHistories = new HashSet<TeachingHistory>();
+            TeachingSchedules = new HashSet<TeachingSchedule>();
         }
     }
+
 }

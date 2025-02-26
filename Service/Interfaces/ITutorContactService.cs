@@ -11,5 +11,6 @@ namespace Service.Interfaces
     public interface ITutorContactService
     {
         Task<dynamic> CreateContactInformation(CurrentUserObject currentUserObject, CreateContactDTO createContactDTO);
+        Task<dynamic> GetContactById(CurrentUserObject currentUserObject);
     }
 }

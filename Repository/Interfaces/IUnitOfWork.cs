@@ -21,6 +21,8 @@ namespace Repository.Interfaces
         IWalletRepository WalletRepository { get; }
         IPaymentRepository PaymentRepository { get; }
         ITransactionHistory TransactionHistory { get; }
+        ISystemAccountWalletRepository SystemAccountWallet { get; }
+
 
         Task<string> SaveAsync();
     }
