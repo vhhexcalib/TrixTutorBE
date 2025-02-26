@@ -19,7 +19,7 @@ namespace TrixTutorAPI.Controllers
         {
             _feedbackService = feedbackService;
         }
-        [HttpPost("category")]
+        [HttpPost("feedback")]
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateFeedback([FromBody] FeedbackDTO feedbackDTO)
