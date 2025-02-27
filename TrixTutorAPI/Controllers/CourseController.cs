@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.CategoryDTO;
 using Service.DTOs.CoursesDTO;
@@ -19,6 +21,8 @@ namespace TrixTutorAPI.Controllers
             _coursesService = coursesService;
         }
         [HttpPost("course")]
+        [Authorize(Policy = "LecturerOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateCourse([FromBody] CreateCoursesDTO createCoursesDTO)
         {
             if (!ModelState.IsValid)
@@ -29,6 +33,43 @@ namespace TrixTutorAPI.Controllers
             {
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
                 var result = await _coursesService.CreateCourse(currentUserObject, createCoursesDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "SystemAccountOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("unaccepted-courses")]
+        public async Task<IActionResult> GetAllCourseByIsAccept([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByCreateDateAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _coursesService.GetAllCourseByIsAcceptAsync(page, size, search, sortByCreateDateAsc);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpPut("accept-course")]
+        public async Task<IActionResult> AcceptingCourse([FromBody] CoursesAcceptDTO coursesAcceptDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _coursesService.AcceptingCouse(coursesAcceptDTO);
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
             }

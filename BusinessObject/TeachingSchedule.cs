@@ -13,7 +13,7 @@ namespace BusinessObject
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime LearningDate { get; set; }
+        public DateTime TeachingDate { get; set; }
         public bool StudentAttendance { get; set; }
         public string StudentReason { get; set; }
         public int SlotNumber { get; set; }

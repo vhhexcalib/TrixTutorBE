@@ -95,7 +95,17 @@ namespace Repository.Repositories
             {
                 query = query.Where(filter);
             }
-
+            if (flag.Equals(""))
+            {
+                // Tìm kiếm theo tất cả biến
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(a => a.Address.Contains(search)
+                    || a.TutorInformation.TutorCategory.Name.Contains(search)
+                    || a.Name.Contains(search)
+                    );
+                }
+            }
             if (flag.Equals("Name"))
             {
                 // Tìm kiếm theo tên tài khoản 
@@ -118,17 +128,6 @@ namespace Repository.Repositories
                 if (!string.IsNullOrEmpty(search))
                 {
                     query = query.Where(a => a.Address.Contains(search));
-                }
-            }
-            if (flag.Equals(""))
-            {
-                // Tìm kiếm theo tất cả biến
-                if (!string.IsNullOrEmpty(search))
-                {
-                    query = query.Where(a => a.Address.Contains(search)
-                    || a.TutorInformation.TutorCategory.Name.Contains(search)
-                    || a.Address.Contains(search)
-                    );
                 }
             }
             // Sắp xếp theo ngày sinh (Birthday)

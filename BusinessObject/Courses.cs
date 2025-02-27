@@ -22,6 +22,16 @@ namespace BusinessObject
         [ForeignKey("TutorInformation")]
         public int TutorId { get; set; }
         public virtual TutorInformation TutorInformation { get; set; }
+
+        // Foreign key đến TeachingDate
+        [ForeignKey("TeachingDate")]
+        public int TeachingDateId { get; set; }
+        public virtual TeachingDate TeachingDate { get; set; }
+
+        // Foreign key đến TeachingTime
+        [ForeignKey("TeachingTime")]
+        public int TeachingTimeId { get; set; }
+        public virtual TeachingTime TeachingTime { get; set; }
         public virtual ICollection<LearningSchedule> LearningSchedules { get; set; }
         public virtual ICollection<LearningHistory> LearningHistories { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }

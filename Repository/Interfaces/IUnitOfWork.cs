@@ -25,6 +25,8 @@ namespace Repository.Interfaces
         ILearningScheduleRepository LearningScheduleRepository { get; }
         ILearningHistoryRepository LearningHistoryRepository { get; }
         ICoursesRepository CoursesRepository { get; }
+        ITeachingHistoryRepository TeachingHistoryRepository { get; }
+        ITeachingScheduleRepository TeachingScheduleRepository { get; }
 
         Task<string> SaveAsync();
     }

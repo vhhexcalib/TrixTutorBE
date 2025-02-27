@@ -90,6 +90,15 @@ namespace Service.Mappings
 
             //Courses
             CreateMap<Courses, CreateCoursesDTO>().ReverseMap();
+
+            // Mapping Courses -> AllCoursesDTO
+            CreateMap<Courses, AllCoursesDTO>()
+                .ForMember(dest => dest.TeachingTime,
+                           opt => opt.MapFrom(src => src.TeachingTime.TeachingTimes)) // Lấy TeachingTimes từ bảng TeachingTime
+                .ForMember(dest => dest.TeachingDate,
+                           opt => opt.MapFrom(src => src.TeachingDate.TeachingDates)) // Lấy TeachingDates từ bảng TeachingDate
+                .ForMember(dest => dest.TutorId,
+                           opt => opt.MapFrom(src => src.TutorInformation.Account.Name)); // Lấy Name từ bảng Account
         }
     }
 }

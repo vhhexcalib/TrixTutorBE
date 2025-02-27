@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessObject
 {
@@ -14,5 +11,10 @@ namespace BusinessObject
         public int Id { get; set; }
         public int Quantity { get; set; }
         public string TeachingDates { get; set; }
+        public virtual ICollection<Courses> Courses { get; set; }
+        public TeachingDate()
+        {
+            Courses = new HashSet<Courses>();
+        }
     }
 }

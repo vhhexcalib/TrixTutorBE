@@ -282,6 +282,20 @@ namespace DataAccess.Context
             .HasForeignKey<SystemAccountWallet>(saw => saw.AccountId)
             .OnDelete(DeleteBehavior.Cascade);
 
+            // Course -> TeachingDate (1-N)
+            modelBuilder.Entity<Courses>()
+                .HasOne(c => c.TeachingDate)
+                .WithMany(td => td.Courses)
+                .HasForeignKey(c => c.TeachingDateId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> TeachingTime (1-N)
+            modelBuilder.Entity<Courses>()
+                .HasOne(c => c.TeachingTime)
+                .WithMany(tt => tt.Courses)
+                .HasForeignKey(c => c.TeachingTimeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(modelBuilder);
         }
 
