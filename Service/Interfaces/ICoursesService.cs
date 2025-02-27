@@ -16,5 +16,8 @@ namespace Service.Interfaces
         Task<dynamic> CreateCourse(CurrentUserObject currentUserObject, CreateCoursesDTO createCoursesDTO);
         Task<PagedResult<AllCoursesDTO>> GetAllCourseByIsAcceptAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
         Task<dynamic> AcceptingCouse(CoursesAcceptDTO coursesAcceptDTO);
+        Task<PagedResult<AllCoursesDTO>> GetAllCourseAcceptedAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
+        Task<IEnumerable<TeachingTimeDTO>> GetTeachingTimeAsync();
+        Task<IEnumerable<TeachingDateDTO>> GetTeachingDateAsync();
     }
 }

@@ -22,8 +22,7 @@ namespace Service.DTOs.TutorDTO
         public string Degree { get; set; }
         public string ExperienceYear { get; set; }
         public int TotalTeachDay { get; set; }
-        public decimal LowestSalaryPerHour { get; set; }
-        public decimal HighestSalaryPerHour { get; set; }
+        public decimal SalaryPerHour { get; set; }
         public string TeachingStyle { get; set; }
         public string TutorCategoryName { get; set; }
         public string BankName { get; set; }

@@ -26,8 +26,8 @@ namespace Service.Services
         }
         public async Task<dynamic> CreateFeedBackForCourse(CurrentUserObject currentUserObject, FeedbackDTO feedbackDTO)
         {
-            var feedback = new Feedback() {AdminChecked = true, CheckingRequest = feedbackDTO.CheckingRequest, CourseId = feedbackDTO.CourseId, FeedbackById = feedbackDTO.FeedbackById, FeedbackContent = feedbackDTO.FeedbackContent, Rating = feedbackDTO.Rating  };
-            if(feedbackDTO.CheckingRequest == true) feedback.AdminChecked = false;
+            var feedback = new Feedback() { CourseId = feedbackDTO.CourseId, FeedbackById = feedbackDTO.FeedbackById, FeedbackContent = feedbackDTO.FeedbackContent, Rating = feedbackDTO.Rating  };
+            if(feedbackDTO.CheckingRequest == true)
             await _unitOfWork.FeedbackRepository.AddAsync(feedback);
             var result = await _unitOfWork.SaveAsync();
             if (result == "Save Change Success")

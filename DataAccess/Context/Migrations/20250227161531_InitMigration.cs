@@ -43,6 +43,34 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TeachingDate",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    TeachingDates = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeachingDate", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeachingTime",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    TeachingTimes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeachingTime", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TutorCategory",
                 columns: table => new
                 {
@@ -135,41 +163,6 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Renting",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TutorId = table.Column<int>(type: "int", nullable: false),
-                    LastRentingTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastRentingStudent = table.Column<int>(type: "int", nullable: false),
-                    LastRentingCategoryId = table.Column<int>(type: "int", nullable: false),
-                    RentingStatus = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Renting", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Renting_Account_LastRentingStudent",
-                        column: x => x.LastRentingStudent,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Renting_Account_TutorId",
-                        column: x => x.TutorId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Renting_TutorCategory_LastRentingCategoryId",
-                        column: x => x.LastRentingCategoryId,
-                        principalTable: "TutorCategory",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TransactionHistory",
                 columns: table => new
                 {
@@ -202,12 +195,10 @@ namespace DataAccess.Context.Migrations
                     Degree = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExperienceYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalTeachDay = table.Column<int>(type: "int", nullable: false),
-                    LowestSalaryPerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    HighestSalaryPerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SalaryPerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TeachingStyle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRented = table.Column<bool>(type: "bit", nullable: false),
                     IsPremium = table.Column<bool>(type: "bit", nullable: false),
-                    MaxLearning = table.Column<int>(type: "int", nullable: false),
                     TutorCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -323,13 +314,56 @@ namespace DataAccess.Context.Migrations
                     TeachingPlace = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAccepted = table.Column<bool>(type: "bit", nullable: false),
                     IsLocked = table.Column<bool>(type: "bit", nullable: false),
-                    TutorId = table.Column<int>(type: "int", nullable: false)
+                    TutorId = table.Column<int>(type: "int", nullable: false),
+                    TeachingDateId = table.Column<int>(type: "int", nullable: false),
+                    TeachingTimeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.CourseId);
                     table.ForeignKey(
+                        name: "FK_Courses_TeachingDate_TeachingDateId",
+                        column: x => x.TeachingDateId,
+                        principalTable: "TeachingDate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_TeachingTime_TeachingTimeId",
+                        column: x => x.TeachingTimeId,
+                        principalTable: "TeachingTime",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Courses_TutorInformation_TutorId",
+                        column: x => x.TutorId,
+                        principalTable: "TutorInformation",
+                        principalColumn: "TutorId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    ReportContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdminChecked = table.Column<bool>(type: "bit", nullable: false),
+                    TutorId = table.Column<int>(type: "int", nullable: false),
+                    ReportById = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_Account_ReportById",
+                        column: x => x.ReportById,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reports_TutorInformation_TutorId",
                         column: x => x.TutorId,
                         principalTable: "TutorInformation",
                         principalColumn: "TutorId",
@@ -365,8 +399,6 @@ namespace DataAccess.Context.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Rating = table.Column<double>(type: "float", nullable: false),
                     FeedbackContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CheckingRequest = table.Column<bool>(type: "bit", nullable: false),
-                    AdminChecked = table.Column<bool>(type: "bit", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     FeedbackById = table.Column<int>(type: "int", nullable: false)
                 },
@@ -513,7 +545,7 @@ namespace DataAccess.Context.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LearningDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TeachingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentAttendance = table.Column<bool>(type: "bit", nullable: false),
                     StudentReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SlotNumber = table.Column<int>(type: "int", nullable: false),
@@ -557,40 +589,59 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "TeachingDate",
+                columns: new[] { "Id", "Quantity", "TeachingDates" },
+                values: new object[,]
+                {
+                    { 1, 0, "Thứ 2, Thứ 5" },
+                    { 2, 0, "Thứ 3, Thứ 6" },
+                    { 3, 0, "Thứ 4, Thứ 7" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TeachingTime",
+                columns: new[] { "Id", "Quantity", "TeachingTimes" },
+                values: new object[,]
+                {
+                    { 1, 0, "08:00 - 10:00" },
+                    { 2, 0, "13:00 - 15:00" },
+                    { 3, 0, "18:00 - 20:00" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "TutorCategory",
                 columns: new[] { "Id", "Name", "Quantity", "RentingQuantity" },
                 values: new object[,]
                 {
-                    { 1, "Toán học", 1, 0 },
-                    { 2, "Vật lý", 1, 0 },
-                    { 3, "Hóa học", 1, 0 },
-                    { 4, "Sinh học", 1, 0 },
-                    { 5, "Lịch sử", 1, 0 },
-                    { 6, "Địa lý", 1, 0 },
-                    { 7, "Ngữ văn", 1, 0 },
-                    { 8, "Tâm lý học", 1, 0 },
-                    { 9, "Triết học", 1, 0 },
-                    { 10, "Xã hội học", 1, 0 },
-                    { 11, "Luật học", 1, 0 },
-                    { 12, "Tiếng Anh", 1, 0 },
-                    { 13, "Tiếng Pháp", 1, 0 },
-                    { 14, "Tiếng Đức", 1, 0 },
-                    { 15, "Tiếng Trung", 1, 0 },
-                    { 16, "Tiếng Nhật", 1, 0 },
-                    { 17, "Lập trình", 1, 0 },
-                    { 18, "Công nghệ thông tin", 1, 0 },
-                    { 19, "Thiết kế đồ họa", 1, 0 },
-                    { 20, "Âm nhạc", 1, 0 },
-                    { 21, "Mỹ thuật", 1, 0 },
-                    { 22, "Giáo dục thể chất", 1, 0 },
-                    { 23, "Tài chính & Kinh tế", 1, 0 },
-                    { 24, "Kinh doanh & Quản lý", 1, 0 },
-                    { 25, "Marketing", 1, 0 },
-                    { 26, "Kế toán", 1, 0 },
-                    { 27, "Kỹ thuật cơ khí", 1, 0 },
-                    { 28, "Kỹ thuật điện - điện tử", 1, 0 },
-                    { 29, "Y học", 1, 0 },
-                    { 30, "Dược học", 1, 0 }
+                    { 1, "Toán học", 0, 0 },
+                    { 2, "Vật lý", 0, 0 },
+                    { 3, "Hóa học", 0, 0 },
+                    { 4, "Sinh học", 0, 0 },
+                    { 5, "Lịch sử", 0, 0 },
+                    { 6, "Địa lý", 0, 0 },
+                    { 7, "Ngữ văn", 0, 0 },
+                    { 8, "Tâm lý", 0, 0 },
+                    { 9, "Triết học", 0, 0 },
+                    { 10, "Xã hội", 0, 0 },
+                    { 11, "Luật học", 0, 0 },
+                    { 12, "Tiếng Anh", 0, 0 },
+                    { 13, "Tiếng Pháp", 0, 0 },
+                    { 14, "Tiếng Đức", 0, 0 },
+                    { 15, "Tiếng Trung", 0, 0 },
+                    { 16, "Tiếng Nhật", 0, 0 },
+                    { 17, "Lập trình", 0, 0 },
+                    { 18, "Công nghệ", 0, 0 },
+                    { 19, "Thiết kế", 0, 0 },
+                    { 20, "Âm nhạc", 0, 0 },
+                    { 21, "Mỹ thuật", 0, 0 },
+                    { 22, "Tài chính", 0, 0 },
+                    { 23, "Kinh doanh", 0, 0 },
+                    { 24, "Marketing", 0, 0 },
+                    { 25, "Kế toán", 0, 0 },
+                    { 26, "Cơ khí", 0, 0 },
+                    { 27, "Điện tử", 0, 0 },
+                    { 28, "Y học", 0, 0 },
+                    { 29, "Dược học", 0, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -598,8 +649,8 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Address", "Avatar", "Birthday", "Email", "IsBan", "IsEmailConfirm", "Name", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", "imgurl", new DateOnly(2025, 2, 26), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", "imgurl", new DateOnly(2025, 2, 26), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", "imgurl", new DateOnly(2025, 2, 27), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", "imgurl", new DateOnly(2025, 2, 27), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -614,12 +665,17 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "SystemAccountWallet",
                 columns: new[] { "AccountId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 1, 0m, 0m, new DateTime(2025, 2, 26, 17, 20, 4, 22, DateTimeKind.Local).AddTicks(559) });
+                values: new object[] { 1, 0m, 0m, new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8176) });
 
             migrationBuilder.InsertData(
                 table: "TutorInformation",
-                columns: new[] { "TutorId", "Degree", "ExperienceYear", "GeneralProfile", "HighestSalaryPerHour", "IsPremium", "IsRented", "Language", "LowestSalaryPerHour", "MaxLearning", "TeachingStyle", "TotalTeachDay", "TutorCategoryId" },
-                values: new object[] { 2, "link", "10Year", "general profile", 0m, false, false, "Vietnamese", 0m, 0, "fun", 0, 1 });
+                columns: new[] { "TutorId", "Degree", "ExperienceYear", "GeneralProfile", "IsPremium", "IsRented", "Language", "SalaryPerHour", "TeachingStyle", "TotalTeachDay", "TutorCategoryId" },
+                values: new object[] { 2, "link", "10Year", "general profile", false, false, "Vietnamese", 0m, "fun", 0, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Wallet",
+                columns: new[] { "TutorId", "Balance", "LastChangeAmount", "LastChangeDate" },
+                values: new object[] { 2, 0m, 0m, new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8651) });
 
             migrationBuilder.InsertData(
                 table: "BankInformation",
@@ -635,6 +691,16 @@ namespace DataAccess.Context.Migrations
                 name: "IX_Certificate_TutorId",
                 table: "Certificate",
                 column: "TutorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_TeachingDateId",
+                table: "Courses",
+                column: "TeachingDateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_TeachingTimeId",
+                table: "Courses",
+                column: "TeachingTimeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_TutorId",
@@ -699,18 +765,13 @@ namespace DataAccess.Context.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Renting_LastRentingCategoryId",
-                table: "Renting",
-                column: "LastRentingCategoryId");
+                name: "IX_Reports_ReportById",
+                table: "Reports",
+                column: "ReportById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Renting_LastRentingStudent",
-                table: "Renting",
-                column: "LastRentingStudent");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Renting_TutorId",
-                table: "Renting",
+                name: "IX_Reports_TutorId",
+                table: "Reports",
                 column: "TutorId");
 
             migrationBuilder.CreateIndex(
@@ -784,7 +845,7 @@ namespace DataAccess.Context.Migrations
                 name: "Payment");
 
             migrationBuilder.DropTable(
-                name: "Renting");
+                name: "Reports");
 
             migrationBuilder.DropTable(
                 name: "SystemAccountWallet");
@@ -809,6 +870,12 @@ namespace DataAccess.Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "TeachingDate");
+
+            migrationBuilder.DropTable(
+                name: "TeachingTime");
 
             migrationBuilder.DropTable(
                 name: "TutorInformation");

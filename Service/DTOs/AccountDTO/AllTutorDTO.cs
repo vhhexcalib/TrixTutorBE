@@ -18,8 +18,7 @@ namespace Service.DTOs.AccountDTO
         public DateOnly Birthday { get; set; }
         public string Language { get; set; }
         public int TotalTeachDay { get; set; }
-        public decimal LowestSalaryPerHour { get; set; }
-        public decimal HighestSalaryPerHour { get; set; }
+        public decimal SalaryPerHour { get; set; }
         public string TutorCategoryName { get; set; }
     }
 }

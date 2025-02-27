@@ -13,8 +13,10 @@ namespace BusinessObject
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PaymentId { get; set; }
+        [ForeignKey("Order")]
         public int OrderId { get; set; }
-        [ForeignKey("AccountId")]
+        public virtual Order Order { get; set; }
+        [ForeignKey("Account")]
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }
         public decimal Amount { get; set; }

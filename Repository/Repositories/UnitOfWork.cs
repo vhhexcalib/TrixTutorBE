@@ -31,6 +31,9 @@ namespace Repository.Repositories
         public ICoursesRepository CoursesRepository { get; set; }
         public ITeachingScheduleRepository TeachingScheduleRepository { get; set; }
         public ITeachingHistoryRepository TeachingHistoryRepository { get; set; }
+        public ITeachingDateRepository TeachingDateRepository { get; set; }
+        public ITeachingTimeRepository TeachingTimeRepository { get; set; }
+
 
         public UnitOfWork(TrixTutorDBContext context)
         {
@@ -54,6 +57,9 @@ namespace Repository.Repositories
             CoursesRepository = new CoursesRepository(_context);
             TeachingScheduleRepository = new TeachingScheduleRepository(_context);
             TeachingHistoryRepository = new TeachingHistoryRepository(_context);
+            TeachingDateRepository = new TeachingDateRepository(_context);
+            TeachingTimeRepository = new TeachingTimeRepository(_context);
+
         }
         public async Task<string> SaveAsync()
         {

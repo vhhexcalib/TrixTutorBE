@@ -27,6 +27,9 @@ namespace Repository.Interfaces
         ICoursesRepository CoursesRepository { get; }
         ITeachingHistoryRepository TeachingHistoryRepository { get; }
         ITeachingScheduleRepository TeachingScheduleRepository { get; }
+        ITeachingDateRepository TeachingDateRepository { get; }
+        ITeachingTimeRepository TeachingTimeRepository { get; }
+
 
         Task<string> SaveAsync();
     }

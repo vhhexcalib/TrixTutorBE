@@ -60,6 +60,25 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpGet("accepted-courses")]
+        public async Task<IActionResult> GetAllCourseAccepted([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByCreateDateAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _coursesService.GetAllCourseAcceptedAsync(page, size, search, sortByCreateDateAsc);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "SystemAccountOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("accept-course")]
         public async Task<IActionResult> AcceptingCourse([FromBody] CoursesAcceptDTO coursesAcceptDTO)
         {
@@ -72,6 +91,40 @@ namespace TrixTutorAPI.Controllers
                 var result = await _coursesService.AcceptingCouse(coursesAcceptDTO);
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpGet("teaching-times")]
+        public async Task<IActionResult> GetTeachingTimes()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _coursesService.GetTeachingTimeAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpGet("teaching-dates")]
+        public async Task<IActionResult> GetTeachingDates()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _coursesService.GetTeachingDateAsync();
+                return Ok(result);
             }
             catch (Exception ex)
             {

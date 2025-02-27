@@ -20,12 +20,10 @@ namespace BusinessObject
         public string Degree { get; set; }
         public string ExperienceYear { get; set; }
         public int TotalTeachDay { get; set; }
-        public decimal LowestSalaryPerHour { get; set; }
-        public decimal HighestSalaryPerHour { get; set; }
+        public decimal SalaryPerHour { get; set; }
         public string TeachingStyle { get; set; }
         public bool IsRented { get; set; }
         public bool IsPremium { get; set; }
-        public int MaxLearning { get; set; }
 
         [ForeignKey("TutorCategory")]
         public int TutorCategoryId { get; set; }
@@ -38,7 +36,7 @@ namespace BusinessObject
         public virtual ICollection<LearningHistory> LearningHistories { get; set; } // Thêm danh sách LearningHistory
         public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
         public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
-
+        public virtual ICollection<Report> Reports { get; set; }
         public TutorInformation()
         {
             Certificates = new HashSet<Certificate>();
@@ -46,7 +44,8 @@ namespace BusinessObject
             LearningHistories = new HashSet<LearningHistory>();
             LearningSchedules = new HashSet<LearningSchedule>();
             TeachingHistories = new HashSet<TeachingHistory>();
-            TeachingSchedules = new HashSet<TeachingSchedule>();
+            TeachingSchedules = new HashSet<TeachingSchedule>(); 
+            Reports = new HashSet<Report>();
         }
     }
 

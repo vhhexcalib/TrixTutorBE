@@ -23,10 +23,11 @@ namespace DataAccess.Context.Configuration
                     Degree = "link",
                     ExperienceYear = "10Year",
                     TotalTeachDay = 0,
-                    LowestSalaryPerHour = 0,
-                    HighestSalaryPerHour = 0,
+                    SalaryPerHour = 0,
                     TeachingStyle = "fun",
                     TutorCategoryId = 1,
+                    IsPremium = false,
+                    IsRented = false
                 }
                 );
         }

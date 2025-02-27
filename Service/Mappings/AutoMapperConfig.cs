@@ -45,8 +45,7 @@ namespace Service.Mappings
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday))
                 .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.TutorInformation.Language))
                 .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
-                .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
-                .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
+                .ForMember(dest => dest.SalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.SalaryPerHour))
                 .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategory.Name))
                 .ForMember(dest => dest.GeneralProfile, opt => opt.MapFrom(src => src.TutorInformation.GeneralProfile)) // Thêm dòng này
                 .ReverseMap()
@@ -60,8 +59,7 @@ namespace Service.Mappings
                 .ForMember(dest => dest.Degree, opt => opt.MapFrom(src => src.TutorInformation.Degree))
                 .ForMember(dest => dest.ExperienceYear, opt => opt.MapFrom(src => src.TutorInformation.ExperienceYear))
                 .ForMember(dest => dest.TotalTeachDay, opt => opt.MapFrom(src => src.TutorInformation.TotalTeachDay))
-                .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
-                .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
+                .ForMember(dest => dest.SalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.SalaryPerHour))
                 .ForMember(dest => dest.TeachingStyle, opt => opt.MapFrom(src => src.TutorInformation.TeachingStyle))
                 .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategoryId))
                 .ForMember(dest => dest.BankName, opt => opt.MapFrom(src => src.TutorInformation.BankInformation.BankName))
@@ -90,7 +88,13 @@ namespace Service.Mappings
 
             //Courses
             CreateMap<Courses, CreateCoursesDTO>().ReverseMap();
-
+            
+            // Teaching Time <-> DTO
+            CreateMap<TeachingTime, TeachingTimeDTO>().ReverseMap();
+            
+            // Teaching Date <-> DTO
+            CreateMap<TeachingDate, TeachingDateDTO>().ReverseMap();
+            
             // Mapping Courses -> AllCoursesDTO
             CreateMap<Courses, AllCoursesDTO>()
                 .ForMember(dest => dest.TeachingTime,

@@ -38,6 +38,8 @@ namespace Service.Services
             createdcourse.TutorId = currentUserObject.AccountId;
             createdcourse.IsAccepted = false;
             createdcourse.IsLocked = false;
+            createdcourse.TeachingDateId = createCoursesDTO.TeachingDateId;
+            createdcourse.TeachingTimeId = createCoursesDTO.TeachingTimeId;
             await _unitOfWork.CoursesRepository.AddAsync(createdcourse);
             var result = await _unitOfWork.SaveAsync();
             if (result == "Save Change Success")
@@ -61,16 +63,25 @@ namespace Service.Services
                 TotalPages = (int)Math.Ceiling((double)totalItems / size)
             };
         }
+        public async Task<PagedResult<AllCoursesDTO>> GetAllCourseAcceptedAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true)
+        {
+            var courses = await _unitOfWork.CoursesRepository.GetAllCourseAccepted(page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
+            var totalItems = await _unitOfWork.CoursesRepository.CountAsync(search); // Đếm tổng số course phù hợp
+
+            return new PagedResult<AllCoursesDTO>
+            {
+                Items = _mapper.Map<IEnumerable<AllCoursesDTO>>(courses),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / size)
+            };
+        }
         public async Task<dynamic> AcceptingCouse(CoursesAcceptDTO coursesAcceptDTO)
         {
             var course = await _unitOfWork.CoursesRepository.GetByIdAsync(coursesAcceptDTO.CourseId);
-            var teachingtime = await _unitOfWork.tea
-                var teachingdate = 
-            if(course == null)
+            if (course == null)
             {
                 return Result.Failure(CoursesErrors.FailGetById);
             }
-            if(coursesAcceptDTO.)
             course.IsAccepted = true;
             await _unitOfWork.CoursesRepository.UpdateAsync(course);
             var result = await _unitOfWork.SaveAsync();
@@ -82,6 +93,16 @@ namespace Service.Services
             {
                 return Result.Failure(CoursesErrors.AcceptCourseFail);
             }
+        }
+        public async Task<IEnumerable<TeachingTimeDTO>> GetTeachingTimeAsync()
+        {
+            var teachingTimes = await _unitOfWork.TeachingTimeRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TeachingTimeDTO>>(teachingTimes);
+        }
+        public async Task<IEnumerable<TeachingDateDTO>> GetTeachingDateAsync()
+        {
+            var teachingDates = await _unitOfWork.TeachingDateRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TeachingDateDTO>>(teachingDates);
         }
     }
 }

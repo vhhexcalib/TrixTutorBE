@@ -68,5 +68,40 @@ namespace Repository.Repositories
             // Phân trang
             return await query.Skip((page - 1) * size).Take(size).ToListAsync();
         }
+        public async Task<IEnumerable<Courses>> GetAllCourseAccepted(Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true)
+        {
+            IQueryable<Courses> query = _context.Set<Courses>();
+
+            // Lọc theo isAccepted = false
+            query = query.Where(a => a.IsAccepted);
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            // Tìm kiếm theo Courses Name
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.CourseName.Contains(search));
+            }
+
+            // Sắp xếp theo Create Date
+            query = sortByCreateDateAsc
+                ? query.OrderBy(a => a.CreateDate)
+                : query.OrderByDescending(a => a.CreateDate);
+
+            // Bao gồm các navigation properties (nếu có)
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            // Phân trang
+            return await query.Skip((page - 1) * size).Take(size).ToListAsync();
+        }
     }
 }

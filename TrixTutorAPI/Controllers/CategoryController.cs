@@ -33,7 +33,24 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpGet("categories-no-paging")]
+        public async Task<IActionResult> GetAllCategoriesNoPaging([FromQuery] string? search = null, [FromQuery] bool sortByQuantityAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            try
+            {
+                var result = await _tutorCategoryService.GetAllCategoriesNoPagingAsync(search, sortByQuantityAsc);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         [HttpPost("category")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
         {

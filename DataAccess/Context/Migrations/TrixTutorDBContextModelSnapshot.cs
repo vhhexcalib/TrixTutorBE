@@ -78,7 +78,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 26),
+                            Birthday = new DateOnly(2025, 2, 27),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -92,7 +92,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 26),
+                            Birthday = new DateOnly(2025, 2, 27),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -211,11 +211,17 @@ namespace DataAccess.Context.Migrations
                     b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
+                    b.Property<int>("TeachingDateId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TeachingPlace")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TeachingSlots")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeachingTimeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
@@ -226,6 +232,10 @@ namespace DataAccess.Context.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CourseId");
+
+                    b.HasIndex("TeachingDateId");
+
+                    b.HasIndex("TeachingTimeId");
 
                     b.HasIndex("TutorId");
 
@@ -239,12 +249,6 @@ namespace DataAccess.Context.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AdminChecked")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CheckingRequest")
-                        .HasColumnType("bit");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -402,7 +406,7 @@ namespace DataAccess.Context.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("BusinessObject.Renting", b =>
+            modelBuilder.Entity("BusinessObject.Report", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -410,30 +414,29 @@ namespace DataAccess.Context.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LastRentingCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LastRentingStudent")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastRentingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("RentingStatus")
+                    b.Property<bool>("AdminChecked")
                         .HasColumnType("bit");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ReportById")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReportContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LastRentingCategoryId");
-
-                    b.HasIndex("LastRentingStudent");
+                    b.HasIndex("ReportById");
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("Renting");
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("BusinessObject.Role", b =>
@@ -561,7 +564,47 @@ namespace DataAccess.Context.Migrations
                             AccountId = 1,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 26, 17, 48, 38, 811, DateTimeKind.Local).AddTicks(9571)
+                            LastChangeDate = new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8176)
+                        });
+                });
+
+            modelBuilder.Entity("BusinessObject.TeachingDate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeachingDates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TeachingDate");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Quantity = 0,
+                            TeachingDates = "Thứ 2, Thứ 5"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Quantity = 0,
+                            TeachingDates = "Thứ 3, Thứ 6"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Quantity = 0,
+                            TeachingDates = "Thứ 4, Thứ 7"
                         });
                 });
 
@@ -610,9 +653,6 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LearningDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("SlotNumber")
                         .HasColumnType("int");
 
@@ -630,6 +670,9 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("TeachingDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
 
@@ -642,6 +685,46 @@ namespace DataAccess.Context.Migrations
                     b.HasIndex("TutorId");
 
                     b.ToTable("TeachingSchedules");
+                });
+
+            modelBuilder.Entity("BusinessObject.TeachingTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeachingTimes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TeachingTime");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Quantity = 0,
+                            TeachingTimes = "08:00 - 10:00"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Quantity = 0,
+                            TeachingTimes = "13:00 - 15:00"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Quantity = 0,
+                            TeachingTimes = "18:00 - 20:00"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.TransactionHistory", b =>
@@ -704,210 +787,203 @@ namespace DataAccess.Context.Migrations
                         {
                             Id = 1,
                             Name = "Toán học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 2,
                             Name = "Vật lý",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 3,
                             Name = "Hóa học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 4,
                             Name = "Sinh học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 5,
                             Name = "Lịch sử",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 6,
                             Name = "Địa lý",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 7,
                             Name = "Ngữ văn",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 8,
-                            Name = "Tâm lý học",
-                            Quantity = 1,
+                            Name = "Tâm lý",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 9,
                             Name = "Triết học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 10,
-                            Name = "Xã hội học",
-                            Quantity = 1,
+                            Name = "Xã hội",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 11,
                             Name = "Luật học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 12,
                             Name = "Tiếng Anh",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 13,
                             Name = "Tiếng Pháp",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 14,
                             Name = "Tiếng Đức",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 15,
                             Name = "Tiếng Trung",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 16,
                             Name = "Tiếng Nhật",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 17,
                             Name = "Lập trình",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 18,
-                            Name = "Công nghệ thông tin",
-                            Quantity = 1,
+                            Name = "Công nghệ",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 19,
-                            Name = "Thiết kế đồ họa",
-                            Quantity = 1,
+                            Name = "Thiết kế",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 20,
                             Name = "Âm nhạc",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 21,
                             Name = "Mỹ thuật",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 22,
-                            Name = "Giáo dục thể chất",
-                            Quantity = 1,
+                            Name = "Tài chính",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 23,
-                            Name = "Tài chính & Kinh tế",
-                            Quantity = 1,
+                            Name = "Kinh doanh",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 24,
-                            Name = "Kinh doanh & Quản lý",
-                            Quantity = 1,
+                            Name = "Marketing",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 25,
-                            Name = "Marketing",
-                            Quantity = 1,
+                            Name = "Kế toán",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 26,
-                            Name = "Kế toán",
-                            Quantity = 1,
+                            Name = "Cơ khí",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 27,
-                            Name = "Kỹ thuật cơ khí",
-                            Quantity = 1,
+                            Name = "Điện tử",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 28,
-                            Name = "Kỹ thuật điện - điện tử",
-                            Quantity = 1,
+                            Name = "Y học",
+                            Quantity = 0,
                             RentingQuantity = 0
                         },
                         new
                         {
                             Id = 29,
-                            Name = "Y học",
-                            Quantity = 1,
-                            RentingQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 30,
                             Name = "Dược học",
-                            Quantity = 1,
+                            Quantity = 0,
                             RentingQuantity = 0
                         });
                 });
@@ -955,9 +1031,6 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("HighestSalaryPerHour")
-                        .HasColumnType("decimal(18, 2)");
-
                     b.Property<bool>("IsPremium")
                         .HasColumnType("bit");
 
@@ -968,11 +1041,8 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("LowestSalaryPerHour")
+                    b.Property<decimal>("SalaryPerHour")
                         .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int>("MaxLearning")
-                        .HasColumnType("int");
 
                     b.Property<string>("TeachingStyle")
                         .IsRequired()
@@ -997,12 +1067,10 @@ namespace DataAccess.Context.Migrations
                             Degree = "link",
                             ExperienceYear = "10Year",
                             GeneralProfile = "general profile",
-                            HighestSalaryPerHour = 0m,
                             IsPremium = false,
                             IsRented = false,
                             Language = "Vietnamese",
-                            LowestSalaryPerHour = 0m,
-                            MaxLearning = 0,
+                            SalaryPerHour = 0m,
                             TeachingStyle = "fun",
                             TotalTeachDay = 0,
                             TutorCategoryId = 1
@@ -1035,7 +1103,7 @@ namespace DataAccess.Context.Migrations
                             TutorId = 2,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 26, 17, 48, 38, 811, DateTimeKind.Local).AddTicks(9649)
+                            LastChangeDate = new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8651)
                         });
                 });
 
@@ -1074,11 +1142,27 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.Courses", b =>
                 {
+                    b.HasOne("BusinessObject.TeachingDate", "TeachingDate")
+                        .WithMany("Courses")
+                        .HasForeignKey("TeachingDateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.TeachingTime", "TeachingTime")
+                        .WithMany("Courses")
+                        .HasForeignKey("TeachingTimeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
                         .WithMany("Courses")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("TeachingDate");
+
+                    b.Navigation("TeachingTime");
 
                     b.Navigation("TutorInformation");
                 });
@@ -1175,31 +1259,23 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("BusinessObject.Renting", b =>
+            modelBuilder.Entity("BusinessObject.Report", b =>
                 {
-                    b.HasOne("BusinessObject.TutorCategory", "Category")
-                        .WithMany("Rentings")
-                        .HasForeignKey("LastRentingCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BusinessObject.Account", "Student")
-                        .WithMany("RentingsAsStudent")
-                        .HasForeignKey("LastRentingStudent")
+                    b.HasOne("BusinessObject.Account", "Account")
+                        .WithMany("Reports")
+                        .HasForeignKey("ReportById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Account", "Tutor")
-                        .WithMany("RentingsAsTutor")
+                    b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
+                        .WithMany("Reports")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Account");
 
-                    b.Navigation("Student");
-
-                    b.Navigation("Tutor");
+                    b.Navigation("TutorInformation");
                 });
 
             modelBuilder.Entity("BusinessObject.SystemAccount", b =>
@@ -1340,9 +1416,7 @@ namespace DataAccess.Context.Migrations
 
                     b.Navigation("Payments");
 
-                    b.Navigation("RentingsAsStudent");
-
-                    b.Navigation("RentingsAsTutor");
+                    b.Navigation("Reports");
 
                     b.Navigation("TeachingHistories");
 
@@ -1383,10 +1457,18 @@ namespace DataAccess.Context.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BusinessObject.TeachingDate", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("BusinessObject.TeachingTime", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
             modelBuilder.Entity("BusinessObject.TutorCategory", b =>
                 {
-                    b.Navigation("Rentings");
-
                     b.Navigation("TutorInformations");
                 });
 
@@ -1402,6 +1484,8 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("LearningHistories");
 
                     b.Navigation("LearningSchedules");
+
+                    b.Navigation("Reports");
 
                     b.Navigation("TeachingHistories");
 

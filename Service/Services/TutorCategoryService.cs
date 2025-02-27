@@ -48,7 +48,25 @@ namespace Service.Services
                 TotalPages = totalPages
             };
         }
+        public async Task<PagedResult<TutorCategoryDTO>> GetAllCategoriesNoPagingAsync(string? search = null, bool sortByQuantityAsc = true)
+        {
+            // Lấy danh mục có tìm kiếm và sắp xếp
+            var categories = await _unitOfWork.TutorCategoryRepository.GetAllCategoriesNoPagingAsync(
+                search, sortByQuantityAsc);
 
+            // Đếm tổng số danh mục để tính phân trang
+            int totalItems = await _unitOfWork.TutorCategoryRepository.CountTutorCategoriesAsync(search);
+
+            // Ánh xạ danh mục sang DTO
+            var categoryDtos = _mapper.Map<IEnumerable<TutorCategoryDTO>>(categories);
+
+            // Trả về kết quả dưới dạng PagedResult
+            return new PagedResult<TutorCategoryDTO>
+            {
+                Items = categoryDtos,
+                TotalItems = totalItems
+            };
+        }
 
         public async Task<dynamic> CreateCategory(CreateCategoryDTO createCategoryDTO)
         {

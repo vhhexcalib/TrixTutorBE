@@ -34,7 +34,7 @@ namespace BusinessObject
         public virtual Wallet Wallet { get; set; }
         public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
         public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
-
+        public virtual ICollection<Report> Reports { get; set; }
         public Account()
         {
             Feedbacks = new HashSet<Feedback>();
@@ -42,6 +42,7 @@ namespace BusinessObject
             LearningSchedules = new HashSet<LearningSchedule>(); 
             TeachingHistories = new HashSet<TeachingHistory>();
             TeachingSchedules = new HashSet<TeachingSchedule>();
+            Reports = new HashSet<Report>();
         }
     }
 

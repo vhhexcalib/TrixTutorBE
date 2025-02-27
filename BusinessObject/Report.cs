@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace BusinessObject
 {
-    public class Feedback
+    public class Report
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public double Rating { get; set; } // Đổi từ string -> double
-        public string FeedbackContent { get; set; }
-        [ForeignKey("Course")]
-        public int CourseId { get; set; }
-        public virtual Courses Course { get; set; }
+        public string ReportContent { get; set; }
+        public bool AdminChecked { get; set; }
+        [ForeignKey("TutorInformation")]
+        public int TutorId { get; set; }
+        public virtual TutorInformation TutorInformation { get; set; }
         [ForeignKey("Account")]
-        public int FeedbackById { get; set; }
+        public int ReportById { get; set; }
         public virtual Account Account { get; set; }
     }
-
 }

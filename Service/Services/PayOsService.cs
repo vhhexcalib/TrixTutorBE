@@ -5,6 +5,7 @@ using Net.payOS;
 using Net.payOS.Types;
 using Repository.Interfaces;
 using Service.Common;
+using Service.Exceptions;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,12 @@ namespace Service.Services
             var checksumKey = _configuration["PayOSSettings:ChecksumKey"];
             payOS = new PayOS(clientId, apiKey, checksumKey);
         }
-        //public async Task<dynamic> CreatePayment(int orderId)
+        //public async Task<dynamic> CreatePayment(int paymentId)
         //{
-        //    var payment = await _unitOfWork.PaymentRepository.
-        //    if (payment != null && payment.Any())
+        //    var payment = await _unitOfWork.PaymentRepository.GetByIdAsync(paymentId);
+        //    if (payment != null)
         //    {
-        //        return Result.Failure(payment.PaymentError);
+        //        return Result.Failure(PaymentErrors.ExistedPayment);
         //    }
         //    var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
         //    if (orderNow == null)

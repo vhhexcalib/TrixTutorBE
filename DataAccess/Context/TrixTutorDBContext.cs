@@ -39,6 +39,7 @@ namespace DataAccess.Context
         public DbSet<SystemAccountWallet> SystemAccountWallet { get; set; }
         public DbSet<TeachingTime> TeachingTime { get; set; }
         public DbSet<TeachingDate> TeachingDate { get; set; }
+        public DbSet<Report> Reports { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -148,11 +149,7 @@ namespace DataAccess.Context
                 .HasForeignKey(c => c.TutorId);
             // Specify the precision and scale for the decimal properties
             modelBuilder.Entity<TutorInformation>()
-                .Property(ti => ti.LowestSalaryPerHour)
-                .HasColumnType("decimal(18, 2)"); // Precision 18, scale 2 (2 decimal places)
-
-            modelBuilder.Entity<TutorInformation>()
-                .Property(ti => ti.HighestSalaryPerHour)
+                .Property(ti => ti.SalaryPerHour)
                 .HasColumnType("decimal(18, 2)"); // Precision 18, scale 2 (2 decimal places)
                               
             // Payment - Cấu hình Amount
@@ -296,6 +293,19 @@ namespace DataAccess.Context
                 .HasForeignKey(c => c.TeachingTimeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Report -> Account (N-1)
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Account)
+                .WithMany(a => a.Reports)
+                .HasForeignKey(r => r.ReportById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Report -> TutorInformation (N-1)
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.TutorInformation)
+                .WithMany(ti => ti.Reports)
+                .HasForeignKey(r => r.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
         }
 
