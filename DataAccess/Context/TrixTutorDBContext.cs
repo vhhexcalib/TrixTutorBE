@@ -37,13 +37,13 @@ namespace DataAccess.Context
         public DbSet<TeachingHistory> TeachingHistories { get; set; }
         public DbSet<TeachingSchedule> TeachingSchedules { get; set; }
         public DbSet<SystemAccountWallet> SystemAccountWallet { get; set; }
-
-
+        public DbSet<TeachingTime> TeachingTime { get; set; }
+        public DbSet<TeachingDate> TeachingDate { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Tutor Category Configuration
+            // Tutor Category Configuration
             modelBuilder.ApplyConfiguration(new TutorCategoryConfiguration());
 
             // SystemAccount Configuration
@@ -58,15 +58,20 @@ namespace DataAccess.Context
             // Tutor Information Configuration
             modelBuilder.ApplyConfiguration(new TutorInformationConfiguration());
 
-            //Bank Information Configuration
+            // Bank Information Configuration
             modelBuilder.ApplyConfiguration(new BankInformationConfiguration());
 
-            //System Account Wallet Configuration
+            // System Account Wallet Configuration
             modelBuilder.ApplyConfiguration(new SystemAccountWalletConfiguration());
 
-            //Tutor Wallet Configuration
+            // Tutor Wallet Configuration
             modelBuilder.ApplyConfiguration(new WalletConfiguration());
 
+            // Teaching Time Configuration
+            modelBuilder.ApplyConfiguration(new TeachingTimeConfiguration());
+
+            // Teaching Date Configuration
+            modelBuilder.ApplyConfiguration(new TeachingDateConfiguration());
 
 
             // Account -> Role: 1-N
@@ -168,19 +173,6 @@ namespace DataAccess.Context
             modelBuilder.Entity<Wallet>()
                 .Property(w => w.LastChangeAmount)
                 .HasPrecision(18, 2);
-            // Account -> Renting: 1-N (Account là Tutor)
-            modelBuilder.Entity<Renting>()
-                .HasOne(r => r.Tutor)
-                .WithMany(a => a.RentingsAsTutor)
-                .HasForeignKey(r => r.TutorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Account -> Renting: 1-N (Account là Student)
-            modelBuilder.Entity<Renting>()
-                .HasOne(r => r.Student)
-                .WithMany(a => a.RentingsAsStudent)
-                .HasForeignKey(r => r.LastRentingStudent)
-                .OnDelete(DeleteBehavior.Restrict);
             // Account -> LearningHistory (1-N)
             modelBuilder.Entity<LearningHistory>()
                 .HasOne(lh => lh.Account)

@@ -32,9 +32,6 @@ namespace BusinessObject
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<TransactionHistory> TransactionHistories { get; set; }
         public virtual Wallet Wallet { get; set; }
-
-        public virtual ICollection<Renting> RentingsAsTutor { get; set; }
-        public virtual ICollection<Renting> RentingsAsStudent { get; set; }
         public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
         public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
 
@@ -42,8 +39,6 @@ namespace BusinessObject
         {
             Feedbacks = new HashSet<Feedback>();
             LearningHistories = new HashSet<LearningHistory>(); // Khởi tạo danh sách LearningHistory
-            RentingsAsTutor = new HashSet<Renting>();
-            RentingsAsStudent = new HashSet<Renting>();
             LearningSchedules = new HashSet<LearningSchedule>(); 
             TeachingHistories = new HashSet<TeachingHistory>();
             TeachingSchedules = new HashSet<TeachingSchedule>();

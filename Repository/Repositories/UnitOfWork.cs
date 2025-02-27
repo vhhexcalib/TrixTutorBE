@@ -24,11 +24,11 @@ namespace Repository.Repositories
         public ICertificateRepository CertificateRepository { get; set; }
         public IWalletRepository WalletRepository { get; set; }
         public IPaymentRepository PaymentRepository { get; set; }
-        public ITransactionHistory TransactionHistory { get; set; }
-        public ISystemAccountWalletRepository SystemAccountWallet { get; set; }
-
-
-
+        public ITransactionHistoryRepository TransactionHistoryRepository { get; set; }
+        public ISystemAccountWalletRepository SystemAccountWalletRepository { get; set; }
+        public ILearningHistoryRepository LearningHistoryRepository { get; set; }
+        public ILearningScheduleRepository LearningScheduleRepository { get; set; }
+        public ICoursesRepository CoursesRepository { get; set; }
 
         public UnitOfWork(TrixTutorDBContext context)
         {
@@ -45,9 +45,11 @@ namespace Repository.Repositories
             CertificateRepository = new CertificateRepository(_context);
             WalletRepository = new WalletRepository(_context);
             PaymentRepository = new PaymentRepository(_context);
-            TransactionHistory = new TransactionHistoryRepository(_context);
-            SystemAccountWallet = new SystemAccountWalletRepository(_context);
-
+            TransactionHistoryRepository = new TransactionHistoryRepository(_context);
+            SystemAccountWalletRepository = new SystemAccountWalletRepository(_context);
+            LearningHistoryRepository = new LearningHistoryRepository(_context);
+            LearningScheduleRepository = new LearningScheduleRepository(_context);
+            CoursesRepository = new CoursesRepository(_context);
         }
         public async Task<string> SaveAsync()
         {

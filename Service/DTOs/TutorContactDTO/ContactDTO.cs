@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.DTOs
+namespace Service.DTOs.TutorContactDTO
 {
     public class ContactDTO
     {

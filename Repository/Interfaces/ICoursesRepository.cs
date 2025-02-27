@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
-    public interface ITransactionHistory : IRepository<TransactionHistory>
+    public interface ICoursesRepository : IRepository<Courses>
     {
+        Task<Courses?> GetCourseByName(string name);
     }
 }

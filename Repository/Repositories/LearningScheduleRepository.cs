@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class TransactionHistoryRepository : Repository<TransactionHistory>, ITransactionHistoryRepository
+    public class LearningScheduleRepository : Repository<LearningSchedule>, ILearningScheduleRepository
     {
         private readonly TrixTutorDBContext _context;
-        public TransactionHistoryRepository(TrixTutorDBContext context) : base(context)
+        public LearningScheduleRepository(TrixTutorDBContext context) : base(context)
         {
             _context = context;
         }

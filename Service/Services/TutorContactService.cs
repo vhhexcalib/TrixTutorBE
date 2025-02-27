@@ -7,7 +7,6 @@ using AutoMapper;
 using BusinessObject;
 using Repository.Interfaces;
 using Service.Common;
-using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.TutorContactDTO;
 using Service.Exceptions;

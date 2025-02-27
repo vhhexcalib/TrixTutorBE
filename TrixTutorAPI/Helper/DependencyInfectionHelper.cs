@@ -38,8 +38,7 @@ public static class DependencyInjectionHelper
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IBankInformationService, BankInformationService>();
         services.AddScoped<IFeedbackService, FeedbackService>();
-
-
+        services.AddScoped<ICoursesService, CoursesService>();
 
         return services;
     }

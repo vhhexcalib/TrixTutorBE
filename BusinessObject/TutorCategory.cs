@@ -14,17 +14,10 @@ namespace BusinessObject
         public string Name { get; set; }
         public int Quantity { get; set; }
         public int RentingQuantity { get; set; }
-
-        // Danh sách gia sư thuộc danh mục này
         public virtual ICollection<TutorInformation> TutorInformations { get; set; }
-
-        // Danh sách các giao dịch thuê liên quan đến danh mục này
-        public virtual ICollection<Renting> Rentings { get; set; }
-
         public TutorCategory()
         {
             TutorInformations = new HashSet<TutorInformation>();
-            Rentings = new HashSet<Renting>();
         }
     }
 }

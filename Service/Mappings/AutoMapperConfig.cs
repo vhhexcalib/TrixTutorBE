@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.Features;
 using BusinessObject;
-using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.BankDTO;
 using Service.DTOs.CategoryDTO;
+using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
 using Service.DTOs.RoleDTO;
+using Service.DTOs.TutorContactDTO;
 using Service.DTOs.TutorDTO;
 
 namespace Service.Mappings
@@ -47,6 +48,7 @@ namespace Service.Mappings
                 .ForMember(dest => dest.LowestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.LowestSalaryPerHour))
                 .ForMember(dest => dest.HighestSalaryPerHour, opt => opt.MapFrom(src => src.TutorInformation.HighestSalaryPerHour))
                 .ForMember(dest => dest.TutorCategoryName, opt => opt.MapFrom(src => src.TutorInformation.TutorCategory.Name))
+                .ForMember(dest => dest.GeneralProfile, opt => opt.MapFrom(src => src.TutorInformation.GeneralProfile)) // Thêm dòng này
                 .ReverseMap()
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToDateTime(TimeOnly.MinValue)));
 
@@ -86,6 +88,8 @@ namespace Service.Mappings
             // Mapping TutorContact <-> TutorContactDTO
             CreateMap<TutorContact, ContactDTO>().ReverseMap();
 
+            //Courses
+            CreateMap<Courses, CreateCoursesDTO>().ReverseMap();
         }
     }
 }

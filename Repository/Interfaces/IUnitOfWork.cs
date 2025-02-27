@@ -20,9 +20,11 @@ namespace Repository.Interfaces
         ICertificateRepository CertificateRepository { get; }
         IWalletRepository WalletRepository { get; }
         IPaymentRepository PaymentRepository { get; }
-        ITransactionHistory TransactionHistory { get; }
-        ISystemAccountWalletRepository SystemAccountWallet { get; }
-
+        ITransactionHistoryRepository TransactionHistoryRepository { get; }
+        ISystemAccountWalletRepository SystemAccountWalletRepository { get; }
+        ILearningScheduleRepository LearningScheduleRepository { get; }
+        ILearningHistoryRepository LearningHistoryRepository { get; }
+        ICoursesRepository CoursesRepository { get; }
 
         Task<string> SaveAsync();
     }

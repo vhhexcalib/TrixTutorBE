@@ -24,7 +24,7 @@ namespace Service.Services
         }
         public async Task<dynamic> GetSystemAccountWallet(CurrentUserObject currentUserObject)
         {
-            var wallets = await _unitOfWork.SystemAccountWallet.GetByIdAsync(currentUserObject.AccountId);
+            var wallets = await _unitOfWork.SystemAccountWalletRepository.GetByIdAsync(currentUserObject.AccountId);
             DTOs.SystemAccountWalletDTO.SystemAccountWalletDTO wallet = new DTOs.SystemAccountWalletDTO.SystemAccountWalletDTO()
             {
                 Balance = wallets.Balance,
