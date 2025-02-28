@@ -12,7 +12,7 @@ namespace Repository.Repositories
     public class TeachingTimeRepository : Repository<TeachingTime>, ITeachingTimeRepository
     {
         private readonly TrixTutorDBContext _context;
-        public TeachingTimeRepository(TrixTutorDBContext context) : base(context)
+          public TeachingTimeRepository(TrixTutorDBContext context) : base(context)
         {
             _context = context;
         }
