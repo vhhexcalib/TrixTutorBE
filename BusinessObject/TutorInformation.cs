@@ -37,6 +37,8 @@ namespace BusinessObject
         public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
         public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<Order> Order { get; set; }
+
         public TutorInformation()
         {
             Certificates = new HashSet<Certificate>();
@@ -46,6 +48,7 @@ namespace BusinessObject
             TeachingHistories = new HashSet<TeachingHistory>();
             TeachingSchedules = new HashSet<TeachingSchedule>(); 
             Reports = new HashSet<Report>();
+            Order = new HashSet<Order>();
         }
     }
 

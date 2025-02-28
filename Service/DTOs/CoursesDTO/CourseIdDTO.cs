@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs.CoursesDTO
 {
-    public class CoursesAcceptDTO
+    public class CourseIdDTO
     {
         public int CourseId { get; set; }
     }

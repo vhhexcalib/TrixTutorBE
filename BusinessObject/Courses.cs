@@ -15,6 +15,7 @@ namespace BusinessObject
         public int TeachingSlots { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime CreateDate { get; set; }
+        public string Images { get; set; }
         public string TeachingPlace { get; set; }
         public bool IsAccepted { get; set; }
         public bool IsLocked { get; set; }
@@ -37,7 +38,7 @@ namespace BusinessObject
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<TeachingHistory> TeachingHistories { get; set; }
         public virtual ICollection<TeachingSchedule> TeachingSchedules { get; set; }
-
+        public virtual ICollection<Order> Order { get; set; }
         public Courses()
         {
             LearningHistories = new HashSet<LearningHistory>();
@@ -45,6 +46,7 @@ namespace BusinessObject
             LearningSchedules = new HashSet<LearningSchedule>();
             TeachingHistories = new HashSet<TeachingHistory>();
             TeachingSchedules = new HashSet<TeachingSchedule>();
+            Order = new HashSet<Order>();
         }
     }
 }

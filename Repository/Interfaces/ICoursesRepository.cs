@@ -14,5 +14,7 @@ namespace Repository.Interfaces
         Task<int> CountAsync(string? search = null);
         Task<IEnumerable<Courses>> GetAllCourseByIsAccept(Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
         Task<IEnumerable<Courses>> GetAllCourseAccepted(Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
+        Task<IEnumerable<Courses>> GetAllCourse(Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
+        Task<IEnumerable<Courses>> GetAllCourseByTutorId(int tutorid, Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
     }
 }

@@ -78,7 +78,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 27),
+                            Birthday = new DateOnly(2025, 2, 28),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -92,7 +92,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 27),
+                            Birthday = new DateOnly(2025, 2, 28),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -202,6 +202,10 @@ namespace DataAccess.Context.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Images")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -363,6 +367,37 @@ namespace DataAccess.Context.Migrations
                     b.ToTable("LearningSchedule");
                 });
 
+            modelBuilder.Entity("BusinessObject.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TutorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("Order");
+                });
+
             modelBuilder.Entity("BusinessObject.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
@@ -402,6 +437,8 @@ namespace DataAccess.Context.Migrations
                     b.HasKey("PaymentId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payment");
                 });
@@ -564,7 +601,7 @@ namespace DataAccess.Context.Migrations
                             AccountId = 1,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8176)
+                            LastChangeDate = new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7514)
                         });
                 });
 
@@ -1103,7 +1140,7 @@ namespace DataAccess.Context.Migrations
                             TutorId = 2,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 27, 23, 15, 29, 803, DateTimeKind.Local).AddTicks(8651)
+                            LastChangeDate = new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7589)
                         });
                 });
 
@@ -1248,6 +1285,33 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("TutorInformation");
                 });
 
+            modelBuilder.Entity("BusinessObject.Order", b =>
+                {
+                    b.HasOne("BusinessObject.Courses", "Course")
+                        .WithMany("Order")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Account", "Account")
+                        .WithMany("Order")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
+                        .WithMany("Order")
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("TutorInformation");
+                });
+
             modelBuilder.Entity("BusinessObject.Payment", b =>
                 {
                     b.HasOne("BusinessObject.Account", "Account")
@@ -1256,7 +1320,15 @@ namespace DataAccess.Context.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Account");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BusinessObject.Report", b =>
@@ -1414,6 +1486,8 @@ namespace DataAccess.Context.Migrations
 
                     b.Navigation("LearningSchedules");
 
+                    b.Navigation("Order");
+
                     b.Navigation("Payments");
 
                     b.Navigation("Reports");
@@ -1438,6 +1512,8 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("LearningHistories");
 
                     b.Navigation("LearningSchedules");
+
+                    b.Navigation("Order");
 
                     b.Navigation("TeachingHistories");
 
@@ -1484,6 +1560,8 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("LearningHistories");
 
                     b.Navigation("LearningSchedules");
+
+                    b.Navigation("Order");
 
                     b.Navigation("Reports");
 

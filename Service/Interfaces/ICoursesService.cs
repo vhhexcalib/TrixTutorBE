@@ -1,4 +1,5 @@
 ﻿using BusinessObject;
+using Microsoft.AspNetCore.Http;
 using Service.DTOs;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.CoursesDTO;
@@ -15,9 +16,13 @@ namespace Service.Interfaces
     {
         Task<dynamic> CreateCourse(CurrentUserObject currentUserObject, CreateCoursesDTO createCoursesDTO);
         Task<PagedResult<AllCoursesDTO>> GetAllCourseByIsAcceptAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
-        Task<dynamic> AcceptingCouse(CoursesAcceptDTO coursesAcceptDTO);
+        Task<dynamic> AcceptingCouse(CourseIdDTO courseIdDTO);
         Task<PagedResult<AllCoursesDTO>> GetAllCourseAcceptedAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
         Task<IEnumerable<TeachingTimeDTO>> GetTeachingTimeAsync();
         Task<IEnumerable<TeachingDateDTO>> GetTeachingDateAsync();
+        Task<dynamic> UploadCourseImages(IFormFile attachmentFile, CourseIdDTO coursesAcceptDTO);
+        Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourse(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
+        Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorId(int tutorid, int page, int size, string? search = null, bool sortByCreateDateAsc = true);
+        Task<dynamic> GetCourseDetail(CourseIdDTO courseIdDTO);
     }
 }

@@ -14,6 +14,11 @@ namespace Service.Exceptions
         public static Error FailGetById => new("Get Course", "Tìm khóa học thất bại.");
         public static Error AcceptCourseFail => new("Update Course", "Chấp nhận khóa học thất bại, không lưu vào được kho dữ liệu.");
         public static Error TeachDateTimeNotFound => new("Create Course", "Không tìm thấy thông tin combo ngày, giờ dạy.");
+        public static Error UploadImageFail => new("Create Course", "Cập nhật ảnh bìa của khóa học thất bại.");
+        public static Error WrongTypeOfImage => new("Create Course", "Loại tệp ảnh bìa không phù hợp, vui lòng chỉ chọn file ảnh.");
+        public static Error OverLimitSize => new("Upload Image", "Dung lượng tệp không được vượt quá giới hạn 500MB.");
+        public static Error FailGetCourseDetail => new("Get Course Detail", "Lấy thông tin khóa học thất bại.");
+
 
     }
 }

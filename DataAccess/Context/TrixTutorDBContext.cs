@@ -40,6 +40,8 @@ namespace DataAccess.Context
         public DbSet<TeachingTime> TeachingTime { get; set; }
         public DbSet<TeachingDate> TeachingDate { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Order> Order { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -306,6 +308,28 @@ namespace DataAccess.Context
                 .WithMany(ti => ti.Reports)
                 .HasForeignKey(r => r.TutorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.TutorInformation)
+                .WithMany(ti => ti.Order)
+                .HasForeignKey(o => o.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Course)
+                .WithMany(c => c.Order)
+                .HasForeignKey(o => o.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Account)
+                .WithMany(a => a.Order)
+                .HasForeignKey(o => o.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
             base.OnModelCreating(modelBuilder);
         }
 
