@@ -12,5 +12,6 @@ namespace Service.Interfaces
     {
         Task<dynamic> CreateContactInformation(CurrentUserObject currentUserObject, CreateContactDTO createContactDTO);
         Task<dynamic> GetContactById(CurrentUserObject currentUserObject);
+        Task<dynamic> UpdateContactInformation(CurrentUserObject currentUserObject, CreateContactDTO createContactDTO);
     }
 }

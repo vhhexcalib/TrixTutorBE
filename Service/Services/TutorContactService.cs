@@ -27,7 +27,7 @@ namespace Service.Services
         public async Task<dynamic> CreateContactInformation (CurrentUserObject currentUserObject, CreateContactDTO createContactDTO)
         {
             var createdContact = await _unitOfWork.TutorContactRepository.GetByIdAsync(currentUserObject.AccountId);
-            if(createdContact == null)
+            if(createdContact != null)
             {
                 return Result.Failure(TutorContactErrors.ExistedContact);
             }
@@ -59,6 +59,28 @@ namespace Service.Services
             }
             var contactDTO = _mapper.Map<ContactDTO>(contact);
             return Result.SuccessWithObject(contactDTO);
+        }
+        public async Task<dynamic> UpdateContactInformation(CurrentUserObject currentUserObject, CreateContactDTO createContactDTO)
+        {
+            var createdContact = await _unitOfWork.TutorContactRepository.GetByIdAsync(currentUserObject.AccountId);
+            if (createdContact == null)
+            {
+                return Result.Failure(TutorContactErrors.NotFoundContact);
+            }
+            createdContact.XURL = createContactDTO.XURL;
+            createdContact.FacebookURL = createContactDTO.FacebookURL;
+            createdContact.InstagramURL = createContactDTO.InstagramURL; 
+            createdContact.LinkedIn = createContactDTO.LinkedIn;
+            await _unitOfWork.TutorContactRepository.UpdateAsync(createdContact);
+            var result = await _unitOfWork.SaveAsync();
+            if (result == "Save Change Success")
+            {
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(TutorContactErrors.FailUpdatingContact);
+            }
         }
     }
 }

@@ -103,6 +103,7 @@ namespace Service.Services
             }
             var createdInformation = _mapper.Map<TutorInformation>(tutorInformationDTO);
             createdInformation.TutorId = currentUserObject.AccountId;
+            createdInformation.TotalTeachDay = 0;
             var bankInformation = new BankInformation { TutorId = currentUserObject.AccountId, BankName = "bankname", BankNumber = "banknumber", OwnerName = "ownername" };
             noneExistTutorCategory.Quantity++;
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);

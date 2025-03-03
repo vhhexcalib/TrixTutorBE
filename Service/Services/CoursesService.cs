@@ -35,7 +35,24 @@ namespace Service.Services
             {
                 return Result.Failure(CoursesErrors.ExistCourseName);
             }
+            var choosedDate = await _unitOfWork.CoursesRepository.GetCourseToCheckTeachingDateTime(currentUserObject.AccountId, createCoursesDTO.TeachingDateId);
 
+            if (choosedDate != null)
+            {
+                if (choosedDate.Any(course => course.TeachingTimeId == createCoursesDTO.TeachingTimeId))
+                {
+                    return Result.Failure(CoursesErrors.DupeTeachingDate);
+                }
+
+            }
+            var choosedDates = await _unitOfWork.TeachingDateRepository.GetByIdAsync(createCoursesDTO.TeachingDateId);
+            choosedDates.Quantity++;
+            await _unitOfWork.TeachingDateRepository.UpdateAsync(choosedDates);
+            await _unitOfWork.SaveAsync();
+            var choosedTimes = await _unitOfWork.TeachingTimeRepository.GetByIdAsync(createCoursesDTO.TeachingTimeId);
+            choosedTimes.Quantity++;
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.TeachingTimeRepository.UpdateAsync(choosedTimes);
             var createdcourse = _mapper.Map<Courses>(createCoursesDTO);
             createdcourse.CreateDate = DateTime.Now;
             createdcourse.TutorId = currentUserObject.AccountId;
@@ -46,14 +63,7 @@ namespace Service.Services
             createdcourse.TeachingTimeId = createCoursesDTO.TeachingTimeId;
             await _unitOfWork.CoursesRepository.AddAsync(createdcourse);
             var result = await _unitOfWork.SaveAsync();
-            if (result == "Save Change Success")
-            {
-                return Result.Success();
-            }
-            else
-            {
-                return Result.Failure(CoursesErrors.CreateCourseFail);
-            }
+            return result == "Save Change Success" ? Result.Success() : Result.Failure(CoursesErrors.CreateCourseFail);
         }
         public async Task<PagedResult<AllCoursesDTO>> GetAllCourseByIsAcceptAsync(int page, int size, string? search = null, bool sortByCreateDateAsc = true)
         {
@@ -79,9 +89,21 @@ namespace Service.Services
                 TotalPages = (int)Math.Ceiling((double)totalItems / size)
             };
         }
-        public async Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorId(int tutorid ,int page, int size, string? search = null, bool sortByCreateDateAsc = true)
+        public async Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorId(int tutorid, int page, int size, string? search = null, bool sortByCreateDateAsc = true)
         {
-            var courses = await _unitOfWork.CoursesRepository.GetAllCourseByTutorId(tutorid ,page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
+            var courses = await _unitOfWork.CoursesRepository.GetAllCourseByTutorId(tutorid, page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
+            var totalItems = await _unitOfWork.CoursesRepository.CountAsync(search); // Đếm tổng số course phù hợp
+
+            return new PagedResult<AllCourseByTutorIdDTO>
+            {
+                Items = _mapper.Map<IEnumerable<AllCourseByTutorIdDTO>>(courses),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / size)
+            };
+        }
+        public async Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorToken(CurrentUserObject currentUserObject, int page, int size, string? search = null, bool sortByCreateDateAsc = true)
+        {
+            var courses = await _unitOfWork.CoursesRepository.GetAllCourseByTutorToken(currentUserObject.AccountId, page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
             var totalItems = await _unitOfWork.CoursesRepository.CountAsync(search); // Đếm tổng số course phù hợp
 
             return new PagedResult<AllCourseByTutorIdDTO>
@@ -135,7 +157,7 @@ namespace Service.Services
         public async Task<dynamic> GetCourseDetail(CourseIdDTO courseIdDTO)
         {
             var course = await _unitOfWork.CoursesRepository.GetByIdAsync(courseIdDTO.CourseId);
-            if(course == null)
+            if (course == null)
             {
                 return Result.Failure(CoursesErrors.FailGetCourseDetail);
             }
@@ -145,7 +167,7 @@ namespace Service.Services
         public async Task<dynamic> UploadCourseImages(IFormFile attachmentFile, CourseIdDTO courseIdDTO)
         {
             var existedCourse = await _unitOfWork.CoursesRepository.GetByIdAsync(courseIdDTO.CourseId);
-            if(existedCourse == null)
+            if (existedCourse == null)
             {
                 return Result.Failure(CoursesErrors.FailGetById);
             }

@@ -24,5 +24,6 @@ namespace Service.Interfaces
         Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourse(int page, int size, string? search = null, bool sortByCreateDateAsc = true);
         Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorId(int tutorid, int page, int size, string? search = null, bool sortByCreateDateAsc = true);
         Task<dynamic> GetCourseDetail(CourseIdDTO courseIdDTO);
+        Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourseByTutorToken(CurrentUserObject currentUserObject, int page, int size, string? search = null, bool sortByCreateDateAsc = true);
     }
 }

@@ -136,7 +136,7 @@ namespace TrixTutorAPI.Controllers
         [HttpPut("upload-image")]
         [Authorize(Policy = "LecturerOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> UploadAvatar(IFormFile attachmentFile, CourseIdDTO courseIdDTO)
+        public async Task<IActionResult> UploadCourseImg([FromForm] CourseIdDTO courseIdDTO, IFormFile attachmentFile )
         {
             if (!ModelState.IsValid)
             {
@@ -147,7 +147,28 @@ namespace TrixTutorAPI.Controllers
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
                 var result = await _coursesService.UploadCourseImages(attachmentFile, courseIdDTO);
                 if (result.IsSuccess) return Ok(result);
-                return BadRequest(result);
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpPut("upload-image-from-header")]
+        [Authorize(Policy = "LecturerOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UploadCourseImgHeader([FromHeader] CourseIdDTO courseIdDTO, IFormFile attachmentFile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _coursesService.UploadCourseImages(attachmentFile, courseIdDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -181,6 +202,26 @@ namespace TrixTutorAPI.Controllers
             try
             {
                 var result = await _coursesService.GetAllCourseByTutorId(tutorIdDTO.TutorId ,page, size, search, sortByCreateDateAsc);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "LecturerOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("courses-by-tutor-token")]
+        public async Task<IActionResult> GetAllCoursesByTutorToken([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string? search = null, [FromQuery] bool sortByCreateDateAsc = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _coursesService.GetAllCourseByTutorToken(currentUserObject, page, size, search, sortByCreateDateAsc);
                 return Ok(result);
             }
             catch (Exception ex)

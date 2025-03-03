@@ -18,7 +18,6 @@ namespace Service.Exceptions
         public static Error WrongTypeOfImage => new("Create Course", "Loại tệp ảnh bìa không phù hợp, vui lòng chỉ chọn file ảnh.");
         public static Error OverLimitSize => new("Upload Image", "Dung lượng tệp không được vượt quá giới hạn 500MB.");
         public static Error FailGetCourseDetail => new("Get Course Detail", "Lấy thông tin khóa học thất bại.");
-
-
+        public static Error DupeTeachingDate => new("Create Course", "Combo giờ dạy học đã có khóa học được tạo, vui lòng chọn giờ dạy học khác ( nếu cả 3 khung giờ đều không còn trống, vui lòng chọn combo ngày khác.");
     }
 }

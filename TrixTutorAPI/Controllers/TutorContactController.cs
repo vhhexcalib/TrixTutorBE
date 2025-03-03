@@ -21,9 +21,11 @@ namespace TrixTutorAPI.Controllers
             _tokenService = tokenService;
             _tutorContactService = tutorContactService;
         }
+
         [HttpPost("contact")]
         [Authorize(Policy = "LecturerOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> CreateContact([FromBody] CreateContactDTO createContactDTO)
         {
             if (!ModelState.IsValid)
@@ -42,9 +44,33 @@ namespace TrixTutorAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPut("contact")]
+        [Authorize(Policy = "LecturerOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+        public async Task<IActionResult> UpdateContact([FromBody] CreateContactDTO createContactDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _tutorContactService.UpdateContactInformation(currentUserObject, createContactDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpGet("contacts-by-tutor-id")]
         [Authorize(Policy = "LecturerOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> GetContactById()
         {
             if (!ModelState.IsValid)

@@ -29,7 +29,7 @@ public class ConfirmationOTPBackgroundService : BackgroundService
 
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken); // Thêm delay để không chạy liên tục
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken); // Thêm delay để không chạy liên tục
         }
     }
 }

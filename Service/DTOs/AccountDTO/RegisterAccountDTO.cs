@@ -22,7 +22,7 @@ namespace Service.DTOs.AccountDTO
         public DateTime Birthday { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập họ và tên.")]
-        [RegularExpression(@"^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƯĂẮẶẲẴÂẦẤẬẪÇÉÈÊỀẾỆỄÌÍÒÓÔÕƠÙÚƯĂĐĩũơƯăắằẳẵâầấậẫễéèêềếệễòóôõơùúüÿýỳỵỹỶỸ\s]+$", ErrorMessage = "Họ và tên chỉ được chứa chữ và khoảng trắng.")]
+        [RegularExpression(@"^[\p{L}\s]+$", ErrorMessage = "Họ và tên chỉ được chứa chữ và khoảng trắng.")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ.")]
         public string Address { get; set; }

@@ -21,19 +21,12 @@ namespace Service.DTOs.TutorDTO
         [Required(ErrorMessage = "Số năm kinh nghiệm là bắt buộc.")]
         public string ExperienceYear { get; set; }
 
-        [Required(ErrorMessage = "Tổng số ngày dạy là bắt buộc.")]
-        public int TotalTeachDay { get; set; }
-
         [Required(ErrorMessage = "CV là bắt buộc.")]
         public string CV { get; set; }
 
-        [Required(ErrorMessage = "Mức lương tối thiểu mỗi giờ là bắt buộc.")]
-        [Range(0, double.MaxValue, ErrorMessage = "Mức lương tối thiểu mỗi giờ phải lớn hơn hoặc bằng 0.")]
-        public decimal LowestSalaryPerHour { get; set; }
-
-        [Required(ErrorMessage = "Mức lương tối đa mỗi giờ là bắt buộc.")]
-        [Range(0, double.MaxValue, ErrorMessage = "Mức lương tối đa mỗi giờ phải lớn hơn hoặc bằng 0.")]
-        public decimal HighestSalaryPerHour { get; set; }
+        [Required(ErrorMessage = "Mức lương mỗi giờ là bắt buộc.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Mức lương mỗi giờ phải lớn hơn hoặc bằng 0.")]
+        public decimal SalaryPerHour { get; set; }
 
         [Required(ErrorMessage = "Phong cách giảng dạy là bắt buộc.")]
         public string TeachingStyle { get; set; }
