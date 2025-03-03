@@ -6,6 +6,7 @@ using Service.DTOs.BankDTO;
 using Service.DTOs.CategoryDTO;
 using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
+using Service.DTOs.OrderDTO;
 using Service.DTOs.RoleDTO;
 using Service.DTOs.TutorContactDTO;
 using Service.DTOs.TutorDTO;
@@ -108,6 +109,11 @@ namespace Service.Mappings
                 .ForMember(dest => dest.TeachingTimes, opt => opt.MapFrom(src => src.TeachingTime.TeachingTimes))
                 .ReverseMap();
 
+            // Mapping Orders -> CreateOrderDTO
+            CreateMap<Order, CreateOrderDTO>().ReverseMap();
+
+            // Mapping Orders -> StudentOrderDTO
+            CreateMap<Order, StudentOrderDTO>().ReverseMap();
 
         }
     }

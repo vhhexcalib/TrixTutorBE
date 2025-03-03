@@ -33,6 +33,8 @@ namespace Repository.Repositories
         public ITeachingHistoryRepository TeachingHistoryRepository { get; set; }
         public ITeachingDateRepository TeachingDateRepository { get; set; }
         public ITeachingTimeRepository TeachingTimeRepository { get; set; }
+        public IOrderRepository OrderRepository { get; set; }
+
 
 
         public UnitOfWork(TrixTutorDBContext context)
@@ -59,6 +61,8 @@ namespace Repository.Repositories
             TeachingHistoryRepository = new TeachingHistoryRepository(_context);
             TeachingDateRepository = new TeachingDateRepository(_context);
             TeachingTimeRepository = new TeachingTimeRepository(_context);
+            OrderRepository = new OrderRepository(_context);
+
 
         }
         public async Task<string> SaveAsync()

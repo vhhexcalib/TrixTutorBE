@@ -33,6 +33,11 @@ namespace Repository.Repositories
 
             return await query.CountAsync();
         }
+        public async Task<Courses> GetCourseByIdAsync(int id)
+        {
+            var course = _context.Courses.Include(c => c.TutorInformation).ThenInclude(t => t.Account).Include(c => c.TeachingDate).Include(c => c.TeachingTime).FirstOrDefault(c => c.CourseId == id);
+            return course;
+        }
         public async Task<IEnumerable<Courses>> GetAllCourseByIsAccept(Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true)
         {
             IQueryable<Courses> query = _context.Set<Courses>();

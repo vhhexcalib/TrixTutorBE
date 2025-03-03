@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IPaymentRepository : IRepository<Payment>
     {
+        Task<Payment> GetPaymentById(string id);
     }
 }

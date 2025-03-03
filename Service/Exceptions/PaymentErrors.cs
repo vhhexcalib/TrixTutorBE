@@ -10,5 +10,6 @@ namespace Service.Exceptions
     public class PaymentErrors
     {
         public static Error ExistedPayment => new("Create payment", "Đơn thanh toán đã được tạo, vui long hoàn thành để tạo đơn khác.");
+        public static Error FinishedPayment => new("Create payment", "Đơn thanh toán đã hoàn thành.");
     }
 }

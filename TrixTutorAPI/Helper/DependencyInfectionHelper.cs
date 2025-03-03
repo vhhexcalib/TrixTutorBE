@@ -40,6 +40,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<IFeedbackService, FeedbackService>();
         services.AddScoped<ICoursesService, CoursesService>();
         services.AddScoped<ITutorContactService, TutorContactService>();
+        services.AddScoped<IOrderService, OrderService>();
+
 
 
         return services;

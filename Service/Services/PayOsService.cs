@@ -5,6 +5,9 @@ using Net.payOS;
 using Net.payOS.Types;
 using Repository.Interfaces;
 using Service.Common;
+using Service.DTOs.AccountDTO;
+using Service.DTOs.OrderDTO;
+using Service.DTOs.PaymentDTO;
 using Service.Exceptions;
 using Service.Interfaces;
 using System;
@@ -22,8 +25,10 @@ namespace Service.Services
         private readonly PayOS payOS;
         private readonly IConfiguration _configuration;
         private readonly IPaymentService _paymentService;
+        private readonly IOrderService _orderService;
 
-        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService)
+
+        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -33,34 +38,28 @@ namespace Service.Services
             var apiKey = _configuration["PayOSSettings:ApiKey"];
             var checksumKey = _configuration["PayOSSettings:ChecksumKey"];
             payOS = new PayOS(clientId, apiKey, checksumKey);
+            _orderService = orderService;
         }
-        //public async Task<dynamic> CreatePayment(int paymentId)
+        //public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
         //{
-        //    var payment = await _unitOfWork.PaymentRepository.GetByIdAsync(paymentId);
-        //    if (payment != null)
+        //    var order = await _unitOfWork.OrderRepository.GetOrderById(paymentDTO.OrderId);
+        //    if (order == null) return Result.Failure(OrderErrors.OrderNotFound);
+        //    var paymentId = RandomPaymentId(paymentDTO.OrderId);
+        //    var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentId);
+        //    if (existedpayment != null)
         //    {
         //        return Result.Failure(PaymentErrors.ExistedPayment);
         //    }
-        //    var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
-        //    if (orderNow == null)
-        //        return Result.Failure(OrderErrors.OrderIsNull);
-        //    if (orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
-        //    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
-        //    var odSaleList = _mapper.Map<List<ODSaleDTO>>(odList);
-        //    List<ItemData> items = new List<ItemData>();
-        //    foreach (var odSale in odSaleList)
+        //    if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
+        //    var domain = "http://localhost:7100";
+        //    Payment newPayment = new Payment()
         //    {
-        //        ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.Price);
-        //        items.Add(item);
-        //    }
-        //    var domain = "http://localhost:3000";
-        //    Payment payment = new Payment()
-        //    {
-        //        OrderId = orderId,
-        //        AccountId = orderNow.Account.AccountId,
-        //        Amount = orderNow.FinalMoney,
+        //        PaymentId = paymentId,
+        //        OrderId = paymentDTO.OrderId,
+        //        AccountId = currentUserObject.AccountId,
+        //        Amount = order.Course.TotalPrice,
         //        PaymentMethod = "Pay all",
-        //        Status = 0,
+        //        Status = false,
         //        TransactionId = "o",
         //        TransactionDate = DateTime.Now,
         //        BankCode = "",
@@ -93,6 +92,14 @@ namespace Service.Services
         //        return Result.Failure(PaymentErrors.PaymentError);
         //    }
         //}
+
+        public string RandomPaymentId(string order)
+        {
+            Random rnd = new Random();
+            int newOtp = rnd.Next(100000, 999999);
+            string otp = newOtp.ToString();
+            return "PM" + otp + order;
+        }
 
         //public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
         //{

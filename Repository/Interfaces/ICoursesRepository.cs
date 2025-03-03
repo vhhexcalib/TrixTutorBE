@@ -18,5 +18,6 @@ namespace Repository.Interfaces
         Task<IEnumerable<Courses>> GetAllCourseByTutorId(int tutorid, Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
         Task<IEnumerable<Courses>> GetAllCourseByTutorToken(int tutorid, Expression<Func<Courses, bool>>? filter = null, string? includeProperties = null, int page = 1, int size = 10, string? search = null, bool sortByCreateDateAsc = true);
         Task<IEnumerable<Courses>> GetCourseToCheckTeachingDateTime(int tutorid, int teachingDate);
+        Task<Courses> GetCourseByIdAsync(int id);
     }
 }

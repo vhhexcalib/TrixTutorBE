@@ -327,6 +327,12 @@ namespace DataAccess.Context
                 .HasForeignKey(o => o.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // TransactionHistory -> Payment: 1-1
+            modelBuilder.Entity<TransactionHistory>()
+                .HasOne(th => th.Payment)
+                .WithOne(p => p.TransactionHistory)
+                .HasForeignKey<TransactionHistory>(th => th.PaymentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 

@@ -1,5 +1,6 @@
 ﻿using BusinessObject;
 using DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace Repository.Repositories
         {
             _context = context;
         }
-
+        public async Task<Payment> GetPaymentById (string id)
+        {
+            return await _context.Payment.FirstOrDefaultAsync(p => p.PaymentId == id);
+        }
     }
 }

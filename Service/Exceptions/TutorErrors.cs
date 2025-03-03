@@ -15,6 +15,7 @@ namespace Service.Exceptions
         public static Error FailCreatingTutorInformation => new("Tutor information", "Tạo thông tin cá nhân của giảng viên thất bại.");
         public static Error ExistTutorInformation => new("Tutor information", "Thông tin của giảng viên đã tồn tại, vui lòng cập nhật thông tin nếu muốn thay đổi bất kì thông tin nào.");
         public static Error NoneExistTutorCategory => new("Tutor information", "Môn học giảng dạy không tồn tại, vui lòng chọn môn học cho phép giảng dạy");
+        public static Error FailGetById => new("Get Tutor", "Giảng viên không tồn tại.");
 
     }
 }

@@ -11,19 +11,22 @@ namespace BusinessObject
     public class Payment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PaymentId { get; set; }
+        public string PaymentId { get; set; }
+
         [ForeignKey("Order")]
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
         public virtual Order Order { get; set; }
+
         [ForeignKey("Account")]
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }
         public decimal Amount { get; set; }
         public string PaymentMethod { get; set; }
-        public int Status { get; set; }
+        public bool Status { get; set; }
         public DateTime TransactionDate { get; set; }
         public string BankCode { get; set; }
         public string ResponseCode { get; set; }
+        public virtual TransactionHistory TransactionHistory { get; set; }
     }
+
 }

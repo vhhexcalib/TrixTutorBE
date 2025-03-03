@@ -156,7 +156,7 @@ namespace Service.Services
         }
         public async Task<dynamic> GetCourseDetail(CourseIdDTO courseIdDTO)
         {
-            var course = await _unitOfWork.CoursesRepository.GetByIdAsync(courseIdDTO.CourseId);
+            var course = await _unitOfWork.CoursesRepository.GetCourseByIdAsync(courseIdDTO.CourseId);
             if (course == null)
             {
                 return Result.Failure(CoursesErrors.FailGetCourseDetail);
