@@ -44,6 +44,7 @@ namespace Service.Services
                 return Result.Failure(TutorErrors.FailGetById);
             }
             var createdOrder = _mapper.Map<Order>(createOrderDTO);
+            createdOrder.OrderId = orderId;
             createdOrder.StudentId = currentUserObject.AccountId;
             createdOrder.OrderDate = DateTime.Now;
             createdOrder.Status = false;
@@ -66,11 +67,8 @@ namespace Service.Services
         {
             Random rnd = new Random();
             int newOtp = rnd.Next(100000, 999999);
-            string otp = newOtp.ToString();
-            string student = studentId.ToString();
-            string tutor = courseId.ToString();
-            string course = tutorId.ToString();
-            return "ORD" + otp + "S" + student + "T" + tutor + "C" + course;
+            string orderid = newOtp.ToString() + studentId.ToString() + courseId.ToString() + tutorId.ToString();
+            return orderid;
         }
     }
 }

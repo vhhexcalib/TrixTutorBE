@@ -342,6 +342,12 @@ namespace DataAccess.Context
                 .HasForeignKey(w => w.TutorId)
                 .OnDelete(DeleteBehavior.Restrict); // Set the delete behavior, as per your requirement
 
+            modelBuilder.Entity<WithdrawHistory>()
+                .Property(w => w.Amount)
+             .HasPrecision(18, 2); // 18 số, 2 số sau dấu thập phân
+
+
+
             base.OnModelCreating(modelBuilder);
         }
 

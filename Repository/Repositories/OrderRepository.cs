@@ -24,8 +24,13 @@ namespace Repository.Repositories
         }
         public async Task<Order> GetOrderById(string id)
         {
-            return await _context.Order.FirstOrDefaultAsync(p => p.OrderId == id);
+            return await _context.Order
+                .Include(o => o.TutorInformation)
+                .Include(o => o.Course)
+                .Include(o => o.Account)
+                .FirstOrDefaultAsync(p => p.OrderId == id);
         }
+
         public async Task<IEnumerable<Order>> GetOrdersByStudentId(int id)
         {
             return await _context.Order

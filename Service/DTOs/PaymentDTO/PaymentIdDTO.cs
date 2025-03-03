@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs.PaymentDTO
 {
-    public class PaymentDTO
+    public class PaymentIdDTO
     {
-        public string OrderId { get; set; }
+        public string PaymentId { get; set; }
     }
 }

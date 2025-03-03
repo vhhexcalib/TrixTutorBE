@@ -8,6 +8,7 @@ using Service.Common;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.OrderDTO;
 using Service.DTOs.PaymentDTO;
+using Service.DTOs.TransactionHistoryDTO;
 using Service.Exceptions;
 using Service.Interfaces;
 using System;
@@ -26,9 +27,11 @@ namespace Service.Services
         private readonly IConfiguration _configuration;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
+        private readonly ITransactionHistoryService _transactionHistoryService;
 
 
-        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService)
+
+        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService, ITransactionHistoryService transactionHistoryService)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -39,236 +42,121 @@ namespace Service.Services
             var checksumKey = _configuration["PayOSSettings:ChecksumKey"];
             payOS = new PayOS(clientId, apiKey, checksumKey);
             _orderService = orderService;
+            _transactionHistoryService = transactionHistoryService;
         }
         public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
         {
             var order = await _unitOfWork.OrderRepository.GetOrderById(paymentDTO.OrderId);
             if (order == null) return Result.Failure(OrderErrors.OrderNotFound);
             var paymentId = RandomPaymentId(paymentDTO.OrderId);
-            var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentId);
+            var paymentIdString = RandomPaymentId(paymentDTO.OrderId).ToString();
+
+            var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentIdString);
             if (existedpayment != null)
             {
                 return Result.Failure(PaymentErrors.ExistedPayment);
             }
 
             if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
-            var domain = "http://localhost:7100";
+            var domain = "http://localhost:7100/swagger";
             Payment newPayment = new Payment()
             {
-                PaymentId = paymentId,
+                PaymentId  = paymentIdString,
                 OrderId = paymentDTO.OrderId,
                 AccountId = currentUserObject.AccountId,
                 Amount = order.Course.TotalPrice,
                 PaymentMethod = "Pay all",
                 Status = false,
-                TransactionId = "o",
                 TransactionDate = DateTime.Now,
                 BankCode = "",
-                ResponseCode = ""
+                ResponseCode = ""                
             };
-            var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
-            await _unitOfWork.SaveAsync();
-
+            List<ItemData> items = new List<ItemData>( );
+            ItemData item = new ItemData(order.OrderId, 1, (int)order.Course.TotalPrice);
+            items.Add(item);
             PaymentData paymentData = new PaymentData(
-                orderCode: payment.PaymentId,
-                amount: (int)payment.Amount,
-                description: $"Order sale paymentId:{payment.PaymentId}",
-                items: items,
-                cancelUrl: domain + "/paymentinfo",
-                returnUrl: domain + "/paymentinfo",
-
-                buyerName: orderNow.Account.AccountName
-                );
-            try
-            {
-                CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
-                payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
-                await _unitOfWork.PaymentRepository.UpdateAsync(payment);
-                await _unitOfWork.SaveAsync();
-                return Result.SuccessWithObject(createPayment.checkoutUrl);
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure(PaymentErrors.PaymentError);
-            }
+               orderCode: paymentId,
+               amount: (int)order.Course.TotalPrice,
+               description: $"PaymentId:{paymentId}",
+               items: items,
+               cancelUrl: domain + "/index.html",
+               returnUrl: domain + "/index.html",
+               buyerName: order.Account.Name
+               );
+            CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+            PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(paymentId);
+            CreateTransactionDTO createTransactionDTO = new CreateTransactionDTO() { PaymentId = paymentIdString, TransactionId = paymentLinkInformation.id };
+            await _transactionHistoryService.CreateTransactionAsync(currentUserObject, createTransactionDTO);
+            await _unitOfWork.PaymentRepository.AddAsync(newPayment);
+            var result = await _unitOfWork.SaveAsync();
+            return result == "Save Change Success" ? Result.SuccessWithObject(createPayment.checkoutUrl) : Result.Failure(PaymentErrors.CreatePaymentFail);
         }
 
-        public string RandomPaymentId(string order)
+        public long RandomPaymentId(string order)
         {
             Random rnd = new Random();
             int newOtp = rnd.Next(100000, 999999);
-            string otp = newOtp.ToString();
-            return "PM" + otp + order;
+            long otp = newOtp;
+            return otp;
         }
 
-        //public async Task<dynamic> CreatePaymentLinkForRent(int orderId)
-        //{
-        //    var paymentSale = await _unitOfWork.PaymentRepository.GetAllAsync(x => x.OrderId == orderId);
-        //    if (paymentSale != null && paymentSale.Any())
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //    var orderNow = await _unitOfWork.OrderRepository.GetAsync(x => x.OrderId == orderId, includeProperties: "Account,StatusOrder");
-        //    if (orderNow == null)
-        //        return Result.Failure(OrderErrors.OrderIsNull);
-        //    if (!orderNow.IsRentalOrder) return Result.Failure(PaymentErrors.WrongPayment);
-        //    var odList = await _unitOfWork.OrderDetailRepository.GetAllAsync(x => x.OrderId == orderNow.OrderId, includeProperties: "Toy", 1, 100);
-        //    var odRentList = _mapper.Map<List<ODRentDTO>>(odList);
-        //    List<ItemData> items = new List<ItemData>();
-        //    foreach (var odSale in odRentList)
-        //    {
-        //        ItemData item = new ItemData(odSale.ToyName, odSale.Quantity, (int)odSale.RentalPrice);
-        //        items.Add(item);
-        //    }
-        //    var domain = "http://localhost:3000";
+        public async Task<dynamic> GetPaymentLinkInformation(string paymentId)
+        {
+            long paymentIdLong = long.Parse(paymentId);
+            PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(paymentIdLong);
+            if (paymentLinkInformation != null)
+            {
+                var payment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentId);
+                var order = await _unitOfWork.OrderRepository.GetOrderById(payment.OrderId);
+                if (paymentLinkInformation.status == "Pending")
+                {
+                    order.Status = false;
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                }
+                else if (paymentLinkInformation.status == "PAID")
+                {
+                    if (payment.PaymentMethod == "Pay all")
+                    {
+                        var adminWallet = await _unitOfWork.SystemAccountWalletRepository.GetByIdAsync(1);
+                        adminWallet.Balance += payment.Amount;
+                        order.Status = true;
+                        payment.Status = true;
+                        await _unitOfWork.PaymentRepository.UpdateAsync(payment);
+                        await _unitOfWork.OrderRepository.UpdateAsync(order);
+                        await _unitOfWork.SystemAccountWalletRepository.UpdateAsync(adminWallet);
+                    }
+                }
+                else if (paymentLinkInformation.status == "CANCELLED")
+                {
+                    await _unitOfWork.PaymentRepository.DeleteAsync(payment);
+                }
+                else
+                {
+                    return Result.Failure(PaymentErrors.FailPayment);
+                }
+                var result = await _unitOfWork.SaveAsync();
 
-        //    Payment payment1 = new Payment()
-        //    {
-        //        OrderId = orderId,
-        //        AccountId = orderNow.Account.AccountId,
-        //        Amount = orderNow.FinalMoney / 2,
-        //        PaymentMethod = "Pay 1",
-        //        Status = 0,
-        //        TransactionId = "o",
-        //        TransactionDate = DateTime.Now,
-        //        BankCode = "",
-        //        ResponseCode = ""
-        //    };
-        //    decimal last = orderNow.FinalMoney - payment1.Amount;
-        //    var save = await _unitOfWork.PaymentRepository.AddAsync(payment1);
-        //    await _unitOfWork.SaveAsync();
-
-        //    PaymentData paymentData = new PaymentData(
-        //        orderCode: payment1.PaymentId,
-        //        amount: (int)payment1.Amount,
-        //        description: $"Order rent1 paymentId:{payment1.PaymentId}",
-        //        items: items,
-        //        cancelUrl: domain + "/paymentinfo",
-        //        returnUrl: domain + "/paymentinfo",
-
-        //        buyerName: orderNow.Account.AccountName
-        //        );
-        //    try
-        //    {
-        //        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-        //        PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment1.PaymentId);
-        //        payment1.TransactionId = paymentLinkInformation.id;
-        //        await _unitOfWork.PaymentRepository.UpdateAsync(payment1);
-        //        await _unitOfWork.DepositOrderRepository.CreateDepositOrder(orderNow, "000", "bank"); // dat coc
-        //        await _unitOfWork.SaveAsync();
-        //        Payment payment2 = new Payment()
-        //        {
-        //            OrderId = orderId,
-        //            AccountId = orderNow.Account.AccountId,
-        //            Amount = last,
-        //            PaymentMethod = "Pay 2",
-        //            Status = 0,
-        //            TransactionId = "o",
-        //            TransactionDate = DateTime.Now,
-        //            BankCode = "",
-        //            ResponseCode = ""
-        //        };
-        //        var save2 = await _unitOfWork.PaymentRepository.AddAsync(payment2);
-        //        await _unitOfWork.SaveAsync();
-        //        return Result.SuccessWithObject(createPayment.checkoutUrl);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //}
-
-        //public async Task<dynamic> CreatePaymentLinkForRent2(int orderId)
-        //{
-        //    var domain = "http://localhost:3000";
-        //    List<ItemData> items = new List<ItemData>();
-        //    Payment payment2 = await _unitOfWork.PaymentRepository.GetAsync(x => x.OrderId == orderId && x.PaymentMethod == "Pay 2" && x.TransactionId == "o");
-        //    if (payment2 == null)
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //    PaymentData paymentData = new PaymentData(
-        //        orderCode: payment2.PaymentId,
-        //        amount: (int)payment2.Amount,
-        //        description: $"Order rent2 paymentId:{payment2.PaymentId}",
-        //        items: items,
-        //        cancelUrl: domain + "/paymentinfo",
-        //        returnUrl: domain + "/paymentinfo"
-        //        );
-        //    try
-        //    {
-        //        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-        //        PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment2.PaymentId);
-        //        payment2.TransactionId = paymentLinkInformation.id;
-        //        payment2.TransactionDate = DateTime.Now;
-        //        await _unitOfWork.PaymentRepository.UpdateAsync(payment2);
-        //        await _unitOfWork.SaveAsync();
-        //        return Result.SuccessWithObject(createPayment.checkoutUrl);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //}
-
-        //public async Task<dynamic> GetPaymentLinkInformation(int paymentId)
-        //{
-        //    PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(paymentId);
-        //    if (paymentLinkInformation != null)
-        //    {
-        //        var payment = await _unitOfWork.PaymentRepository.GetAsync(x => x.PaymentId == paymentId);
-        //        int orderId = payment.OrderId;
-        //        int status = 0;
-        //        if (paymentLinkInformation.status == "Pending")
-        //        {
-        //            status = 0; // chua thanh toan
-        //            await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
-        //        }
-        //        else if (paymentLinkInformation.status == "PAID")
-        //        {
-        //            status = 1; // thanh toan xong
-        //            if (payment.PaymentMethod == "Pay 1" || payment.PaymentMethod == "Pay all")
-        //            {
-        //                await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 2);
-        //            }
-        //        }
-        //        else if (paymentLinkInformation.status == "CANCELLED")
-        //        {
-        //            status = 2; // huy don
-        //            await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 9);
-        //        }
-        //        else
-        //        {
-        //            status = 3; // ko xd dc
-        //            await _unitOfWork.OrderRepository.UpdateOrderStatus(orderId, 1);
-        //        }
-        //        payment.Status = status;
-        //        await _unitOfWork.PaymentRepository.UpdatePayment(payment); // update lai status trong payment
-        //        await _unitOfWork.SaveAsync();
-        //    }
-        //    return Result.SuccessWithObject(paymentLinkInformation);
-        //}
+            }
+            return Result.SuccessWithObject(paymentLinkInformation);
+        }
 
 
-        //public async Task<dynamic> CancelPaymentLink(int orderId)
-        //{
-        //    PaymentLinkInformation cancelledPaymentLinkInfo = await payOS.cancelPaymentLink(orderId);
-        //    return Result.Success();
-        //}
+        public async Task<dynamic> CancelPaymentLink(string orderId)
+        {
+            if (!long.TryParse(orderId, out long orderIdLong))
+            {
+                return Result.Failure(PaymentErrors.FailCancelPayment);
+            }
 
-        //public async Task<dynamic> GetAllPaymentForStaff(int status)
-        //{
-        //    var payments = await _unitOfWork.PaymentRepository.GetPaymentForStaff(status);
+            PaymentLinkInformation cancelledPaymentLinkInfo = await payOS.cancelPaymentLink(orderIdLong);
+            return Result.Success();
+        }
 
-        //    return Result.SuccessWithObject(payments);
-        //}
-
-        //public async Task<dynamic> GetOrderIdByPaymentId(int paymentId)
-        //{
-        //    var paymemt = await _unitOfWork.PaymentRepository.GetAsync(x => x.PaymentId == paymentId);
-        //    int orderId = paymemt.OrderId;
-        //    return Result.SuccessWithObject(orderId);
-        //}
+        public async Task<dynamic> GetOrderIdByPaymentId(string paymentId)
+        {
+            var paymemt = await _unitOfWork.PaymentRepository.GetAsync(x => x.PaymentId == paymentId);
+            string orderId = paymemt.OrderId;
+            return Result.SuccessWithObject(orderId);
+        }
     }
 }

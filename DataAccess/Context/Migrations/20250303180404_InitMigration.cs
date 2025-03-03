@@ -137,29 +137,6 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TransactionHistory",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TransactionStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TransactionHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TransactionHistory_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TutorInformation",
                 columns: table => new
                 {
@@ -367,6 +344,28 @@ namespace DataAccess.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WithdrawHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TutorId = table.Column<int>(type: "int", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WithdrawHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WithdrawHistory_TutorInformation_TutorId",
+                        column: x => x.TutorId,
+                        principalTable: "TutorInformation",
+                        principalColumn: "TutorId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Feedback",
                 columns: table => new
                 {
@@ -483,11 +482,11 @@ namespace DataAccess.Context.Migrations
                 name: "Order",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TutorId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -590,13 +589,12 @@ namespace DataAccess.Context.Migrations
                 name: "Payment",
                 columns: table => new
                 {
-                    PaymentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BankCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ResponseCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -616,6 +614,33 @@ namespace DataAccess.Context.Migrations
                         principalTable: "Order",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransactionHistory",
+                columns: table => new
+                {
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionHistory", x => x.TransactionId);
+                    table.ForeignKey(
+                        name: "FK_TransactionHistory_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TransactionHistory_Payment_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payment",
+                        principalColumn: "PaymentId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -690,8 +715,8 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Address", "Avatar", "Birthday", "Email", "IsBan", "IsEmailConfirm", "Name", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", "imgurl", new DateOnly(2025, 2, 28), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", "imgurl", new DateOnly(2025, 2, 28), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", "imgurl", new DateOnly(2025, 3, 4), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", "imgurl", new DateOnly(2025, 3, 4), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -706,7 +731,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "SystemAccountWallet",
                 columns: new[] { "AccountId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 1, 0m, 0m, new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7514) });
+                values: new object[] { 1, 0m, 0m, new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7448) });
 
             migrationBuilder.InsertData(
                 table: "TutorInformation",
@@ -716,7 +741,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "Wallet",
                 columns: new[] { "TutorId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 2, 0m, 0m, new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7589) });
+                values: new object[] { 2, 0m, 0m, new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7514) });
 
             migrationBuilder.InsertData(
                 table: "BankInformation",
@@ -876,9 +901,20 @@ namespace DataAccess.Context.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TransactionHistory_PaymentId",
+                table: "TransactionHistory",
+                column: "PaymentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TutorInformation_TutorCategoryId",
                 table: "TutorInformation",
                 column: "TutorCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WithdrawHistory_TutorId",
+                table: "WithdrawHistory",
+                column: "TutorId");
         }
 
         /// <inheritdoc />
@@ -903,9 +939,6 @@ namespace DataAccess.Context.Migrations
                 name: "LearningSchedule");
 
             migrationBuilder.DropTable(
-                name: "Payment");
-
-            migrationBuilder.DropTable(
                 name: "Reports");
 
             migrationBuilder.DropTable(
@@ -927,10 +960,16 @@ namespace DataAccess.Context.Migrations
                 name: "Wallet");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "WithdrawHistory");
 
             migrationBuilder.DropTable(
                 name: "SystemAccount");
+
+            migrationBuilder.DropTable(
+                name: "Payment");
+
+            migrationBuilder.DropTable(
+                name: "Order");
 
             migrationBuilder.DropTable(
                 name: "Courses");

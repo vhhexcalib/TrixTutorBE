@@ -78,7 +78,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 28),
+                            Birthday = new DateOnly(2025, 3, 4),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -92,7 +92,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 2, 28),
+                            Birthday = new DateOnly(2025, 3, 4),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -369,14 +369,14 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.Order", b =>
                 {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -400,11 +400,8 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.Payment", b =>
                 {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -417,8 +414,9 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -428,8 +426,8 @@ namespace DataAccess.Context.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
@@ -601,7 +599,7 @@ namespace DataAccess.Context.Migrations
                             AccountId = 1,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7514)
+                            LastChangeDate = new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7448)
                         });
                 });
 
@@ -766,11 +764,8 @@ namespace DataAccess.Context.Migrations
 
             modelBuilder.Entity("BusinessObject.TransactionHistory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -782,17 +777,16 @@ namespace DataAccess.Context.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("PaymentId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TransactionStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
+                    b.HasKey("TransactionId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
 
                     b.ToTable("TransactionHistory");
                 });
@@ -1140,8 +1134,36 @@ namespace DataAccess.Context.Migrations
                             TutorId = 2,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 2, 28, 22, 53, 24, 325, DateTimeKind.Local).AddTicks(7589)
+                            LastChangeDate = new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7514)
                         });
+                });
+
+            modelBuilder.Entity("BusinessObject.WithdrawHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TutorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("WithdrawHistory");
                 });
 
             modelBuilder.Entity("BusinessObject.Account", b =>
@@ -1434,7 +1456,15 @@ namespace DataAccess.Context.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Payment", "Payment")
+                        .WithOne("TransactionHistory")
+                        .HasForeignKey("BusinessObject.TransactionHistory", "PaymentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Account");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("BusinessObject.TutorContact", b =>
@@ -1478,6 +1508,17 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("BusinessObject.WithdrawHistory", b =>
+                {
+                    b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
+                        .WithMany("WithdrawHistory")
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TutorInformation");
+                });
+
             modelBuilder.Entity("BusinessObject.Account", b =>
                 {
                     b.Navigation("Feedbacks");
@@ -1518,6 +1559,12 @@ namespace DataAccess.Context.Migrations
                     b.Navigation("TeachingHistories");
 
                     b.Navigation("TeachingSchedules");
+                });
+
+            modelBuilder.Entity("BusinessObject.Payment", b =>
+                {
+                    b.Navigation("TransactionHistory")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessObject.Role", b =>
@@ -1571,6 +1618,8 @@ namespace DataAccess.Context.Migrations
 
                     b.Navigation("TutorContact")
                         .IsRequired();
+
+                    b.Navigation("WithdrawHistory");
                 });
 #pragma warning restore 612, 618
         }

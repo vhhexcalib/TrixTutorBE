@@ -8,6 +8,7 @@ using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
 using Service.DTOs.OrderDTO;
 using Service.DTOs.RoleDTO;
+using Service.DTOs.TransactionHistoryDTO;
 using Service.DTOs.TutorContactDTO;
 using Service.DTOs.TutorDTO;
 
@@ -114,6 +115,11 @@ namespace Service.Mappings
 
             // Mapping Orders -> StudentOrderDTO
             CreateMap<Order, StudentOrderDTO>().ReverseMap();
+
+            // Mapping TransactionHistory -> TransactionDTO
+            CreateMap<TransactionHistory, TransactionDTO>()
+                .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.Name))
+                .ReverseMap();
 
         }
     }
