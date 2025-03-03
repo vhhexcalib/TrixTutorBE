@@ -23,7 +23,6 @@ namespace BusinessObject
         public decimal Amount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string TransactionStatus { get; set; } // Rút hay chuyển
     }
 
 }

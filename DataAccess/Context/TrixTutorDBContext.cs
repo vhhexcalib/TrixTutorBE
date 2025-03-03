@@ -41,6 +41,7 @@ namespace DataAccess.Context
         public DbSet<TeachingDate> TeachingDate { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Order> Order { get; set; }
+        public DbSet<WithdrawHistory> WithdrawHistory { get; set; }
 
         #endregion
 
@@ -334,7 +335,12 @@ namespace DataAccess.Context
                 .HasForeignKey<TransactionHistory>(th => th.PaymentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
+            // TutorInformation -> WithdrawHistory: 1-N
+            modelBuilder.Entity<WithdrawHistory>()
+                .HasOne(w => w.TutorInformation)
+                .WithMany(ti => ti.WithdrawHistory)
+                .HasForeignKey(w => w.TutorId)
+                .OnDelete(DeleteBehavior.Restrict); // Set the delete behavior, as per your requirement
 
             base.OnModelCreating(modelBuilder);
         }
