@@ -11,7 +11,7 @@ namespace BusinessObject
     public class TransactionHistory
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [ForeignKey("Account")]
         public int AccountId { get; set; }
@@ -21,7 +21,7 @@ namespace BusinessObject
         public string PaymentId { get; set; }
         public virtual Payment Payment { get; set; }
         public decimal Amount { get; set; }
-        public string Status { get; set; }
+        public bool Status { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 

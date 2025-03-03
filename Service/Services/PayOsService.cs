@@ -40,58 +40,59 @@ namespace Service.Services
             payOS = new PayOS(clientId, apiKey, checksumKey);
             _orderService = orderService;
         }
-        //public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
-        //{
-        //    var order = await _unitOfWork.OrderRepository.GetOrderById(paymentDTO.OrderId);
-        //    if (order == null) return Result.Failure(OrderErrors.OrderNotFound);
-        //    var paymentId = RandomPaymentId(paymentDTO.OrderId);
-        //    var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentId);
-        //    if (existedpayment != null)
-        //    {
-        //        return Result.Failure(PaymentErrors.ExistedPayment);
-        //    }
-        //    if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
-        //    var domain = "http://localhost:7100";
-        //    Payment newPayment = new Payment()
-        //    {
-        //        PaymentId = paymentId,
-        //        OrderId = paymentDTO.OrderId,
-        //        AccountId = currentUserObject.AccountId,
-        //        Amount = order.Course.TotalPrice,
-        //        PaymentMethod = "Pay all",
-        //        Status = false,
-        //        TransactionId = "o",
-        //        TransactionDate = DateTime.Now,
-        //        BankCode = "",
-        //        ResponseCode = ""
-        //    };
-        //    var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
-        //    await _unitOfWork.SaveAsync();
+        public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
+        {
+            var order = await _unitOfWork.OrderRepository.GetOrderById(paymentDTO.OrderId);
+            if (order == null) return Result.Failure(OrderErrors.OrderNotFound);
+            var paymentId = RandomPaymentId(paymentDTO.OrderId);
+            var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentId);
+            if (existedpayment != null)
+            {
+                return Result.Failure(PaymentErrors.ExistedPayment);
+            }
 
-        //    PaymentData paymentData = new PaymentData(
-        //        orderCode: payment.PaymentId,
-        //        amount: (int)payment.Amount,
-        //        description: $"Order sale paymentId:{payment.PaymentId}",
-        //        items: items,
-        //        cancelUrl: domain + "/paymentinfo",
-        //        returnUrl: domain + "/paymentinfo",
+            if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
+            var domain = "http://localhost:7100";
+            Payment newPayment = new Payment()
+            {
+                PaymentId = paymentId,
+                OrderId = paymentDTO.OrderId,
+                AccountId = currentUserObject.AccountId,
+                Amount = order.Course.TotalPrice,
+                PaymentMethod = "Pay all",
+                Status = false,
+                TransactionId = "o",
+                TransactionDate = DateTime.Now,
+                BankCode = "",
+                ResponseCode = ""
+            };
+            var save = await _unitOfWork.PaymentRepository.AddAsync(payment);
+            await _unitOfWork.SaveAsync();
 
-        //        buyerName: orderNow.Account.AccountName
-        //        );
-        //    try
-        //    {
-        //        CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-        //        PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
-        //        payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
-        //        await _unitOfWork.PaymentRepository.UpdateAsync(payment);
-        //        await _unitOfWork.SaveAsync();
-        //        return Result.SuccessWithObject(createPayment.checkoutUrl);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Result.Failure(PaymentErrors.PaymentError);
-        //    }
-        //}
+            PaymentData paymentData = new PaymentData(
+                orderCode: payment.PaymentId,
+                amount: (int)payment.Amount,
+                description: $"Order sale paymentId:{payment.PaymentId}",
+                items: items,
+                cancelUrl: domain + "/paymentinfo",
+                returnUrl: domain + "/paymentinfo",
+
+                buyerName: orderNow.Account.AccountName
+                );
+            try
+            {
+                CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+                PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(payment.PaymentId);
+                payment.TransactionId = paymentLinkInformation.id;      //update lai transactiondId
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment);
+                await _unitOfWork.SaveAsync();
+                return Result.SuccessWithObject(createPayment.checkoutUrl);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(PaymentErrors.PaymentError);
+            }
+        }
 
         public string RandomPaymentId(string order)
         {
