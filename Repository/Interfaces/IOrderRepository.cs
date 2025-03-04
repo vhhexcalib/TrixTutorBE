@@ -13,5 +13,6 @@ namespace Repository.Interfaces
         Task<Order> GetOrderByStudentId(int id);
         Task<IEnumerable<Order>> GetOrdersByStudentId(int id);
         Task<int> CountAsync();
+        Task<Order> GetOrderDetailById(string id, int studentId);
     }
 }

@@ -108,19 +108,29 @@ namespace Service.Mappings
                 .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.TutorInformation.Account.Name))
                 .ForMember(dest => dest.TeachingDates, opt => opt.MapFrom(src => src.TeachingDate.TeachingDates))
                 .ForMember(dest => dest.TeachingTimes, opt => opt.MapFrom(src => src.TeachingTime.TeachingTimes))
+                .ForMember(dest => dest.TutorId, opt => opt.MapFrom(src => src.TutorInformation.TutorId))
                 .ReverseMap();
 
             // Mapping Orders -> CreateOrderDTO
             CreateMap<Order, CreateOrderDTO>().ReverseMap();
 
             // Mapping Orders -> StudentOrderDTO
-            CreateMap<Order, StudentOrderDTO>().ReverseMap();
+            CreateMap<Order, StudentOrderDTO>()
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
+                .ReverseMap();
 
             // Mapping TransactionHistory -> TransactionDTO
             CreateMap<TransactionHistory, TransactionDTO>()
                 .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.Name))
                 .ReverseMap();
 
+            // Mapping Order -> OrderDetailDTO
+            CreateMap<Order, OrderDetailDTO>()
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
+                .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.TutorInformation.Account.Name))
+                .ForMember(dest => dest.TotalSlots, opt => opt.MapFrom(src => src.Course.TeachingSlots))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Course.TotalPrice))
+                .ReverseMap();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Service.DTOs.CoursesDTO
         public DateTime CreateDate { get; set; }
         public string Images { get; set; }
         public string TeachingPlace { get; set; }
+        public int TutorId { get; set; }
         public string TutorName { get; set; }
         public string TeachingDates { get; set; }
         public string TeachingTimes { get; set; }

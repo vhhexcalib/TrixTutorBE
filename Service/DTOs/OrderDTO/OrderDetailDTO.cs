@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs.OrderDTO
 {
-    public class StudentOrderDTO
+    public class OrderDetailDTO
     {
         public string OrderId { get; set; }
-        public int TutorId { get; set; }
-        public int CourseId { get; set; }
-        [ForeignKey("Account")]
-        public int StudentId { get; set; }
+        public string TutorName { get; set; }
         public string CourseName { get; set; }
-
         public DateTime OrderDate { get; set; }
         public bool Status { get; set; }
+        public int TotalSlots { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

@@ -30,11 +30,21 @@ namespace Repository.Repositories
                 .Include(o => o.Account)
                 .FirstOrDefaultAsync(p => p.OrderId == id);
         }
+        public async Task<Order> GetOrderDetailById(string id, int studentId)
+        {
+            return await _context.Order
+                .Include(o => o.TutorInformation)
+                    .ThenInclude(ti => ti.Account)
+                .Include(o => o.Course)
+                .Include(o => o.Account)
+                .FirstOrDefaultAsync(p => p.OrderId == id && p.StudentId == studentId);
+        }
 
         public async Task<IEnumerable<Order>> GetOrdersByStudentId(int id)
         {
             return await _context.Order
                 .Where(p => p.StudentId == id)
+                .Include(o => o.Course)
                 .ToListAsync();
         }
         public async Task<int> CountAsync()

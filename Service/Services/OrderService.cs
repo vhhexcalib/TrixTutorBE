@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using Service.Common;
 using Service.DTOs;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.CoursesDTO;
 using Service.DTOs.OrderDTO;
 using Service.Exceptions;
 using Service.Interfaces;
@@ -25,11 +26,11 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<dynamic> CreateOrderAsync (CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
+        public async Task<dynamic> CreateOrderAsync(CurrentUserObject currentUserObject, CreateOrderDTO createOrderDTO)
         {
             var orderId = RandomOrderId(currentUserObject.AccountId, createOrderDTO.CourseId, createOrderDTO.TutorId);
             var existedOrder = await _unitOfWork.OrderRepository.GetOrderByStudentId(currentUserObject.AccountId);
-            if(existedOrder != null)
+            if (existedOrder != null)
             {
                 return Result.Failure(OrderErrors.ExistedOrder);
             }
@@ -49,7 +50,7 @@ namespace Service.Services
             createdOrder.OrderDate = DateTime.Now;
             createdOrder.Status = false;
             await _unitOfWork.OrderRepository.AddAsync(createdOrder);
-            var result =  await _unitOfWork.SaveAsync();
+            var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(OrderErrors.CreateOrderFail);
         }
         public async Task<PagedResult<StudentOrderDTO>> GetAllStudentOrdersAsync(CurrentUserObject currentUserObject)
@@ -62,13 +63,37 @@ namespace Service.Services
                 TotalItems = totalItems
             };
         }
-
+        public async Task<dynamic> GetOrderDetail(CurrentUserObject currentUserObject, OrderDTO orderDTO)
+        {
+            var order = await _unitOfWork.OrderRepository.GetOrderDetailById(orderDTO.OrderId, currentUserObject.AccountId);
+            if (order == null)
+            {
+                return Result.Failure(OrderErrors.OrderNotFound);
+            }
+            var orderDetail = _mapper.Map<OrderDetailDTO>(order);
+            return Result.SuccessWithObject(orderDetail);
+        }
         public string RandomOrderId(int studentId, int courseId, int tutorId)
         {
             Random rnd = new Random();
             int newOtp = rnd.Next(100000, 999999);
             string orderid = newOtp.ToString() + studentId.ToString() + courseId.ToString() + tutorId.ToString();
             return orderid;
+        }
+        public async Task<dynamic> CancelOrder(CurrentUserObject currentUserObject, OrderDTO orderDTO)
+        {
+            var order = await _unitOfWork.OrderRepository.GetOrderDetailById(orderDTO.OrderId, currentUserObject.AccountId);
+            if (order == null)
+            {
+                return Result.Failure(OrderErrors.OrderNotFound);
+            }
+            if(order.Status)
+            {
+                return Result.Failure(OrderErrors.FinishedPaymentOrder);
+            }
+            await _unitOfWork.OrderRepository.DeleteAsync(order);
+            var result = await _unitOfWork.SaveAsync();
+            return result == "Save Change Success" ? Result.Success() : Result.Failure(OrderErrors.CancelOrderFail);
         }
     }
 }

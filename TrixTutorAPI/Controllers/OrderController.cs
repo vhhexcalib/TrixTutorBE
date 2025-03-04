@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.CoursesDTO;
 using Service.DTOs.OrderDTO;
 using Service.Interfaces;
 using Service.Services;
@@ -56,6 +57,47 @@ namespace TrixTutorAPI.Controllers
             {
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
                 var result = await _orderService.CreateOrderAsync(currentUserObject, createOrderDTO);
+                if (result.IsSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "StudentOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("order-detail")]
+        public async Task<IActionResult> GetOrderDetail([FromQuery] OrderDTO orderDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _orderService.GetOrderDetail(currentUserObject, orderDTO);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize(Policy = "StudentOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("cancel-order")]
+        public async Task<IActionResult> CancelOrder([FromBody] OrderDTO orderDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
+                var result = await _orderService.CancelOrder(currentUserObject, orderDTO);
                 if (result.IsSuccess) return Ok(result);
                 return BadRequest(result);
             }
