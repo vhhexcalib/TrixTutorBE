@@ -49,7 +49,7 @@ namespace Service.Services
             var order = await _unitOfWork.OrderRepository.GetOrderById(paymentDTO.OrderId);
             if (order == null) return Result.Failure(OrderErrors.OrderNotFound);
             var paymentId = RandomPaymentId(paymentDTO.OrderId);
-            var paymentIdString = RandomPaymentId(paymentDTO.OrderId).ToString();
+            var paymentIdString = paymentId.ToString();
 
             var existedpayment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentIdString);
             if (existedpayment != null)
@@ -58,7 +58,7 @@ namespace Service.Services
             }
 
             if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
-            var domain = "http://localhost:7100/swagger";
+            var domain = "https://trixtutor.io.vn/";
             Payment newPayment = new Payment()
             {
                 PaymentId  = paymentIdString,
@@ -72,15 +72,15 @@ namespace Service.Services
                 ResponseCode = ""                
             };
             List<ItemData> items = new List<ItemData>( );
-            ItemData item = new ItemData(order.OrderId, 1, (int)order.Course.TotalPrice);
+            ItemData item = new ItemData(order.Course.CourseName, 1, (int)order.Course.TotalPrice);
             items.Add(item);
             PaymentData paymentData = new PaymentData(
                orderCode: paymentId,
                amount: (int)order.Course.TotalPrice,
                description: $"PaymentId:{paymentId}",
                items: items,
-               cancelUrl: domain + "/index.html",
-               returnUrl: domain + "/index.html",
+               cancelUrl: domain + "/login",
+               returnUrl: domain + "/login",
                buyerName: order.Account.Name
                );
             CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
@@ -121,6 +121,7 @@ namespace Service.Services
                         adminWallet.Balance += payment.Amount;
                         order.Status = true;
                         payment.Status = true;
+                        var tutorInformation = await _unitOfWork.TutorInformationRepository.GetByIdAsync();
                         await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                         await _unitOfWork.OrderRepository.UpdateAsync(order);
                         await _unitOfWork.SystemAccountWalletRepository.UpdateAsync(adminWallet);

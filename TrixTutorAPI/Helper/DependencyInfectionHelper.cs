@@ -46,6 +46,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
         services.AddScoped<IPayOsService, PayOsService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ISystemAccountWalletService, SystemAccountWalletService>();
+
 
 
 
