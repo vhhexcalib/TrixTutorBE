@@ -61,7 +61,7 @@ namespace Service.Services
             var domain = "https://trixtutor.io.vn/";
             Payment newPayment = new Payment()
             {
-                PaymentId  = paymentIdString,
+                PaymentId = paymentIdString,
                 OrderId = paymentDTO.OrderId,
                 AccountId = currentUserObject.AccountId,
                 Amount = order.Course.TotalPrice,
@@ -69,9 +69,9 @@ namespace Service.Services
                 Status = false,
                 TransactionDate = DateTime.Now,
                 BankCode = "",
-                ResponseCode = ""                
+                ResponseCode = ""
             };
-            List<ItemData> items = new List<ItemData>( );
+            List<ItemData> items = new List<ItemData>();
             ItemData item = new ItemData(order.Course.CourseName, 1, (int)order.Course.TotalPrice);
             items.Add(item);
             PaymentData paymentData = new PaymentData(
@@ -121,12 +121,54 @@ namespace Service.Services
                         adminWallet.Balance += payment.Amount;
                         order.Status = true;
                         payment.Status = true;
-                        var tutorInformation = await _unitOfWork.TutorInformationRepository.GetByIdAsync();
+                        var tutorWallet = await _unitOfWork.WalletRepository.GetByIdAsync(order.TutorId);
+                        tutorWallet.Balance += payment.Amount;
+
+                        await _unitOfWork.WalletRepository.UpdateAsync(tutorWallet);
                         await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                         await _unitOfWork.OrderRepository.UpdateAsync(order);
                         await _unitOfWork.SystemAccountWalletRepository.UpdateAsync(adminWallet);
+
+                        // Lấy danh sách TeachingSlots của khóa học
+                        int teachingSlots = order.Course.TeachingSlots; // TeachingSlots là số lượng slot
+                        if (teachingSlots > 0)
+                        {
+                            var teachingSchedules = new List<TeachingSchedule>();
+                            var learningSchedules = new List<LearningSchedule>();
+
+                            for (int i = 1; i <= teachingSlots; i++) // Lặp từ 1 đến số lượng slot
+                            {
+                                teachingSchedules.Add(new TeachingSchedule
+                                {
+                                    TeachingDate = DateTime.Now.AddDays(i), // Đặt ngày học giả định
+                                    SlotNumber = i,
+                                    StudyPlace = "Online", // Hoặc một giá trị thực tế
+                                    StudentId = order.StudentId,
+                                    TutorId = order.TutorId,
+                                    CourseId = order.CourseId,
+                                    StudentAttendance = false,
+                                    StudentReason = null
+                                });
+
+                                learningSchedules.Add(new LearningSchedule
+                                {
+                                    LearningDate = DateTime.Now.AddDays(i),
+                                    SlotNumber = i,
+                                    TeachingPlace = "Online",
+                                    StudentId = order.StudentId,
+                                    TutorId = order.TutorId,
+                                    CourseId = order.CourseId,
+                                    TutorAttendance = false,
+                                    TutorReason = null
+                                });
+                            }
+                            // Thêm tất cả vào DB
+                            await _unitOfWork.TeachingScheduleRepository.AddRangeAsync(teachingSchedules);
+                            await _unitOfWork.LearningScheduleRepository.AddRangeAsync(learningSchedules);
+                        }
                     }
                 }
+
                 else if (paymentLinkInformation.status == "CANCELLED")
                 {
                     await _unitOfWork.PaymentRepository.DeleteAsync(payment);

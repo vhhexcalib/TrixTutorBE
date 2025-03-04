@@ -16,6 +16,7 @@ namespace BusinessObject
         public DateTime LearningDate { get; set; }
         public bool TutorAttendance { get; set; }
         public string TutorReason { get; set; }
+        public int LearningTime { get; set; }
         public int SlotNumber { get; set; }
         public string TeachingPlace { get; set; }
         [ForeignKey("Account")]
