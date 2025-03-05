@@ -21,5 +21,21 @@ namespace Repository.Repositories
         {
             return await _context.Payment.FirstOrDefaultAsync(p => p.PaymentId == id);
         }
+        public async Task<IEnumerable<Payment>> GetAllPayments()
+        {
+            return await _context.Payment
+                .Include(o => o.Order)
+                .ThenInclude(o => o.Course)
+                .ThenInclude(c => c.TutorInformation)
+                .ThenInclude(ti => ti.Account)
+                .Include(o => o.Account)
+                .ToListAsync();
+        }
+        public async Task<int> CountAsync()
+        {
+            IQueryable<Payment> query = _context.Set<Payment>();
+
+            return await query.CountAsync();
+        }
     }
 }

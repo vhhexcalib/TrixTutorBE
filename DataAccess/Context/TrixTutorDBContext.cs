@@ -77,6 +77,8 @@ namespace DataAccess.Context
             // Teaching Date Configuration
             modelBuilder.ApplyConfiguration(new TeachingDateConfiguration());
 
+            // Course Configuration
+            modelBuilder.ApplyConfiguration(new CourseConfiguration());
 
             // Account -> Role: 1-N
             modelBuilder.Entity<Account>()

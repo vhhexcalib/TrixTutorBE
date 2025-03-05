@@ -18,7 +18,7 @@ namespace BusinessObject
         [ForeignKey("Course")]
         public int CourseId { get; set; }
         public virtual Courses Course { get; set; }
-
+        public bool IsCanceled { get; set; }
         [ForeignKey("Account")]
         public int StudentId { get; set; }
         public virtual Account Account { get; set; }

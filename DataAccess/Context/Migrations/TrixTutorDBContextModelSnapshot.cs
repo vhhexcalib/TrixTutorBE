@@ -78,7 +78,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 3, 4),
+                            Birthday = new DateOnly(2025, 3, 5),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -91,8 +91,8 @@ namespace DataAccess.Context.Migrations
                         {
                             Id = 2,
                             Address = "HCM",
-                            Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 3, 4),
+                            Avatar = "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg",
+                            Birthday = new DateOnly(2025, 3, 5),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -244,6 +244,24 @@ namespace DataAccess.Context.Migrations
                     b.HasIndex("TutorId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            CourseId = 1,
+                            CourseName = "Thoát rank vàng",
+                            CreateDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4559),
+                            Description = "Faker chỉ out jungle",
+                            Images = "courseImg",
+                            IsAccepted = true,
+                            IsLocked = false,
+                            TeachingDateId = 1,
+                            TeachingPlace = "SummonerRift",
+                            TeachingSlots = 3,
+                            TeachingTimeId = 1,
+                            TotalPrice = 3000.00m,
+                            TutorId = 2
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Feedback", b =>
@@ -336,6 +354,9 @@ namespace DataAccess.Context.Migrations
                     b.Property<DateTime>("LearningDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("LearningTime")
+                        .HasColumnType("int");
+
                     b.Property<int>("SlotNumber")
                         .HasColumnType("int");
 
@@ -374,6 +395,9 @@ namespace DataAccess.Context.Migrations
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -599,7 +623,7 @@ namespace DataAccess.Context.Migrations
                             AccountId = 1,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7448)
+                            LastChangeDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4279)
                         });
                 });
 
@@ -707,6 +731,9 @@ namespace DataAccess.Context.Migrations
 
                     b.Property<DateTime>("TeachingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TeachingTime")
+                        .HasColumnType("int");
 
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
@@ -1095,14 +1122,14 @@ namespace DataAccess.Context.Migrations
                         new
                         {
                             TutorId = 2,
-                            Degree = "link",
-                            ExperienceYear = "10Year",
-                            GeneralProfile = "general profile",
+                            Degree = "Top 1 Thách Đấu",
+                            ExperienceYear = "20",
+                            GeneralProfile = "Trẻ con sa mạc truyền tai nhau bài đồng giao",
                             IsPremium = false,
                             IsRented = false,
-                            Language = "Vietnamese",
-                            SalaryPerHour = 0m,
-                            TeachingStyle = "fun",
+                            Language = "Vietlish",
+                            SalaryPerHour = 1000m,
+                            TeachingStyle = "Jungle Ăn Thịt",
                             TotalTeachDay = 0,
                             TutorCategoryId = 1
                         });
@@ -1134,7 +1161,7 @@ namespace DataAccess.Context.Migrations
                             TutorId = 2,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7514)
+                            LastChangeDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4343)
                         });
                 });
 

@@ -449,6 +449,7 @@ namespace DataAccess.Context.Migrations
                     LearningDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TutorAttendance = table.Column<bool>(type: "bit", nullable: false),
                     TutorReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LearningTime = table.Column<int>(type: "int", nullable: false),
                     SlotNumber = table.Column<int>(type: "int", nullable: false),
                     TeachingPlace = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
@@ -485,6 +486,7 @@ namespace DataAccess.Context.Migrations
                     OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TutorId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
+                    IsCanceled = table.Column<bool>(type: "bit", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
@@ -557,6 +559,7 @@ namespace DataAccess.Context.Migrations
                     StudentAttendance = table.Column<bool>(type: "bit", nullable: false),
                     StudentReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SlotNumber = table.Column<int>(type: "int", nullable: false),
+                    TeachingTime = table.Column<int>(type: "int", nullable: false),
                     StudyPlace = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     TutorId = table.Column<int>(type: "int", nullable: false),
@@ -715,8 +718,8 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Address", "Avatar", "Birthday", "Email", "IsBan", "IsEmailConfirm", "Name", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", "imgurl", new DateOnly(2025, 3, 4), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", "imgurl", new DateOnly(2025, 3, 4), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", "imgurl", new DateOnly(2025, 3, 5), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg", new DateOnly(2025, 3, 5), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -731,22 +734,27 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "SystemAccountWallet",
                 columns: new[] { "AccountId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 1, 0m, 0m, new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7448) });
+                values: new object[] { 1, 0m, 0m, new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4279) });
 
             migrationBuilder.InsertData(
                 table: "TutorInformation",
                 columns: new[] { "TutorId", "Degree", "ExperienceYear", "GeneralProfile", "IsPremium", "IsRented", "Language", "SalaryPerHour", "TeachingStyle", "TotalTeachDay", "TutorCategoryId" },
-                values: new object[] { 2, "link", "10Year", "general profile", false, false, "Vietnamese", 0m, "fun", 0, 1 });
+                values: new object[] { 2, "Top 1 Thách Đấu", "20", "Trẻ con sa mạc truyền tai nhau bài đồng giao", false, false, "Vietlish", 1000m, "Jungle Ăn Thịt", 0, 1 });
 
             migrationBuilder.InsertData(
                 table: "Wallet",
                 columns: new[] { "TutorId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 2, 0m, 0m, new DateTime(2025, 3, 4, 1, 4, 4, 491, DateTimeKind.Local).AddTicks(7514) });
+                values: new object[] { 2, 0m, 0m, new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4343) });
 
             migrationBuilder.InsertData(
                 table: "BankInformation",
                 columns: new[] { "TutorId", "BankName", "BankNumber", "OwnerName" },
                 values: new object[] { 2, "BankName", "1234567890", "Tutor" });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "CourseId", "CourseName", "CreateDate", "Description", "Images", "IsAccepted", "IsLocked", "TeachingDateId", "TeachingPlace", "TeachingSlots", "TeachingTimeId", "TotalPrice", "TutorId" },
+                values: new object[] { 1, "Thoát rank vàng", new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4559), "Faker chỉ out jungle", "courseImg", true, false, 1, "SummonerRift", 3, 1, 3000.00m, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_RoleId",

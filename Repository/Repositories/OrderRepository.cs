@@ -22,6 +22,10 @@ namespace Repository.Repositories
         {
             return await _context.Order.FirstOrDefaultAsync(p => p.StudentId == id && p.Status == false);
         }
+        public async Task<Order> GetUnCanceledOrderByStudentId(int id)
+        {
+            return await _context.Order.FirstOrDefaultAsync(p => p.StudentId == id && p.IsCanceled == false && p.Status == false);
+        }
         public async Task<Order> GetOrderById(string id)
         {
             return await _context.Order
@@ -45,6 +49,8 @@ namespace Repository.Repositories
             return await _context.Order
                 .Where(p => p.StudentId == id)
                 .Include(o => o.Course)
+                .ThenInclude(c => c.TutorInformation)
+                .ThenInclude(ti => ti.Account)
                 .ToListAsync();
         }
         public async Task<int> CountAsync()

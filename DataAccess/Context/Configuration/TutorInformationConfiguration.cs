@@ -18,13 +18,13 @@ namespace DataAccess.Context.Configuration
                 new TutorInformation
                 {
                     TutorId = 2,
-                    GeneralProfile = "general profile",
-                    Language = "Vietnamese",
-                    Degree = "link",
-                    ExperienceYear = "10Year",
+                    GeneralProfile = "Trẻ con sa mạc truyền tai nhau bài đồng giao",
+                    Language = "Vietlish",
+                    Degree = "Top 1 Thách Đấu",
+                    ExperienceYear = "20",
                     TotalTeachDay = 0,
-                    SalaryPerHour = 0,
-                    TeachingStyle = "fun",
+                    SalaryPerHour = 1000,
+                    TeachingStyle = "Jungle Ăn Thịt",
                     TutorCategoryId = 1,
                     IsPremium = false,
                     IsRented = false

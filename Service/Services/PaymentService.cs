@@ -9,6 +9,9 @@ using MediatR;
 using Service.Interfaces;
 using AutoMapper;
 using Repository.Interfaces;
+using Service.DTOs.AccountDTO;
+using Service.DTOs.OrderDTO;
+using Service.DTOs;
 
 namespace Service.Services
 {
@@ -21,6 +24,15 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        public async Task<PagedResult<AllPaymentDTO>> GetAllPaymentAsync()
+        {
+            var payments = await _unitOfWork.PaymentRepository.GetAllPayments();
+            var totalItems = await _unitOfWork.PaymentRepository.CountAsync();
+            return new PagedResult<AllPaymentDTO>
+            {
+                Items = _mapper.Map<IEnumerable<AllPaymentDTO>>(payments),
+                TotalItems = totalItems
+            };
+        }
     }
 }

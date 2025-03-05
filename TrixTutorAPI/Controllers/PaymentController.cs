@@ -17,12 +17,15 @@ namespace TrixTutorAPI.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IPayOsService _payOsService;
+        private readonly IPaymentService _paymentService;
 
 
-        public PaymentController(ITokenService tokenService, IPayOsService payOsService)
+
+        public PaymentController(ITokenService tokenService, IPayOsService payOsService, IPaymentService paymentService)
         {
             _tokenService = tokenService;
             _payOsService = payOsService;
+            _paymentService = paymentService;
         }
         [Authorize(Policy = "UserOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -59,10 +62,29 @@ namespace TrixTutorAPI.Controllers
             return Ok(result);
         }
         [HttpGet("order-id")]
-        public async Task<IActionResult> GetOrderIdByPaymentId(PaymentIdDTO paymentIdDTO)
+        public async Task<IActionResult> GetOrderIdByPaymentId([FromQuery] PaymentIdDTO paymentIdDTO)
         {
             var result = await _payOsService.GetOrderIdByPaymentId(paymentIdDTO.PaymentId);
             return Ok(result);
+        }
+        [Authorize(Policy = "AdminOnly")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("payments")]
+        public async Task<IActionResult> GetAllPayments()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await _paymentService.GetAllPaymentAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

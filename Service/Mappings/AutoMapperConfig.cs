@@ -7,6 +7,7 @@ using Service.DTOs.CategoryDTO;
 using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
 using Service.DTOs.OrderDTO;
+using Service.DTOs.PaymentDTO;
 using Service.DTOs.RoleDTO;
 using Service.DTOs.TransactionHistoryDTO;
 using Service.DTOs.TutorContactDTO;
@@ -117,6 +118,9 @@ namespace Service.Mappings
             // Mapping Orders -> StudentOrderDTO
             CreateMap<Order, StudentOrderDTO>()
                 .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
+                .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.Course.TutorInformation.Account.Name))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Course.Images))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Course.TotalPrice))
                 .ReverseMap();
 
             // Mapping TransactionHistory -> TransactionDTO
@@ -130,6 +134,14 @@ namespace Service.Mappings
                 .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.TutorInformation.Account.Name))
                 .ForMember(dest => dest.TotalSlots, opt => opt.MapFrom(src => src.Course.TeachingSlots))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Course.TotalPrice))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Course.Images))
+                .ReverseMap();
+
+            // Mapping Payment -> AllPaymentDTO
+            CreateMap<Payment, AllPaymentDTO>()
+                .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.Order.TutorInformation.Account.Name))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Order.Course.CourseName))
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Account.Name))
                 .ReverseMap();
         }
     }

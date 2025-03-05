@@ -34,6 +34,11 @@ namespace Service.Services
             {
                 return Result.Failure(OrderErrors.ExistedOrder);
             }
+            var existedUnCanceledOrder = await _unitOfWork.OrderRepository.GetUnCanceledOrderByStudentId(currentUserObject.AccountId);
+            if (existedUnCanceledOrder != null)
+            {
+                return Result.Failure(OrderErrors.UnfinishedOrder);
+            }
             var existedCourse = await _unitOfWork.CoursesRepository.GetByIdAsync(createOrderDTO.CourseId);
             if (existedCourse == null)
             {
@@ -49,6 +54,7 @@ namespace Service.Services
             createdOrder.StudentId = currentUserObject.AccountId;
             createdOrder.OrderDate = DateTime.Now;
             createdOrder.Status = false;
+            createdOrder.IsCanceled = false;
             await _unitOfWork.OrderRepository.AddAsync(createdOrder);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(OrderErrors.CreateOrderFail);
@@ -56,7 +62,7 @@ namespace Service.Services
         public async Task<PagedResult<StudentOrderDTO>> GetAllStudentOrdersAsync(CurrentUserObject currentUserObject)
         {
             var orders = await _unitOfWork.OrderRepository.GetOrdersByStudentId(currentUserObject.AccountId);
-            var totalItems = await _unitOfWork.AccountRepository.CountAsync(); // Đếm tổng số đơn thuê phù hợp
+            var totalItems = await _unitOfWork.OrderRepository.CountAsync(); // Đếm tổng số đơn thuê phù hợp
             return new PagedResult<StudentOrderDTO>
             {
                 Items = _mapper.Map<IEnumerable<StudentOrderDTO>>(orders),
@@ -91,7 +97,9 @@ namespace Service.Services
             {
                 return Result.Failure(OrderErrors.FinishedPaymentOrder);
             }
-            await _unitOfWork.OrderRepository.DeleteAsync(order);
+            order.Status = true;
+            order.IsCanceled = true;
+            await _unitOfWork.OrderRepository.UpdateAsync(order);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(OrderErrors.CancelOrderFail);
         }

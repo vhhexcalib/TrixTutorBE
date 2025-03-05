@@ -14,5 +14,6 @@ namespace Repository.Interfaces
         Task<IEnumerable<Order>> GetOrdersByStudentId(int id);
         Task<int> CountAsync();
         Task<Order> GetOrderDetailById(string id, int studentId);
+        Task<Order> GetUnCanceledOrderByStudentId(int id);
     }
 }

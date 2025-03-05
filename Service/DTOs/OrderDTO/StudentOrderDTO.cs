@@ -13,11 +13,13 @@ namespace Service.DTOs.OrderDTO
         public string OrderId { get; set; }
         public int TutorId { get; set; }
         public int CourseId { get; set; }
-        [ForeignKey("Account")]
+        public string Images { get; set; }
         public int StudentId { get; set; }
         public string CourseName { get; set; }
-
+        public string TutorName { get; set; }
+        public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; }
+        public bool IsCanceled { get; set; }
         public bool Status { get; set; }
     }
 }

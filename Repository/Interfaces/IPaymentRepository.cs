@@ -10,5 +10,7 @@ namespace Repository.Interfaces
     public interface IPaymentRepository : IRepository<Payment>
     {
         Task<Payment> GetPaymentById(string id);
+        Task<IEnumerable<Payment>> GetAllPayments();
+        Task<int> CountAsync();
     }
 }

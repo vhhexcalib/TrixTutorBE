@@ -15,7 +15,9 @@ namespace Service.DTOs.OrderDTO
         public string CourseName { get; set; }
         public DateTime OrderDate { get; set; }
         public bool Status { get; set; }
+        public bool IsCanceled { get; set; }
         public int TotalSlots { get; set; }
         public decimal TotalPrice { get; set; }
+        public string Images { get; set; }
     }
 }

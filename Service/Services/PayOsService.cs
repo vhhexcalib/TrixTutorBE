@@ -58,7 +58,7 @@ namespace Service.Services
             }
 
             if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
-            var domain = "https://trixtutor.io.vn/";
+            var domain = "http://localhost:3000";
             Payment newPayment = new Payment()
             {
                 PaymentId = paymentIdString,
@@ -79,8 +79,8 @@ namespace Service.Services
                amount: (int)order.Course.TotalPrice,
                description: $"PaymentId:{paymentId}",
                items: items,
-               cancelUrl: domain + "/login",
-               returnUrl: domain + "/login",
+               cancelUrl: domain + "/paymentinfo",
+               returnUrl: domain + "/paymentinfo",
                buyerName: order.Account.Name
                );
             CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
@@ -119,65 +119,72 @@ namespace Service.Services
                     {
                         var adminWallet = await _unitOfWork.SystemAccountWalletRepository.GetByIdAsync(1);
                         adminWallet.Balance += payment.Amount;
+                        adminWallet.LastChangeAmount = payment.Amount;
+                        adminWallet.LastChangeDate = DateTime.Now;
                         order.Status = true;
                         payment.Status = true;
                         var tutorWallet = await _unitOfWork.WalletRepository.GetByIdAsync(order.TutorId);
                         tutorWallet.Balance += payment.Amount;
-
+                        tutorWallet.LastChangeDate = DateTime.Now;
+                        tutorWallet.LastChangeAmount = payment.Amount;
                         await _unitOfWork.WalletRepository.UpdateAsync(tutorWallet);
                         await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                         await _unitOfWork.OrderRepository.UpdateAsync(order);
                         await _unitOfWork.SystemAccountWalletRepository.UpdateAsync(adminWallet);
+                        await _unitOfWork.SaveAsync();
+                        //// Lấy danh sách TeachingSlots của khóa học
+                        //int teachingSlots = order.Course.TeachingSlots; // TeachingSlots là số lượng slot
+                        //if (teachingSlots > 0)
+                        //{
+                        //    var teachingSchedules = new List<TeachingSchedule>();
+                        //    var learningSchedules = new List<LearningSchedule>();
 
-                        // Lấy danh sách TeachingSlots của khóa học
-                        int teachingSlots = order.Course.TeachingSlots; // TeachingSlots là số lượng slot
-                        if (teachingSlots > 0)
-                        {
-                            var teachingSchedules = new List<TeachingSchedule>();
-                            var learningSchedules = new List<LearningSchedule>();
+                        //    for (int i = 1; i <= teachingSlots; i++) // Lặp từ 1 đến số lượng slot
+                        //    {
+                        //        teachingSchedules.Add(new TeachingSchedule
+                        //        {
+                        //            TeachingDate = DateTime.Now.AddDays(i), // Đặt ngày học giả định
+                        //            SlotNumber = i,
+                        //            StudyPlace = "Online", // Hoặc một giá trị thực tế
+                        //            StudentId = order.StudentId,
+                        //            TutorId = order.TutorId,
+                        //            CourseId = order.CourseId,
+                        //            StudentAttendance = false,
+                        //            StudentReason = null
+                        //        });
 
-                            for (int i = 1; i <= teachingSlots; i++) // Lặp từ 1 đến số lượng slot
-                            {
-                                teachingSchedules.Add(new TeachingSchedule
-                                {
-                                    TeachingDate = DateTime.Now.AddDays(i), // Đặt ngày học giả định
-                                    SlotNumber = i,
-                                    StudyPlace = "Online", // Hoặc một giá trị thực tế
-                                    StudentId = order.StudentId,
-                                    TutorId = order.TutorId,
-                                    CourseId = order.CourseId,
-                                    StudentAttendance = false,
-                                    StudentReason = null
-                                });
-
-                                learningSchedules.Add(new LearningSchedule
-                                {
-                                    LearningDate = DateTime.Now.AddDays(i),
-                                    SlotNumber = i,
-                                    TeachingPlace = "Online",
-                                    StudentId = order.StudentId,
-                                    TutorId = order.TutorId,
-                                    CourseId = order.CourseId,
-                                    TutorAttendance = false,
-                                    TutorReason = null
-                                });
-                            }
-                            // Thêm tất cả vào DB
-                            await _unitOfWork.TeachingScheduleRepository.AddRangeAsync(teachingSchedules);
-                            await _unitOfWork.LearningScheduleRepository.AddRangeAsync(learningSchedules);
-                        }
+                        //        learningSchedules.Add(new LearningSchedule
+                        //        {
+                        //            LearningDate = DateTime.Now.AddDays(i),
+                        //            SlotNumber = i,
+                        //            TeachingPlace = "Online",
+                        //            StudentId = order.StudentId,
+                        //            TutorId = order.TutorId,
+                        //            CourseId = order.CourseId,
+                        //            TutorAttendance = false,
+                        //            TutorReason = null
+                        //        });
+                        //    }
+                        //    // Thêm tất cả vào DB
+                        //    await _unitOfWork.TeachingScheduleRepository.AddRangeAsync(teachingSchedules);
+                        //    await _unitOfWork.LearningScheduleRepository.AddRangeAsync(learningSchedules);
+                        //}
                     }
                 }
 
                 else if (paymentLinkInformation.status == "CANCELLED")
                 {
+                    order.Status = true;
+                    order.IsCanceled = true;
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
                     await _unitOfWork.PaymentRepository.DeleteAsync(payment);
+                    await _unitOfWork.SaveAsync();
                 }
                 else
                 {
                     return Result.Failure(PaymentErrors.FailPayment);
                 }
-                var result = await _unitOfWork.SaveAsync();
+                await _unitOfWork.SaveAsync();
 
             }
             return Result.SuccessWithObject(paymentLinkInformation);

@@ -37,7 +37,7 @@ namespace DataAccess.Context.Configuration
                      Name = "Tutor",
                      Birthday = DateOnly.FromDateTime(DateTime.Now),
                      RoleId = 4,
-                     Avatar = "imgurl",
+                     Avatar = "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg",
                      IsEmailConfirm = true,
                      Address = "HCM",
                      Phone = "0987654321",

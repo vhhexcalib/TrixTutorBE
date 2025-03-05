@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Service.DTOs.PaymentDTO;
+using Service.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,6 @@ namespace Service.Interfaces
 {
     public interface IPaymentService
     {
+        Task<PagedResult<AllPaymentDTO>> GetAllPaymentAsync();
     }
 }
