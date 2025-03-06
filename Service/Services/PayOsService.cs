@@ -132,43 +132,6 @@ namespace Service.Services
                         await _unitOfWork.OrderRepository.UpdateAsync(order);
                         await _unitOfWork.SystemAccountWalletRepository.UpdateAsync(adminWallet);
                         await _unitOfWork.SaveAsync();
-                        //// Lấy danh sách TeachingSlots của khóa học
-                        //int teachingSlots = order.Course.TeachingSlots; // TeachingSlots là số lượng slot
-                        //if (teachingSlots > 0)
-                        //{
-                        //    var teachingSchedules = new List<TeachingSchedule>();
-                        //    var learningSchedules = new List<LearningSchedule>();
-
-                        //    for (int i = 1; i <= teachingSlots; i++) // Lặp từ 1 đến số lượng slot
-                        //    {
-                        //        teachingSchedules.Add(new TeachingSchedule
-                        //        {
-                        //            TeachingDate = DateTime.Now.AddDays(i), // Đặt ngày học giả định
-                        //            SlotNumber = i,
-                        //            StudyPlace = "Online", // Hoặc một giá trị thực tế
-                        //            StudentId = order.StudentId,
-                        //            TutorId = order.TutorId,
-                        //            CourseId = order.CourseId,
-                        //            StudentAttendance = false,
-                        //            StudentReason = null
-                        //        });
-
-                        //        learningSchedules.Add(new LearningSchedule
-                        //        {
-                        //            LearningDate = DateTime.Now.AddDays(i),
-                        //            SlotNumber = i,
-                        //            TeachingPlace = "Online",
-                        //            StudentId = order.StudentId,
-                        //            TutorId = order.TutorId,
-                        //            CourseId = order.CourseId,
-                        //            TutorAttendance = false,
-                        //            TutorReason = null
-                        //        });
-                        //    }
-                        //    // Thêm tất cả vào DB
-                        //    await _unitOfWork.TeachingScheduleRepository.AddRangeAsync(teachingSchedules);
-                        //    await _unitOfWork.LearningScheduleRepository.AddRangeAsync(learningSchedules);
-                        //}
                     }
                 }
 
