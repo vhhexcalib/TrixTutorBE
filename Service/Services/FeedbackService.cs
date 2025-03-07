@@ -7,8 +7,11 @@ using AutoMapper;
 using BusinessObject;
 using Repository.Interfaces;
 using Service.Common;
+using Service.DTOs;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
+using Service.DTOs.OrderDTO;
 using Service.Exceptions;
 using Service.Interfaces;
 
@@ -26,24 +29,24 @@ namespace Service.Services
         }
         public async Task<dynamic> CreateFeedBackForCourse(CurrentUserObject currentUserObject, FeedbackDTO feedbackDTO)
         {
+            var student = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            if (student == null) return Result.Failure(AccountErrors.FailGetAccount);
+            var learingSchedule = await _unitOfWork.LearningScheduleRepository.GetLearningScheduleByStudentId(currentUserObject.AccountId);
+            if(learingSchedule.TutorReason == "" || learingSchedule.TutorReason == "Vắng") return Result.Failure(LearningScheduleErrors.AtleastLearnOneSlot);
             var feedback = new Feedback() { CourseId = feedbackDTO.CourseId, FeedbackById = feedbackDTO.FeedbackById, FeedbackContent = feedbackDTO.FeedbackContent, Rating = feedbackDTO.Rating  };
-            if(feedbackDTO.CheckingRequest == true)
             await _unitOfWork.FeedbackRepository.AddAsync(feedback);
             var result = await _unitOfWork.SaveAsync();
-            if (result == "Save Change Success")
-            {
-                return Result.Success();
-            }
-            else
-            {
-                return Result.Failure(FeedbackErrors.FailCreatingFeedback);
-            }
+            return result == "Save Change Success" ? Result.Success() : Result.Failure(FeedbackErrors.FailCreatingFeedback);
         }
-        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbackByUserIdAsync(int userId)
+        public async Task<PagedResult<GetFeedbackDTO>> GetAllCourseFeedbackAsync(CourseIdDTO courseIdDTO)
         {
-            var feedbacks = await _unitOfWork.FeedbackRepository.GetAllFeedbackByUserId(userId);
-            return _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+            var feedbacks = await _unitOfWork.FeedbackRepository.GetAllFeedbackByCourseId(courseIdDTO.CourseId);
+            var totalItems = await _unitOfWork.FeedbackRepository.CountAsync(courseIdDTO.CourseId); 
+            return new PagedResult<GetFeedbackDTO>
+            {
+                Items = _mapper.Map<IEnumerable<GetFeedbackDTO>>(feedbacks),
+                TotalItems = totalItems
+            };
         }
-
     }
 }

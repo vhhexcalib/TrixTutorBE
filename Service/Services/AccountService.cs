@@ -158,14 +158,13 @@ namespace Service.Services
             };
             return Result.SuccessWithObject(profile);
         }
-        public async Task<dynamic> UpdateProfile(CurrentUserObject currentUserObject, ProfileDTO profileDTO)
+        public async Task<dynamic> UpdateProfile(CurrentUserObject currentUserObject, EditProfileStudentDTO editProfileStudentDTO)
         {
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
-            account.Address = profileDTO.Address;
-            account.Birthday = profileDTO.Birthday;
-            account.Phone = profileDTO.Phone;
-            account.Avatar = profileDTO.Avatar;
-            account.Name = profileDTO.Name;
+            account.Address = editProfileStudentDTO.Address;
+            account.Birthday = editProfileStudentDTO.Birthday;
+            account.Phone = editProfileStudentDTO.Phone;
+            account.Name = editProfileStudentDTO.Name;
             await _unitOfWork.AccountRepository.UpdateAsync(account);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(AccountErrors.FailUpdateProfile);

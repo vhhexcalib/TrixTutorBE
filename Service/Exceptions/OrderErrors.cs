@@ -15,7 +15,7 @@ namespace Service.Exceptions
         public static Error OrderNotFound => new("Get Order", "Đơn thuê không tồn tại, vui lòng tạo đơn thuê");
         public static Error FinishedPaymentOrder => new("Create payment", "Đơn thuê đã hoàn thành thanh toán.");
         public static Error CancelOrderFail => new("Detele Order", "Xóa đơn thuê thất bại.");
-
+        public static Error OngoingCourse => new("Create Order", "Khung ngày giờ này đã có lịch học, vui lòng chọn khóa học khung ngày khác hoặc khung giờ khác.");
 
     }
 }

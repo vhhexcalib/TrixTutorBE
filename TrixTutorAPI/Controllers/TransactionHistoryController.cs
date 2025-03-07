@@ -33,7 +33,7 @@ namespace TrixTutorAPI.Controllers
             try
             {
                 CurrentUserObject currentUserObject = await TokenHelper.Instance.GetThisUserInfo(HttpContext);
-                var result = await _transactionHistoryService.GetAllStudentOrdersAsync(currentUserObject);
+                var result = await _transactionHistoryService.GetAllStudentTransactionAsync(currentUserObject);
                 return Ok(result);
             }
             catch (Exception ex)

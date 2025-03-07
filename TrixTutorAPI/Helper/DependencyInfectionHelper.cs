@@ -49,6 +49,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<ISystemAccountWalletService, SystemAccountWalletService>();
         services.AddScoped<ILearningScheduleService, LearningScheduleService>();
         services.AddScoped<ITeachingScheduleService, TeachingScheduleService>();
+        services.AddScoped<ILearningHistoryService, LearningHistoryService>();
+        services.AddScoped<ITeachingHistoryService, TeachingHistoryService>();
 
 
         return services;

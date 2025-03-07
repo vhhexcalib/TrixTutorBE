@@ -30,6 +30,9 @@ namespace Service.Services
         {
             var orderId = RandomOrderId(currentUserObject.AccountId, createOrderDTO.CourseId, createOrderDTO.TutorId);
             var existedOrder = await _unitOfWork.OrderRepository.GetOrderByStudentId(currentUserObject.AccountId);
+            var learningHistoryCourse = await _unitOfWork.LearningHistoryRepository.GetAsync(x => x.CourseId == createOrderDTO.CourseId, "Course");
+            var learningschedule = await _unitOfWork.LearningScheduleRepository.GetAsync(x => x.CourseId == createOrderDTO.CourseId, "Course");
+
             if (existedOrder != null)
             {
                 return Result.Failure(OrderErrors.ExistedOrder);
@@ -48,6 +51,13 @@ namespace Service.Services
             if (existedTutor == null)
             {
                 return Result.Failure(TutorErrors.FailGetById);
+            }
+            if(existedCourse.TeachingDateId == learningschedule.Course.TeachingDateId || learningHistoryCourse.Course.TeachingDateId == learningschedule.Course.TeachingDateId)
+            {
+                if (existedCourse.TeachingDateId == learningschedule.Course.TeachingTimeId || learningHistoryCourse.Course.TeachingTimeId == learningschedule.Course.TeachingTimeId)
+                {
+                    return Result.Failure(OrderErrors.OngoingCourse);
+                }
             }
             var createdOrder = _mapper.Map<Order>(createOrderDTO);
             createdOrder.OrderId = orderId;

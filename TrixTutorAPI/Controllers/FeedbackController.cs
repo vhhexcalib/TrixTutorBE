@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.AccountDTO;
 using Service.DTOs.CategoryDTO;
+using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
 using Service.Interfaces;
 using Service.Services;
@@ -20,7 +21,7 @@ namespace TrixTutorAPI.Controllers
             _feedbackService = feedbackService;
         }
         [HttpPost("feedback")]
-        [Authorize(Policy = "UserOnly")]
+        [Authorize(Policy = "StudentOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateFeedback([FromBody] FeedbackDTO feedbackDTO)
         {
@@ -41,7 +42,7 @@ namespace TrixTutorAPI.Controllers
             }
         }
         [HttpGet("feedbacks-by-course-id")]
-        public async Task<IActionResult> GetFeedbacks([FromBody] FeedbackCourseDTO feedbackCourseDTO)
+        public async Task<IActionResult> GetFeedbacks([FromQuery] CourseIdDTO courseIdDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +50,7 @@ namespace TrixTutorAPI.Controllers
             }
             try
             {
-                var result = await _feedbackService.GetAllFeedbackByUserIdAsync(feedbackCourseDTO.CourseId);
+                var result = await _feedbackService.GetAllCourseFeedbackAsync(courseIdDTO);
                 return Ok(result);
             }
             catch (Exception ex)

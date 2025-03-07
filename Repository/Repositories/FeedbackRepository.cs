@@ -17,9 +17,20 @@ namespace Repository.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Feedback>> GetAllFeedbackByUserId(int courseId)
+        public async Task<IEnumerable<Feedback>> GetAllFeedbackByCourseId(int courseId)
         {
-            return await GetAllAsync(f => f.CourseId == courseId);
+            return await _context.Feedback
+                .Where(f => f.CourseId == courseId)
+                .Include(c => c.Course)
+                .Include(a => a.Account)
+                .ToListAsync();
+        }
+        public async Task<int> CountAsync(int id)
+        {
+            IQueryable<Feedback> query = _context.Set<Feedback>()
+                .Where(x => x.CourseId == id);
+
+            return await query.CountAsync();
         }
 
     }

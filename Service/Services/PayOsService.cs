@@ -6,8 +6,10 @@ using Net.payOS.Types;
 using Repository.Interfaces;
 using Service.Common;
 using Service.DTOs.AccountDTO;
+using Service.DTOs.LearningHistoryDTO;
 using Service.DTOs.OrderDTO;
 using Service.DTOs.PaymentDTO;
+using Service.DTOs.TeachingHistoryDTO;
 using Service.DTOs.TransactionHistoryDTO;
 using Service.Exceptions;
 using Service.Interfaces;
@@ -30,10 +32,13 @@ namespace Service.Services
         private readonly ITransactionHistoryService _transactionHistoryService;
         private readonly ILearningScheduleService _learningScheduleService;
         private readonly ITeachingScheduleService _teachingScheduleService;
+        private readonly ILearningHistoryService _learningHistoryService;
+        private readonly ITeachingHistoryService _teachingHistoryService;
 
 
 
-        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService, ITransactionHistoryService transactionHistoryService, ILearningScheduleService learningScheduleService, ITeachingScheduleService teachingScheduleService)
+
+        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService, ITransactionHistoryService transactionHistoryService, ILearningScheduleService learningScheduleService, ITeachingScheduleService teachingScheduleService, ILearningHistoryService learningHistoryService, ITeachingHistoryService teachingHistoryService)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -47,6 +52,8 @@ namespace Service.Services
             _transactionHistoryService = transactionHistoryService;
             _learningScheduleService = learningScheduleService;
             _teachingScheduleService = teachingScheduleService;
+            _learningHistoryService = learningHistoryService;
+            _teachingHistoryService = teachingHistoryService;
         }
         public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
         {
@@ -130,6 +137,10 @@ namespace Service.Services
                         tutorWallet.Balance += payment.Amount;
                         tutorWallet.LastChangeDate = DateTime.Now;
                         tutorWallet.LastChangeAmount = payment.Amount;
+                        CreateLearningHistoryDTO createLearningHistoryDTO = new CreateLearningHistoryDTO() {TutorId = order.TutorId, CourseId = order.CourseId };
+                        CreateTeachingHistoryDTO createTeachingHistoryDTO = new CreateTeachingHistoryDTO() { TutorId = order.TutorId, CourseId = order.CourseId };
+                        await _teachingHistoryService.CreateTeachingHistory(order.StudentId, createTeachingHistoryDTO);
+                        await _learningHistoryService.CreateLearningHistory(order.StudentId, createLearningHistoryDTO);
                         await _transactionHistoryService.CreateTransactionAsync(payment.AccountId, paymentId);
                         await _learningScheduleService.AddLearningSchedulesAsync(payment.OrderId);
                         await _teachingScheduleService.AddTeachingSchedulesAsync(payment.OrderId);
@@ -145,8 +156,10 @@ namespace Service.Services
                 {
                     order.Status = true;
                     order.IsCanceled = true;
+                    payment.PaymentMethod = "Canceled";
+                    payment.Status = true;
                     await _unitOfWork.OrderRepository.UpdateAsync(order);
-                    await _unitOfWork.PaymentRepository.DeleteAsync(payment);
+                    await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                     await _unitOfWork.SaveAsync();
                 }
                 else

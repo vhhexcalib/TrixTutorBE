@@ -28,11 +28,6 @@ namespace Service.Services
         public async Task<dynamic> CreateTransactionAsync(int accountid, string PaymentId)
         {
             var transactionId = RandomTransactionId(accountid, PaymentId);
-            var existedTransactionId = await _unitOfWork.TransactionHistoryRepository.GetTransactionByPaymentId(PaymentId);
-            if (existedTransactionId != null)
-            {
-                return Result.Failure(TransactionErrors.ExistedTransaction);
-            }
             var existedPayment = await _unitOfWork.PaymentRepository.GetPaymentById(PaymentId);
             if (existedPayment == null)
             {
@@ -50,10 +45,10 @@ namespace Service.Services
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(TransactionErrors.CreateTransactionFail);
         }
-        public async Task<PagedResult<TransactionDTO>> GetAllStudentOrdersAsync(CurrentUserObject currentUserObject)
+        public async Task<PagedResult<TransactionDTO>> GetAllStudentTransactionAsync(CurrentUserObject currentUserObject)
         {
             var transactions = await _unitOfWork.TransactionHistoryRepository.GetTransactionsByStudentId(currentUserObject.AccountId);
-            var totalItems = await _unitOfWork.TransactionHistoryRepository.CountAsync();
+            var totalItems = await _unitOfWork.TransactionHistoryRepository.CountAsync(currentUserObject.AccountId);
             return new PagedResult<TransactionDTO>
             {
                 Items = _mapper.Map<IEnumerable<TransactionDTO>>(transactions),

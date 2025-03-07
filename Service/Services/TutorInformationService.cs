@@ -142,7 +142,6 @@ namespace Service.Services
             account.Address = tutorProfileDTO.Address;
             account.Birthday = tutorProfileDTO.Birthday;
             account.Phone = tutorProfileDTO.Phone;
-            account.Avatar = tutorProfileDTO.Avatar;
             account.Name = tutorProfileDTO.Name;
             tutorinformation.GeneralProfile = tutorProfileDTO.GeneralProfile;
             tutorinformation.Language = tutorProfileDTO.Language;
@@ -166,11 +165,6 @@ namespace Service.Services
             }
             tutorinformation.TutorCategoryId = tutorProfileDTO.TutorCategoryId;
             tutorinformation.TotalTeachDay = tutorProfileDTO.TotalTeachDay;
-            var bankInformation = await _unitOfWork.BankInformationRepository.GetByIdAsync(currentUserObject.AccountId);
-            bankInformation.BankName = tutorProfileDTO.BankName;
-            bankInformation.BankNumber = tutorProfileDTO.BankNumber;
-            bankInformation.OwnerName = tutorProfileDTO.OwnerName;
-            await _unitOfWork.BankInformationRepository.UpdateAsync(bankInformation);
             await _unitOfWork.TutorInformationRepository.UpdateAsync(tutorinformation);
             await _unitOfWork.AccountRepository.UpdateAsync(account);
             var result = await _unitOfWork.SaveAsync();

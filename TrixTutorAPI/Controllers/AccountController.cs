@@ -115,7 +115,7 @@ namespace TrixTutorAPI.Controllers
         [Authorize(Policy = "StudentOnly")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDTO profileDTO)
+        public async Task<IActionResult> UpdateProfile([FromBody] EditProfileStudentDTO profileDTO)
         {
             if (!ModelState.IsValid)
             {

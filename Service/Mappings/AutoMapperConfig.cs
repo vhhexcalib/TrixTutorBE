@@ -157,6 +157,12 @@ namespace Service.Mappings
                 .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Account.Name))
                 .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
                 .ReverseMap();
+
+            // Mapping Feedback -> GetFeedbackDTO
+            CreateMap<Feedback, GetFeedbackDTO>()
+                .ForMember(dest => dest.FeedbackByName, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
+                .ReverseMap();
         }
     }
 }

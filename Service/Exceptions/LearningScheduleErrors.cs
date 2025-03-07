@@ -13,6 +13,8 @@ namespace Service.Exceptions
         public static Error ScheduleNotFound => new("Get schedule", "Lịch học không tồn tại.");
         public static Error FailTakingAttendance => new("Take Attendance", "Lưu điểm danh không thành công.");
         public static Error TutorAlreadyTakenAttendance => new("Take Attendance", "Giảng viên đã được điểm danh.");
+        public static Error AtleastLearnOneSlot => new("Create Feedback", "Hãy học ít nhất 1 buổi để có thể đánh giá khóa học.");
+
 
     }
 }

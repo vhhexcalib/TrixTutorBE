@@ -36,11 +36,13 @@ namespace Repository.Repositories
                 .Include(a => a.Account)
                 .ToListAsync();
         }
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(int accountId)
         {
-            IQueryable<TransactionHistory> query = _context.Set<TransactionHistory>();
+            IQueryable<TransactionHistory> query = _context.Set<TransactionHistory>()
+                .Where(x => x.AccountId == accountId);
 
             return await query.CountAsync();
         }
+
     }
 }

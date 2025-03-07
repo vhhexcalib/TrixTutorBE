@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs.FeedBackDTO
 {
-    public class FeedbackDTO
+    public class GetFeedbackDTO
     {
         public double Rating { get; set; }
         public string FeedbackContent { get; set; }
-        public int CourseId { get; set; }
-        public int FeedbackById { get; set; }
+        public int CourseName { get; set; }
+        public int FeedbackByName { get; set; }
     }
 }

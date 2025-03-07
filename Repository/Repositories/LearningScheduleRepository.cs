@@ -26,6 +26,10 @@ namespace Repository.Repositories
                 .ThenInclude(ti => ti.Account)
                 .ToListAsync();
         }
+        public async Task<LearningSchedule> GetLearningScheduleByStudentId(int id)
+        {
+            return await _context.LearningSchedule.Where(p => p.StudentId == id).FirstOrDefaultAsync();
+        }
         public async Task<int> CountAsync()
         {
             IQueryable<LearningSchedule> query = _context.Set<LearningSchedule>();
