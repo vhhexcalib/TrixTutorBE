@@ -12,6 +12,7 @@ namespace Repository.Interfaces
         Task<TransactionHistory> GetTransactionByStudentIdAsync(int id);
         Task<TransactionHistory> GetTransactionById(string id);
         Task<IEnumerable<TransactionHistory>> GetTransactionsByStudentId(int id);
+        Task<TransactionHistory> GetTransactionByPaymentId(string id);
         Task<int> CountAsync();
     }
 }

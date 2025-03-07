@@ -11,6 +11,8 @@ namespace Service.Exceptions
     {
         public static Error ExistedCategory => new("Create category", "Danh mục môn học này đã tồn tại vui lòng chọn nhập môn học khác");
         public static Error CreateCategoryFailed => new("Create category", "Danh mục môn học tạo thất bại, vui lòng tạo lại");
+        public static Error NoneExistCategory => new("Update Tutor Profile", "Danh mục môn học không tồn tại vui lòng chọn nhập môn học khác");
+
 
     }
 }

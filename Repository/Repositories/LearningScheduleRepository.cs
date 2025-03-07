@@ -1,5 +1,6 @@
 ﻿using BusinessObject;
 using DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,21 @@ namespace Repository.Repositories
         public LearningScheduleRepository(TrixTutorDBContext context) : base(context)
         {
             _context = context;
+        }
+        public async Task<IEnumerable<LearningSchedule>> GetLearningSchedulesByStudentId(int id)
+        {
+            return await _context.LearningSchedule
+                .Where(p => p.StudentId == id)
+                .Include(o => o.Course)
+                .ThenInclude(c => c.TutorInformation)
+                .ThenInclude(ti => ti.Account)
+                .ToListAsync();
+        }
+        public async Task<int> CountAsync()
+        {
+            IQueryable<LearningSchedule> query = _context.Set<LearningSchedule>();
+
+            return await query.CountAsync();
         }
     }
 }

@@ -47,10 +47,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<IPayOsService, PayOsService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ISystemAccountWalletService, SystemAccountWalletService>();
-
-
-
-
+        services.AddScoped<ILearningScheduleService, LearningScheduleService>();
+        services.AddScoped<ITeachingScheduleService, TeachingScheduleService>();
 
 
         return services;

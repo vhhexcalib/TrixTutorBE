@@ -6,9 +6,11 @@ using Service.DTOs.BankDTO;
 using Service.DTOs.CategoryDTO;
 using Service.DTOs.CoursesDTO;
 using Service.DTOs.FeedBackDTO;
+using Service.DTOs.LearningDTO;
 using Service.DTOs.OrderDTO;
 using Service.DTOs.PaymentDTO;
 using Service.DTOs.RoleDTO;
+using Service.DTOs.TeachingDTO;
 using Service.DTOs.TransactionHistoryDTO;
 using Service.DTOs.TutorContactDTO;
 using Service.DTOs.TutorDTO;
@@ -142,6 +144,18 @@ namespace Service.Mappings
                 .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.Order.TutorInformation.Account.Name))
                 .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Order.Course.CourseName))
                 .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Account.Name))
+                .ReverseMap();
+
+            // Mapping LearningSchedule -> LearningDTO
+            CreateMap<LearningSchedule, LearningDTO>()
+                .ForMember(dest => dest.TutorName, opt => opt.MapFrom(src => src.TutorInformation.Account.Name))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
+                .ReverseMap();
+
+            // Mapping TeachingSchedule -> TeachingDTO
+            CreateMap<TeachingSchedule, TeachingDTO>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Account.Name))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.CourseName))
                 .ReverseMap();
         }
     }

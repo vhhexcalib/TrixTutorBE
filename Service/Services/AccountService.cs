@@ -153,10 +153,23 @@ namespace Service.Services
                 Address = account.Address,
                 Birthday = account.Birthday,
                 Phone = account.Phone,
-                Avatar = account.Avatar
+                Avatar = account.Avatar,
+                Name = account.Name
             };
             return Result.SuccessWithObject(profile);
         }
+        public async Task<dynamic> UpdateProfile(CurrentUserObject currentUserObject, ProfileDTO profileDTO)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            account.Address = profileDTO.Address;
+            account.Birthday = profileDTO.Birthday;
+            account.Phone = profileDTO.Phone;
+            account.Avatar = profileDTO.Avatar;
+            account.Name = profileDTO.Name;
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            var result = await _unitOfWork.SaveAsync();
+            return result == "Save Change Success" ? Result.Success() : Result.Failure(AccountErrors.FailUpdateProfile);
+        }      
         public async Task<dynamic> GetProfileByIdBasedOnRole(int id)
         {
 
@@ -175,7 +188,8 @@ namespace Service.Services
                         Address = account.Address,
                         Birthday = account.Birthday,
                         Phone = account.Phone,
-                        Avatar = account.Avatar
+                        Avatar = account.Avatar,
+                        Name = account.Name
                     };
                     return Result.SuccessWithObject(profile);
                 }

@@ -28,10 +28,12 @@ namespace Service.Services
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly ITransactionHistoryService _transactionHistoryService;
+        private readonly ILearningScheduleService _learningScheduleService;
+        private readonly ITeachingScheduleService _teachingScheduleService;
 
 
 
-        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService, ITransactionHistoryService transactionHistoryService)
+        public PayOsService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IPaymentService paymentService, IOrderService orderService, ITransactionHistoryService transactionHistoryService, ILearningScheduleService learningScheduleService, ITeachingScheduleService teachingScheduleService)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -43,6 +45,8 @@ namespace Service.Services
             payOS = new PayOS(clientId, apiKey, checksumKey);
             _orderService = orderService;
             _transactionHistoryService = transactionHistoryService;
+            _learningScheduleService = learningScheduleService;
+            _teachingScheduleService = teachingScheduleService;
         }
         public async Task<dynamic> CreatePayment(CurrentUserObject currentUserObject, PaymentDTO paymentDTO)
         {
@@ -58,7 +62,7 @@ namespace Service.Services
             }
 
             if (order.Status) return Result.Failure(OrderErrors.FinishedPaymentOrder);
-            var domain = "http://localhost:3000";
+            var domain = "https://trixtutor.io.vn/";
             Payment newPayment = new Payment()
             {
                 PaymentId = paymentIdString,
@@ -86,7 +90,6 @@ namespace Service.Services
             CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
             PaymentLinkInformation paymentLinkInformation = await payOS.getPaymentLinkInformation(paymentId);
             CreateTransactionDTO createTransactionDTO = new CreateTransactionDTO() { PaymentId = paymentIdString, TransactionId = paymentLinkInformation.id };
-            await _transactionHistoryService.CreateTransactionAsync(currentUserObject, createTransactionDTO);
             await _unitOfWork.PaymentRepository.AddAsync(newPayment);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.SuccessWithObject(createPayment.checkoutUrl) : Result.Failure(PaymentErrors.CreatePaymentFail);
@@ -127,6 +130,9 @@ namespace Service.Services
                         tutorWallet.Balance += payment.Amount;
                         tutorWallet.LastChangeDate = DateTime.Now;
                         tutorWallet.LastChangeAmount = payment.Amount;
+                        await _transactionHistoryService.CreateTransactionAsync(payment.AccountId, paymentId);
+                        await _learningScheduleService.AddLearningSchedulesAsync(payment.OrderId);
+                        await _teachingScheduleService.AddTeachingSchedulesAsync(payment.OrderId);
                         await _unitOfWork.WalletRepository.UpdateAsync(tutorWallet);
                         await _unitOfWork.PaymentRepository.UpdateAsync(payment);
                         await _unitOfWork.OrderRepository.UpdateAsync(order);

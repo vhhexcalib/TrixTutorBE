@@ -25,15 +25,15 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<dynamic> CreateTransactionAsync(CurrentUserObject currentUserObject, CreateTransactionDTO createTransactionDTO)
+        public async Task<dynamic> CreateTransactionAsync(int accountid, string PaymentId)
         {
-            var transactionId = createTransactionDTO.TransactionId;
-            var existedTransactionId = await _unitOfWork.TransactionHistoryRepository.GetTransactionById(transactionId);
+            var transactionId = RandomTransactionId(accountid, PaymentId);
+            var existedTransactionId = await _unitOfWork.TransactionHistoryRepository.GetTransactionByPaymentId(PaymentId);
             if (existedTransactionId != null)
             {
                 return Result.Failure(TransactionErrors.ExistedTransaction);
             }
-            var existedPayment = await _unitOfWork.PaymentRepository.GetPaymentById(createTransactionDTO.PaymentId);
+            var existedPayment = await _unitOfWork.PaymentRepository.GetPaymentById(PaymentId);
             if (existedPayment == null)
             {
                 return Result.Failure(PaymentErrors.ExistedPaymentNotFound);
@@ -42,7 +42,7 @@ namespace Service.Services
             {
                 TransactionId = transactionId,
                 PaymentId = existedPayment.PaymentId,
-                AccountId = currentUserObject.AccountId,
+                AccountId = accountid,
                 Amount = existedPayment.Amount,
                 CreatedAt = DateTime.Now
             };           
@@ -61,13 +61,12 @@ namespace Service.Services
             };
         }
 
-        public string RandomTransactionId(int studentId, CreateTransactionDTO createTransactionDTO)
+        public string RandomTransactionId(int studentId, string payment)
         {
             Random rnd = new Random();
             int newOtp = rnd.Next(100000, 999999);
             string otp = newOtp.ToString();
             string student = studentId.ToString();
-            string payment = createTransactionDTO.PaymentId;
             return "TRS" + otp + "S" + student + "P" + payment;
         }
     }

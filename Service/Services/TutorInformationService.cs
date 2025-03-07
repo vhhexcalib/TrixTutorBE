@@ -135,5 +135,46 @@ namespace Service.Services
             };
             return Result.SuccessWithObject(wallet);
         }
+         public async Task<dynamic> UpdateProfile(CurrentUserObject currentUserObject, EditTutorProfileDTO tutorProfileDTO)
+        {
+            var account = await _unitOfWork.AccountRepository.GetByIdAsync(currentUserObject.AccountId);
+            var tutorinformation = await _unitOfWork.TutorInformationRepository.GetByIdAsync(currentUserObject.AccountId);
+            account.Address = tutorProfileDTO.Address;
+            account.Birthday = tutorProfileDTO.Birthday;
+            account.Phone = tutorProfileDTO.Phone;
+            account.Avatar = tutorProfileDTO.Avatar;
+            account.Name = tutorProfileDTO.Name;
+            tutorinformation.GeneralProfile = tutorProfileDTO.GeneralProfile;
+            tutorinformation.Language = tutorProfileDTO.Language;
+            tutorinformation.Degree = tutorProfileDTO.Degree;
+            tutorinformation.ExperienceYear = tutorProfileDTO.ExperienceYear;
+            tutorinformation.SalaryPerHour = tutorProfileDTO.SalaryPerHour;
+            tutorinformation.TeachingStyle = tutorProfileDTO.TeachingStyle;
+            var foundCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(tutorProfileDTO.TutorCategoryId);
+            if(foundCategory == null)
+            {
+                return Result.Failure(CategoryErrors.NoneExistCategory);
+            }
+            if (tutorProfileDTO.TutorCategoryId != tutorinformation.TutorCategoryId)
+            {
+                var oldCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(tutorinformation.TutorCategoryId);
+                oldCategory.Quantity--;
+                var newCategory = await _unitOfWork.TutorCategoryRepository.GetByIdAsync(tutorProfileDTO.TutorCategoryId);
+                newCategory.Quantity++;
+                await _unitOfWork.TutorCategoryRepository.UpdateAsync(oldCategory);
+                await _unitOfWork.TutorCategoryRepository.UpdateAsync(newCategory);
+            }
+            tutorinformation.TutorCategoryId = tutorProfileDTO.TutorCategoryId;
+            tutorinformation.TotalTeachDay = tutorProfileDTO.TotalTeachDay;
+            var bankInformation = await _unitOfWork.BankInformationRepository.GetByIdAsync(currentUserObject.AccountId);
+            bankInformation.BankName = tutorProfileDTO.BankName;
+            bankInformation.BankNumber = tutorProfileDTO.BankNumber;
+            bankInformation.OwnerName = tutorProfileDTO.OwnerName;
+            await _unitOfWork.BankInformationRepository.UpdateAsync(bankInformation);
+            await _unitOfWork.TutorInformationRepository.UpdateAsync(tutorinformation);
+            await _unitOfWork.AccountRepository.UpdateAsync(account);
+            var result = await _unitOfWork.SaveAsync();
+            return result == "Save Change Success" ? Result.Success() : Result.Failure(AccountErrors.FailUpdateProfile);
+        }
     }
 }

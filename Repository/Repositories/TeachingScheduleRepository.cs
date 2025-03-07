@@ -1,5 +1,6 @@
 ﻿using BusinessObject;
 using DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,19 @@ namespace Repository.Repositories
         {
             _context = context;
         }
+        public async Task<IEnumerable<TeachingSchedule>> GetTeachingSchedulesByTutorId(int id)
+        {
+            return await _context.TeachingSchedules
+                .Where(p => p.TutorId == id)
+                .Include(o => o.Course)
+                .Include(ti => ti.Account)
+                .ToListAsync();
+        }
+        public async Task<int> CountAsync()
+        {
+            IQueryable<TeachingSchedule> query = _context.Set<TeachingSchedule>();
 
+            return await query.CountAsync();
+        }
     }
 }

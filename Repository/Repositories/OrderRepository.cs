@@ -31,6 +31,9 @@ namespace Repository.Repositories
             return await _context.Order
                 .Include(o => o.TutorInformation)
                 .Include(o => o.Course)
+                .ThenInclude(td => td.TeachingDate)
+                .Include(o => o.Course)
+                .ThenInclude(td => td.TeachingTime)
                 .Include(o => o.Account)
                 .FirstOrDefaultAsync(p => p.OrderId == id);
         }

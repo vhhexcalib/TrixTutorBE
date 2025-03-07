@@ -10,5 +10,7 @@ namespace Service.Exceptions
     public class AccountErrors
     {
         public static Error FailGetProfile => new("Get profile", "Tài khoản không tồn tại vui lòng chọn tài khoản khác");
+        public static Error FailUpdateProfile => new("Update profile", "Tài khoản không tồn tại vui lòng chọn tài khoản khác");
+
     }
 }

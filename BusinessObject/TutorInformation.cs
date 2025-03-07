@@ -14,7 +14,6 @@ namespace BusinessObject
         [ForeignKey("Account")]
         public int TutorId { get; set; }
         public virtual Account Account { get; set; }
-
         public string GeneralProfile { get; set; }
         public string Language { get; set; }
         public string Degree { get; set; }

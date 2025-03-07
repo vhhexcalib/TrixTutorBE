@@ -9,6 +9,7 @@ namespace Repository.Interfaces
 {
     public interface ITeachingScheduleRepository : IRepository<TeachingSchedule>
     {
-
+        Task<IEnumerable<TeachingSchedule>> GetTeachingSchedulesByTutorId(int id);
+        Task<int> CountAsync();
     }
 }

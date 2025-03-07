@@ -9,6 +9,10 @@ namespace Service.Exceptions
 {
     public class LearningScheduleErrors
     {
-        public static Error FailSavingSchedule => new("Save schedule", "Lưu lịch giảng dạy không thành công.");
+        public static Error FailSavingSchedule => new("Save schedule", "Lưu lịch học không thành công.");
+        public static Error ScheduleNotFound => new("Get schedule", "Lịch học không tồn tại.");
+        public static Error FailTakingAttendance => new("Take Attendance", "Lưu điểm danh không thành công.");
+        public static Error TutorAlreadyTakenAttendance => new("Take Attendance", "Giảng viên đã được điểm danh.");
+
     }
 }

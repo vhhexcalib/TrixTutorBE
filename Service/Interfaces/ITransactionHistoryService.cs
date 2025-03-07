@@ -12,6 +12,6 @@ namespace Service.Interfaces
     public interface ITransactionHistoryService
     {
         Task<PagedResult<TransactionDTO>> GetAllStudentOrdersAsync(CurrentUserObject currentUserObject);
-        Task<dynamic> CreateTransactionAsync(CurrentUserObject currentUserObject, CreateTransactionDTO createTransactionDTO);
+        Task<dynamic> CreateTransactionAsync(int accountid, string PaymentId);
     }
 }

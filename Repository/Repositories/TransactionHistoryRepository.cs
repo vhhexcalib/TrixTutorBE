@@ -25,6 +25,10 @@ namespace Repository.Repositories
         {
             return await _context.TransactionHistory.FirstOrDefaultAsync(p => p.TransactionId == id);
         }
+        public async Task<TransactionHistory> GetTransactionByPaymentId(string id)
+        {
+            return await _context.TransactionHistory.FirstOrDefaultAsync(p => p.PaymentId == id);
+        }
         public async Task<IEnumerable<TransactionHistory>> GetTransactionsByStudentId(int id)
         {
             return await _context.TransactionHistory
