@@ -32,9 +32,9 @@ namespace Repository.Repositories
         public async Task<IEnumerable<TransactionHistory>> GetTransactionsByStudentId(int id)
         {
             return await _context.TransactionHistory
-                .Where(p => p.AccountId == id)
-                .Include(a => a.Account)
-                .ToListAsync();
+               .Where(p => p.AccountId == id)
+               .Include(a => a.Account)
+               .ToListAsync();
         }
         public async Task<int> CountAsync(int accountId)
         {

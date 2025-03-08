@@ -30,11 +30,18 @@ namespace Repository.Repositories
         {
             return await _context.LearningSchedule.Where(p => p.StudentId == id).FirstOrDefaultAsync();
         }
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(int id)
         {
-            IQueryable<LearningSchedule> query = _context.Set<LearningSchedule>();
+            IQueryable<LearningSchedule> query = _context.Set<LearningSchedule>()
+                .Where(x => x.TutorId == id);
 
             return await query.CountAsync();
+        }
+        public async Task<LearningSchedule> GetLearningScheduleToTakeAttendance(int studentId, DateTime TeachingDate, int TeachingTime)
+        {
+            return await _context.LearningSchedule
+                .Where(p => p.StudentId == studentId && p.LearningDate == TeachingDate && p.LearningTime == TeachingTime)
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Service.Services
         public async Task<PagedResult<LearningDTO>> GetAllLearningScheduleByStudentIdAsync(CurrentUserObject currentUserObject)
         {
             var schedules = await _unitOfWork.LearningScheduleRepository.GetLearningSchedulesByStudentId(currentUserObject.AccountId);
-            var totalItems = await _unitOfWork.LearningScheduleRepository.CountAsync(); // Đếm tổng số đơn thuê phù hợp
+            var totalItems = await _unitOfWork.LearningScheduleRepository.CountAsync(currentUserObject.AccountId); // Đếm tổng số đơn thuê phù hợp
 
             // Ánh xạ danh mục sang DTO
             var categoryDtos = _mapper.Map<IEnumerable<LearningDTO>>(schedules);
@@ -105,22 +105,27 @@ namespace Service.Services
         {
             var schedule = await _unitOfWork.LearningScheduleRepository.GetByIdAsync(slotId);
             if (schedule == null) return Result.Failure(LearningScheduleErrors.ScheduleNotFound);
-            if (schedule.TutorReason != "")
+            //if (schedule.TutorReason != "")
+            //{
+            //    return Result.Failure(LearningScheduleErrors.TutorAlreadyTakenAttendance);
+            //}
+            var attendance = await _unitOfWork.TeachingScheduleRepository.GetTeachingScheduleToTakeAttendance(schedule.TutorId, schedule.LearningDate, schedule.LearningTime);
+            if (attendance == null)
             {
-                return Result.Failure(LearningScheduleErrors.TutorAlreadyTakenAttendance);
+                return Result.Failure(LearningHistoryErrors.ScheduleNotFound);
             }
             if (flag == 1)
             {
-                schedule.TutorAttendance = true;
-                schedule.TutorReason = "Có mặt";
+                attendance.StudentAttendance = true;
+                attendance.StudentReason = "Có mặt";
                 var tutor = await _unitOfWork.TutorInformationRepository.GetByIdAsync(schedule.TutorId);
                 tutor.TotalTeachDay++;
                 await _unitOfWork.TutorInformationRepository.UpdateAsync(tutor);
             }
             else
             {
-                schedule.TutorAttendance = false;
-                schedule.TutorReason = "Vắng";
+                attendance.StudentAttendance = false;
+                attendance.StudentReason = "Vắng";
             }
             await _unitOfWork.LearningScheduleRepository.UpdateAsync(schedule);
             var result = await _unitOfWork.SaveAsync();

@@ -25,11 +25,18 @@ namespace Repository.Repositories
                 .Include(ti => ti.Account)
                 .ToListAsync();
         }
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(int id)
         {
-            IQueryable<TeachingSchedule> query = _context.Set<TeachingSchedule>();
+            IQueryable<TeachingSchedule> query = _context.Set<TeachingSchedule>()
+                .Where(x => x.StudentId == id);
 
             return await query.CountAsync();
+        }
+        public async Task<TeachingSchedule> GetTeachingScheduleToTakeAttendance(int tutorId, DateTime TeachingDate, int TeachingTime)
+        {
+            return await _context.TeachingSchedules
+                .Where(p => p.TutorId == tutorId && p.TeachingDate == TeachingDate && p.TeachingTime == TeachingTime)
+                .FirstOrDefaultAsync();
         }
     }
 }

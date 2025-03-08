@@ -88,7 +88,7 @@ namespace Service.Services
         public async Task<PagedResult<TeachingDTO>> GetAllTeachingScheduleByTutorIdAsync(CurrentUserObject currentUserObject)
         {
             var schedules = await _unitOfWork.TeachingScheduleRepository.GetTeachingSchedulesByTutorId(currentUserObject.AccountId);
-            var totalItems = await _unitOfWork.TeachingScheduleRepository.CountAsync(); // Đếm tổng số đơn thuê phù hợp
+            var totalItems = await _unitOfWork.TeachingScheduleRepository.CountAsync(currentUserObject.AccountId); // Đếm tổng số đơn thuê phù hợp
 
             // Ánh xạ danh mục sang DTO
             var categoryDtos = _mapper.Map<IEnumerable<TeachingDTO>>(schedules);
@@ -104,21 +104,26 @@ namespace Service.Services
         {
             var schedule = await _unitOfWork.TeachingScheduleRepository.GetByIdAsync(slotId);
             if (schedule == null) return Result.Failure(TeachingScheduleErrors.ScheduleNotFound);
-            if (schedule.StudentReason != "")
+            //if (schedule.StudentReason != "")
+            //{
+            //    return Result.Failure(TeachingScheduleErrors.StudentAlreadyTakenAttendance);
+            //}
+            var attendance = await _unitOfWork.LearningScheduleRepository.GetLearningScheduleToTakeAttendance(schedule.StudentId, schedule.TeachingDate, schedule.TeachingTime);
+            if(attendance == null)
             {
-                return Result.Failure(TeachingScheduleErrors.StudentAlreadyTakenAttendance);
+                return Result.Failure(TeachingScheduleErrors.ScheduleNotFound);
             }
             if (flag == 1)
             {
-                schedule.StudentAttendance = true;
-                schedule.StudentReason = "Có mặt";
+                attendance.TutorAttendance = true;
+                attendance.TutorReason = "Có mặt";
             }
             else
             {
-                schedule.StudentAttendance = false;
-                schedule.StudentReason = "Vắng";
+                attendance.TutorAttendance = false;
+                attendance.TutorReason = "Vắng";
             }
-            await _unitOfWork.TeachingScheduleRepository.UpdateAsync(schedule);
+            await _unitOfWork.LearningScheduleRepository.UpdateAsync(attendance);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(TeachingScheduleErrors.FailTakingAttendance);
         }

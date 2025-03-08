@@ -51,6 +51,7 @@ public static class DependencyInjectionHelper
         services.AddScoped<ITeachingScheduleService, TeachingScheduleService>();
         services.AddScoped<ILearningHistoryService, LearningHistoryService>();
         services.AddScoped<ITeachingHistoryService, TeachingHistoryService>();
+        services.AddScoped<IReportService, ReportService>();
 
 
         return services;

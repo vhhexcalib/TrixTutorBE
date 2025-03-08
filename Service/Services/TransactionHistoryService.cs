@@ -47,15 +47,14 @@ namespace Service.Services
         }
         public async Task<PagedResult<TransactionDTO>> GetAllStudentTransactionAsync(CurrentUserObject currentUserObject)
         {
-            var transactions = await _unitOfWork.TransactionHistoryRepository.GetTransactionsByStudentId(currentUserObject.AccountId);
-            var totalItems = await _unitOfWork.TransactionHistoryRepository.CountAsync(currentUserObject.AccountId);
+            var transaction = await _unitOfWork.TransactionHistoryRepository.GetTransactionByStudentIdAsync(currentUserObject.AccountId);
+            var totalItems = await _unitOfWork.TransactionHistoryRepository.CountAsync(currentUserObject.AccountId); // Đếm tổng số đơn thuê phù hợp
             return new PagedResult<TransactionDTO>
             {
-                Items = _mapper.Map<IEnumerable<TransactionDTO>>(transactions),
+                Items = _mapper.Map<IEnumerable<TransactionDTO>>(transaction),
                 TotalItems = totalItems
             };
         }
-
         public string RandomTransactionId(int studentId, string payment)
         {
             Random rnd = new Random();

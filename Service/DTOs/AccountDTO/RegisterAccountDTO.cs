@@ -14,8 +14,7 @@ namespace Service.DTOs.AccountDTO
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
-        [MinLength(8, ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự.")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Mật khẩu phải có ít nhất một chữ cái viết hoa và một ký tự đặc biệt.")]
+        [MinLength(6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập ngày sinh.")]

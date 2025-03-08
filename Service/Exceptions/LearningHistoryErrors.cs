@@ -10,6 +10,8 @@ namespace Service.Exceptions
     public class LearningHistoryErrors
     {
         public static Error FailCreateLearningHistory => new("Create Learning History", "Tạo lịch sử học thất bại, không lưu vào cơ sở dữ liệu.");
+        public static Error ScheduleNotFound => new("Get schedule", "Lịch học không tồn tại.");
+
 
     }
 }

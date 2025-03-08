@@ -10,6 +10,7 @@ namespace Repository.Interfaces
     public interface ITeachingScheduleRepository : IRepository<TeachingSchedule>
     {
         Task<IEnumerable<TeachingSchedule>> GetTeachingSchedulesByTutorId(int id);
-        Task<int> CountAsync();
+        Task<int> CountAsync(int id);
+        Task<TeachingSchedule> GetTeachingScheduleToTakeAttendance(int tutorId, DateTime TeachingDate, int TeachingTime);
     }
 }
