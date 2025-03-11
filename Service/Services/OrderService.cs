@@ -52,11 +52,14 @@ namespace Service.Services
             {
                 return Result.Failure(TutorErrors.FailGetById);
             }
-            if(existedCourse.TeachingDateId == learningschedule.Course.TeachingDateId || learningHistoryCourse.Course.TeachingDateId == learningschedule.Course.TeachingDateId)
+            if (learningschedule != null)
             {
-                if (existedCourse.TeachingDateId == learningschedule.Course.TeachingTimeId || learningHistoryCourse.Course.TeachingTimeId == learningschedule.Course.TeachingTimeId)
+                if (existedCourse.TeachingDateId == learningschedule.Course.TeachingDateId || learningHistoryCourse.Course.TeachingDateId == learningschedule.Course.TeachingDateId)
                 {
-                    return Result.Failure(OrderErrors.OngoingCourse);
+                    if (existedCourse.TeachingDateId == learningschedule.Course.TeachingTimeId || learningHistoryCourse.Course.TeachingTimeId == learningschedule.Course.TeachingTimeId)
+                    {
+                        return Result.Failure(OrderErrors.OngoingCourse);
+                    }
                 }
             }
             var createdOrder = _mapper.Map<Order>(createOrderDTO);
@@ -103,7 +106,7 @@ namespace Service.Services
             {
                 return Result.Failure(OrderErrors.OrderNotFound);
             }
-            if(order.Status)
+            if (order.Status)
             {
                 return Result.Failure(OrderErrors.FinishedPaymentOrder);
             }

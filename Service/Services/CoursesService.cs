@@ -79,7 +79,7 @@ namespace Service.Services
         }
         public async Task<PagedResult<AllCourseByTutorIdDTO>> GetAllCourse(int page, int size, string? search = null, bool sortByCreateDateAsc = true)
         {
-            var courses = await _unitOfWork.CoursesRepository.GetAllCourse(page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
+            var courses = await _unitOfWork.CoursesRepository.GetAllCourse(x => x.IsAccepted == true, page: page, size: size, search: search, sortByCreateDateAsc: sortByCreateDateAsc);
             var totalItems = await _unitOfWork.CoursesRepository.CountAsync(search); // Đếm tổng số course phù hợp
 
             return new PagedResult<AllCourseByTutorIdDTO>

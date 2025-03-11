@@ -23,6 +23,8 @@ public static class DependencyInjectionHelper
         services.AddScoped<IConfirmationOTPRepository, ConfirmationOTPRepository>();
         services.AddScoped<ICertFileRepository, CertFileRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<ILearningHistoryRepository, LearningHistoryRepository>();
+
 
 
         // Register services
