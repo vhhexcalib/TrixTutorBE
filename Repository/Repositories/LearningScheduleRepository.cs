@@ -37,10 +37,10 @@ namespace Repository.Repositories
 
             return await query.CountAsync();
         }
-        public async Task<LearningSchedule> GetLearningScheduleToTakeAttendance(int studentId, DateTime TeachingDate, int TeachingTime)
+        public async Task<LearningSchedule> GetLearningScheduleToTakeAttendance(int tutorId, int studentId, int courseId, int slotNumber)
         {
             return await _context.LearningSchedule
-                .Where(p => p.StudentId == studentId && p.LearningDate == TeachingDate && p.LearningTime == TeachingTime)
+                .Where(p => p.TutorId == tutorId && p.CourseId == courseId && p.StudentId == studentId && p.SlotNumber == slotNumber)
                 .FirstOrDefaultAsync();
         }
     }

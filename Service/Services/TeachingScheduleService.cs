@@ -61,10 +61,26 @@ namespace Service.Services
                 _ => 8 // Giá trị mặc định nếu không khớp ID nào
             };
 
-            // Tạo danh sách lịch học
+            // Tạo danh sách lịch dạy
             for (int i = 0; i < teachingSlots; i++)
             {
-                DateTime teachingDate = upcomingDays[i % upcomingDays.Count]; // Quay lại từ đầu nếu slot nhiều hơn số ngày hợp lệ
+                DateTime teachingDate = upcomingDays[i % upcomingDays.Count];
+
+                // Kiểm tra nếu ngày học đã qua tháng hiện tại
+                if (teachingDate.Month != today.Month)
+                {
+                    int newMonth = teachingDate.Month + 1;
+                    int newYear = teachingDate.Year;
+
+                    // Nếu đang ở tháng 12, chuyển về tháng 1 năm sau
+                    if (newMonth > 12)
+                    {
+                        newMonth = 1;
+                        newYear += 1;
+                    }
+
+                    teachingDate = new DateTime(newYear, newMonth, 1);
+                }
 
                 teachingSchedules.Add(new TeachingSchedule
                 {
@@ -80,11 +96,13 @@ namespace Service.Services
                 });
             }
 
+
             // Lưu vào DB
             await _unitOfWork.TeachingScheduleRepository.AddRangeAsync(teachingSchedules);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(LearningScheduleErrors.FailSavingSchedule);
         }
+
         public async Task<PagedResult<TeachingDTO>> GetAllTeachingScheduleByTutorIdAsync(CurrentUserObject currentUserObject)
         {
             var schedules = await _unitOfWork.TeachingScheduleRepository.GetTeachingSchedulesByTutorId(currentUserObject.AccountId);
@@ -108,7 +126,7 @@ namespace Service.Services
             //{
             //    return Result.Failure(TeachingScheduleErrors.StudentAlreadyTakenAttendance);
             //}
-            var attendance = await _unitOfWork.LearningScheduleRepository.GetLearningScheduleToTakeAttendance(schedule.StudentId, schedule.TeachingDate, schedule.TeachingTime);
+            var attendance = await _unitOfWork.LearningScheduleRepository.GetLearningScheduleToTakeAttendance(schedule.TutorId, schedule.StudentId, schedule.CourseId, schedule.SlotNumber);
             if(attendance == null)
             {
                 return Result.Failure(TeachingScheduleErrors.ScheduleNotFound);
@@ -124,6 +142,7 @@ namespace Service.Services
                 attendance.TutorReason = "Vắng";
             }
             await _unitOfWork.LearningScheduleRepository.UpdateAsync(attendance);
+            await _unitOfWork.TeachingScheduleRepository.UpdateAsync(schedule);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(TeachingScheduleErrors.FailTakingAttendance);
         }

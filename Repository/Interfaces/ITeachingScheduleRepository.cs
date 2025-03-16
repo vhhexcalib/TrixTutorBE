@@ -11,6 +11,6 @@ namespace Repository.Interfaces
     {
         Task<IEnumerable<TeachingSchedule>> GetTeachingSchedulesByTutorId(int id);
         Task<int> CountAsync(int id);
-        Task<TeachingSchedule> GetTeachingScheduleToTakeAttendance(int tutorId, DateTime TeachingDate, int TeachingTime);
+        Task<TeachingSchedule> GetTeachingScheduleToTakeAttendance(int tutorId, int studentId, int courseId, int slotNumber);
     }
 }

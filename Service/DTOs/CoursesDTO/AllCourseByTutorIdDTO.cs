@@ -12,6 +12,7 @@ namespace Service.DTOs.CoursesDTO
         public string CourseName { get; set; }
         public string Description { get; set; }
         public string Images { get; set; }
+        public decimal TotalPrice { get; set; }
         public int TeachingSlots { get; set; }
     }
 }

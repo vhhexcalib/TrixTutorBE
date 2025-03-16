@@ -403,9 +403,7 @@ namespace DataAccess.Context.Migrations
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     IsFinished = table.Column<bool>(type: "bit", nullable: false),
                     FinishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TutorId = table.Column<int>(type: "int", nullable: false),
-                    CoursesCourseId = table.Column<int>(type: "int", nullable: true),
-                    TutorInformationTutorId = table.Column<int>(type: "int", nullable: true)
+                    TutorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -421,23 +419,13 @@ namespace DataAccess.Context.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "CourseId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LearningHistory_Courses_CoursesCourseId",
-                        column: x => x.CoursesCourseId,
-                        principalTable: "Courses",
-                        principalColumn: "CourseId");
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LearningHistory_TutorInformation_TutorId",
                         column: x => x.TutorId,
                         principalTable: "TutorInformation",
                         principalColumn: "TutorId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_LearningHistory_TutorInformation_TutorInformationTutorId",
-                        column: x => x.TutorInformationTutorId,
-                        principalTable: "TutorInformation",
-                        principalColumn: "TutorId");
                 });
 
             migrationBuilder.CreateTable(
@@ -718,8 +706,8 @@ namespace DataAccess.Context.Migrations
                 columns: new[] { "Id", "Address", "Avatar", "Birthday", "Email", "IsBan", "IsEmailConfirm", "Name", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "HCM", "imgurl", new DateOnly(2025, 3, 5), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
-                    { 2, "HCM", "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg", new DateOnly(2025, 3, 5), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
+                    { 1, "HCM", "imgurl", new DateOnly(2025, 3, 15), "Student@gmail.com", false, true, "Student", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "1234567890", 3 },
+                    { 2, "HCM", "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg", new DateOnly(2025, 3, 15), "Tutor@gmail.com", false, true, "Tutor", "f756011db6e966fa291176eb2426febe028835d5ee6c8d92596888cff156656c", "0987654321", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -734,7 +722,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "SystemAccountWallet",
                 columns: new[] { "AccountId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 1, 0m, 0m, new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4279) });
+                values: new object[] { 1, 0m, 0m, new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(7436) });
 
             migrationBuilder.InsertData(
                 table: "TutorInformation",
@@ -744,7 +732,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "Wallet",
                 columns: new[] { "TutorId", "Balance", "LastChangeAmount", "LastChangeDate" },
-                values: new object[] { 2, 0m, 0m, new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4343) });
+                values: new object[] { 2, 0m, 0m, new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(7725) });
 
             migrationBuilder.InsertData(
                 table: "BankInformation",
@@ -754,7 +742,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.InsertData(
                 table: "Courses",
                 columns: new[] { "CourseId", "CourseName", "CreateDate", "Description", "Images", "IsAccepted", "IsLocked", "TeachingDateId", "TeachingPlace", "TeachingSlots", "TeachingTimeId", "TotalPrice", "TutorId" },
-                values: new object[] { 1, "Thoát rank vàng", new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4559), "Faker chỉ out jungle", "courseImg", true, false, 1, "SummonerRift", 3, 1, 3000.00m, 2 });
+                values: new object[] { 1, "Thoát rank vàng", new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(8002), "Faker chỉ out jungle", "courseImg", true, false, 1, "SummonerRift", 3, 1, 3000.00m, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_RoleId",
@@ -794,13 +782,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LearningHistory_CourseId",
                 table: "LearningHistory",
-                column: "CourseId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LearningHistory_CoursesCourseId",
-                table: "LearningHistory",
-                column: "CoursesCourseId");
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LearningHistory_StudentId",
@@ -810,13 +792,7 @@ namespace DataAccess.Context.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LearningHistory_TutorId",
                 table: "LearningHistory",
-                column: "TutorId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LearningHistory_TutorInformationTutorId",
-                table: "LearningHistory",
-                column: "TutorInformationTutorId");
+                column: "TutorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LearningSchedule_CourseId",

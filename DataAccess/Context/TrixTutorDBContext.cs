@@ -156,7 +156,7 @@ namespace DataAccess.Context
             modelBuilder.Entity<TutorInformation>()
                 .Property(ti => ti.SalaryPerHour)
                 .HasColumnType("decimal(18, 2)"); // Precision 18, scale 2 (2 decimal places)
-                              
+
             // Payment - Cấu hình Amount
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
@@ -328,6 +328,27 @@ namespace DataAccess.Context
                 .HasOne(o => o.Account)
                 .WithMany(a => a.Order)
                 .HasForeignKey(o => o.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Account -> LearningHistory (1-N)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.Account)
+                .WithMany(a => a.LearningHistories)
+                .HasForeignKey(lh => lh.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Course -> LearningHistory (1-N)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.Course)
+                .WithMany(c => c.LearningHistories)
+                .HasForeignKey(lh => lh.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TutorInformation -> LearningHistory (1-N)
+            modelBuilder.Entity<LearningHistory>()
+                .HasOne(lh => lh.TutorInformation)
+                .WithMany(ti => ti.LearningHistories)
+                .HasForeignKey(lh => lh.TutorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // TransactionHistory -> Payment: 1-1

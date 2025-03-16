@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(TrixTutorDBContext))]
-    [Migration("20250305151911_InitMigration")]
+    [Migration("20250315143957_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -81,7 +81,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             Address = "HCM",
                             Avatar = "imgurl",
-                            Birthday = new DateOnly(2025, 3, 5),
+                            Birthday = new DateOnly(2025, 3, 15),
                             Email = "Student@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -95,7 +95,7 @@ namespace DataAccess.Context.Migrations
                             Id = 2,
                             Address = "HCM",
                             Avatar = "https://trixtutorstorage.blob.core.windows.net/image/dae63657-5e95-456a-b31a-20f78e63d8ca.jpg",
-                            Birthday = new DateOnly(2025, 3, 5),
+                            Birthday = new DateOnly(2025, 3, 15),
                             Email = "Tutor@gmail.com",
                             IsBan = false,
                             IsEmailConfirm = true,
@@ -253,7 +253,7 @@ namespace DataAccess.Context.Migrations
                         {
                             CourseId = 1,
                             CourseName = "Thoát rank vàng",
-                            CreateDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4559),
+                            CreateDate = new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(8002),
                             Description = "Faker chỉ out jungle",
                             Images = "courseImg",
                             IsAccepted = true,
@@ -308,9 +308,6 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CoursesCourseId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("FinishDate")
                         .HasColumnType("datetime2");
 
@@ -323,22 +320,13 @@ namespace DataAccess.Context.Migrations
                     b.Property<int>("TutorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TutorInformationTutorId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId")
-                        .IsUnique();
-
-                    b.HasIndex("CoursesCourseId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TutorId")
-                        .IsUnique();
-
-                    b.HasIndex("TutorInformationTutorId");
+                    b.HasIndex("TutorId");
 
                     b.ToTable("LearningHistory");
                 });
@@ -626,7 +614,7 @@ namespace DataAccess.Context.Migrations
                             AccountId = 1,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4279)
+                            LastChangeDate = new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(7436)
                         });
                 });
 
@@ -1164,7 +1152,7 @@ namespace DataAccess.Context.Migrations
                             TutorId = 2,
                             Balance = 0m,
                             LastChangeAmount = 0m,
-                            LastChangeDate = new DateTime(2025, 3, 5, 22, 19, 10, 802, DateTimeKind.Local).AddTicks(4343)
+                            LastChangeDate = new DateTime(2025, 3, 15, 21, 39, 56, 636, DateTimeKind.Local).AddTicks(7725)
                         });
                 });
 
@@ -1278,14 +1266,10 @@ namespace DataAccess.Context.Migrations
             modelBuilder.Entity("BusinessObject.LearningHistory", b =>
                 {
                     b.HasOne("BusinessObject.Courses", "Course")
-                        .WithOne()
-                        .HasForeignKey("BusinessObject.LearningHistory", "CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BusinessObject.Courses", null)
                         .WithMany("LearningHistories")
-                        .HasForeignKey("CoursesCourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BusinessObject.Account", "Account")
                         .WithMany("LearningHistories")
@@ -1294,14 +1278,10 @@ namespace DataAccess.Context.Migrations
                         .IsRequired();
 
                     b.HasOne("BusinessObject.TutorInformation", "TutorInformation")
-                        .WithOne()
-                        .HasForeignKey("BusinessObject.LearningHistory", "TutorId")
+                        .WithMany("LearningHistories")
+                        .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("BusinessObject.TutorInformation", null)
-                        .WithMany("LearningHistories")
-                        .HasForeignKey("TutorInformationTutorId");
 
                     b.Navigation("Account");
 

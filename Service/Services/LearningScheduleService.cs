@@ -65,7 +65,23 @@ namespace Service.Services
             // Tạo danh sách lịch học
             for (int i = 0; i < teachingSlots; i++)
             {
-                DateTime learningDate = upcomingDays[i % upcomingDays.Count]; // Quay lại từ đầu nếu slot nhiều hơn số ngày hợp lệ
+                DateTime learningDate = upcomingDays[i % upcomingDays.Count];
+
+                // Kiểm tra nếu ngày học đã qua tháng hiện tại
+                if (learningDate.Month != today.Month)
+                {
+                    int newMonth = learningDate.Month + 1;
+                    int newYear = learningDate.Year;
+
+                    // Nếu đang ở tháng 12, chuyển về tháng 1 năm sau
+                    if (newMonth > 12)
+                    {
+                        newMonth = 1;
+                        newYear += 1;
+                    }
+
+                    learningDate = new DateTime(newYear, newMonth, 1);
+                }
 
                 learningSchedules.Add(new LearningSchedule
                 {
@@ -86,6 +102,8 @@ namespace Service.Services
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(LearningScheduleErrors.FailSavingSchedule);
         }
+
+
         public async Task<PagedResult<LearningDTO>> GetAllLearningScheduleByStudentIdAsync(CurrentUserObject currentUserObject)
         {
             var schedules = await _unitOfWork.LearningScheduleRepository.GetLearningSchedulesByStudentId(currentUserObject.AccountId);
@@ -109,7 +127,7 @@ namespace Service.Services
             //{
             //    return Result.Failure(LearningScheduleErrors.TutorAlreadyTakenAttendance);
             //}
-            var attendance = await _unitOfWork.TeachingScheduleRepository.GetTeachingScheduleToTakeAttendance(schedule.TutorId, schedule.LearningDate, schedule.LearningTime);
+            var attendance = await _unitOfWork.TeachingScheduleRepository.GetTeachingScheduleToTakeAttendance(schedule.TutorId, schedule.StudentId, schedule.CourseId, schedule.SlotNumber);
             if (attendance == null)
             {
                 return Result.Failure(LearningHistoryErrors.ScheduleNotFound);
@@ -128,6 +146,7 @@ namespace Service.Services
                 attendance.StudentReason = "Vắng";
             }
             await _unitOfWork.LearningScheduleRepository.UpdateAsync(schedule);
+            await _unitOfWork.TeachingScheduleRepository.UpdateAsync(attendance);
             var result = await _unitOfWork.SaveAsync();
             return result == "Save Change Success" ? Result.Success() : Result.Failure(LearningScheduleErrors.FailTakingAttendance);
         }
